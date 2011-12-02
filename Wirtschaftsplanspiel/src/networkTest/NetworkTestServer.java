@@ -9,13 +9,13 @@ public class NetworkTestServer {
 	public static void main(String[] args) {
 		Server server = new Server(51515);
 		
-		Scanner scanner = new Scanner(System.in);
-		
-		String input = "";
+		System.out.println("-1 zum Beenden.");
+		Scanner scanner = new Scanner(System.in);		
+		String input = "";	
 		
 		do {
 			input = scanner.nextLine();
-		} while (input != "-1");
+		} while (!input.equals("-1"));
 		
 		server.StopAcceptClients();
 	}
