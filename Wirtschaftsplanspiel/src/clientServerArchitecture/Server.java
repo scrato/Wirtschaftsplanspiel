@@ -142,5 +142,14 @@ public class Server {
 		lock_clients.release();
 	}
 
+	public void close() {
+		lock_clients.acquireUninterruptibly();
+		for (ClientHandler handler : clients.values()) {
+			handler.close();
+		}
+		clients.clear();
+		lock_clients.release();
+		System.out.println("Server wurde geschlossen.");
+	}
 	
 }
