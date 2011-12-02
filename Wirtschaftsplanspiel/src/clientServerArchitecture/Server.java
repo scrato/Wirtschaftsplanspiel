@@ -1,12 +1,8 @@
 package clientServerArchitecture;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
@@ -44,8 +40,6 @@ public class Server {
 	private void StartListener()
 	{
 		Socket newSocket;
-		BufferedReader reader;
-		BufferedWriter writer;
 
 		DataInputStream inputStream;
 		DataOutputStream outputStream;
@@ -62,13 +56,7 @@ public class Server {
 		while (!stopListener) {
 			try {
 				newSocket = listener.accept();
-				
-//				reader = new BufferedReader( new InputStreamReader( newSocket.getInputStream()));
-//		        buffer = new char[16];
-//		        countChars = reader.read(buffer, 0, 16);		        
-//				name = new String(buffer, 0, countChars);
-//				name.trim();
-//				
+		
 				inputStream = new DataInputStream( newSocket.getInputStream());
 				nameByteLength = inputStream.readInt();
 				nameBytes = new byte[nameByteLength];

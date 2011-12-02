@@ -76,21 +76,7 @@ public class ClientHandler implements Comparable<ClientHandler> {
 				// Verbindung zum Client verloren. TODO darauf reagieren.
 				System.err.println("Verbindung zu Client "+ this.id + " verloren.");
 				parent.RemoveClient(this);
-				try {
-					if (!socket.isInputShutdown()) {
-						socket.getInputStream().close();
-					}
-					if (!socket.isOutputShutdown()) {
-						socket.getOutputStream().close();
-					}
-					if (socket.isClosed()) {
-						socket.close();
-					}
-				} catch (IOException e1) {
-					// should never reach this point.
-				} finally {			
-					stopListener = true;
-				}
+				this.close();
 			}
 		}
 	}
@@ -118,10 +104,19 @@ public class ClientHandler implements Comparable<ClientHandler> {
 	public void close() {
 		stopListener = true;
 		try {
-			socket.close();
+			if (!socket.isInputShutdown()) {
+				socket.getInputStream().close();
+			}
+			if (!socket.isOutputShutdown()) {
+				socket.getOutputStream().close();
+			}
+			if (socket.isClosed()) {
+				socket.close();
+			}
 		} catch (IOException e) {
-			System.err.println("Client konnte nicht geschlossen werden.");
+			// should never reach this point!
 		}
+		System.out.println("Client " + id + " hat das Spiel verlassen.");
 	}
 	
 	public String get_Name() {
