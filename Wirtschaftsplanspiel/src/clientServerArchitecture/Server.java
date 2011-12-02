@@ -137,6 +137,16 @@ public class Server {
 		}
 		clients.clear();
 		lock_clients.release();
+		
+		stopListener = true;
+		try {
+			if (!listener.isClosed()) {
+				listener.close();
+			}
+		} catch (IOException e) {
+			// should never reach this point!
+		} 
+		
 		System.out.println("Server wurde geschlossen.");
 	}
 	

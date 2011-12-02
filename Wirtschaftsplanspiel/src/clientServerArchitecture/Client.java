@@ -9,14 +9,14 @@ import java.util.concurrent.Semaphore;
 
 public class Client {
 
-	String name;
-	Integer id;
+	private String name;
+	private Integer id;
 	
-	Socket socket;
-	Thread listenerThread;
-	boolean stopListener;
+	private Socket socket;
+	private Thread listenerThread;
+	private boolean stopListener;
 	
-	Semaphore lock_send = new Semaphore(1);
+	private Semaphore lock_send = new Semaphore(1);
 	
 	public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
 		try {
