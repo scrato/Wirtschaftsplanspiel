@@ -133,6 +133,7 @@ public class Client {
 	
 	public void close()
 	{
+		stopListener = true;
 		try {
 			if (!socket.isInputShutdown()) {
 				socket.getInputStream().close();
@@ -145,8 +146,6 @@ public class Client {
 			}
 		} catch (IOException e) {
 			// should never reach this point!
-		} finally {			
-			stopListener = true;
 		} 
 		System.out.println("Verbindung zum Server getrennt.");
 	}
