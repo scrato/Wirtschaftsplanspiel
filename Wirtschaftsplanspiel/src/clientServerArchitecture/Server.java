@@ -138,7 +138,7 @@ public class Server {
 	
 	void RemoveClient(ClientHandler client) {
 		lock_clients.acquireUninterruptibly();
-		clients.remove(client);
+		clients.remove(client.get_ID());
 		lock_clients.release();
 	}
 
