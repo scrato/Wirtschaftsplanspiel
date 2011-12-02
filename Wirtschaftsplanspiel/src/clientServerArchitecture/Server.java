@@ -46,9 +46,14 @@ public class Server {
 		Socket newSocket;
 		BufferedReader reader;
 		BufferedWriter writer;
-		char[] buffer;
+
+		DataInputStream inputStream;
+		DataOutputStream outputStream;
+		
+		int nameByteLength;
+		byte[] nameBytes;
+		
 		String name;
-		int countChars;
 		ClientHandler newClient;
 		Integer newID;
 		
@@ -58,15 +63,21 @@ public class Server {
 			try {
 				newSocket = listener.accept();
 				
-				reader = new BufferedReader( new InputStreamReader( newSocket.getInputStream()));
-		        buffer = new char[16];
-		        countChars = reader.read(buffer, 0, 16);		        
-				name = new String(buffer, 0, countChars);
-				name.trim();
+//				reader = new BufferedReader( new InputStreamReader( newSocket.getInputStream()));
+//		        buffer = new char[16];
+//		        countChars = reader.read(buffer, 0, 16);		        
+//				name = new String(buffer, 0, countChars);
+//				name.trim();
+//				
+				inputStream = new DataInputStream( newSocket.getInputStream());
+				nameByteLength = inputStream.readInt();
+				nameBytes = new byte[nameByteLength];
+				inputStream.read(nameBytes, 0, nameByteLength);
+				name = new String(nameBytes);
 				
 				newID = getNextFreePlayerID();
 				
-				DataOutputStream outputStream = new DataOutputStream( newSocket.getOutputStream());
+				outputStream = new DataOutputStream( newSocket.getOutputStream());
 				outputStream.writeInt(newID);
 
 				newClient = new ClientHandler(newID, name, newSocket, this);
@@ -127,7 +138,7 @@ public class Server {
 	
 	void RemoveClient(ClientHandler client) {
 		lock_clients.acquireUninterruptibly();
-		clients.remove(client);
+		clients.remove(client.get_ID());
 		lock_clients.release();
 	}
 

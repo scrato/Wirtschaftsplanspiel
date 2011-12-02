@@ -31,7 +31,7 @@ public class NetworkTestClient {
 			client = new Client("test", ipAddress, 51515);
 			if (client != null) {
 				System.out.println("Verbindung hergestellt.");
-				System.out.println("Sende Nachricht 'Hallo Welt'.");
+				System.out.println("Sende Nachricht 'Hallo Welt' 2 mal.");
 				String content = "Hallo Welt.";
 				byte[] encoded = content.getBytes();
 				

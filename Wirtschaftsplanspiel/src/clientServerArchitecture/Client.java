@@ -35,12 +35,21 @@ public class Client {
 				}
 			};			
 			name = Name;
-			char[] nameChars = name.toCharArray();
-			char[] sendChars = new char[16];
-			System.arraycopy(nameChars, 0, sendChars, 0, nameChars.length);
+//			char[] nameChars = name.toCharArray();
+//			char[] sendChars = new char[16];
+//			System.arraycopy(nameChars, 0, sendChars, 0, nameChars.length);
+//			
+//			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
+//			outputStream.writeChars(name);
+			byte[] nameBytes = Name.getBytes();
+			byte[] nameBytesLength = ByteConverter.toBytes(nameBytes.length);
+			
+			byte[] nameMessage = new byte[nameBytes.length + 4];
+			System.arraycopy(nameBytesLength, 0, nameMessage, 0, 4);
+			System.arraycopy(nameBytes, 0, nameMessage, 4, nameBytes.length);
 			
 			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
-			outputStream.writeChars(name);
+			outputStream.write(nameMessage);
 			
 			DataInputStream inputStream = new DataInputStream( socket.getInputStream());
 			id = inputStream.readInt();
