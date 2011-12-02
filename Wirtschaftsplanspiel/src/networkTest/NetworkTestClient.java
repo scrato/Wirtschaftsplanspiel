@@ -17,16 +17,16 @@ public class NetworkTestClient {
 		InetAddress ipAddress = null;
 		
 		do {
-		System.out.println("Geben Sie die IP an:");
-		ipAddressString = scanner.nextLine();
-		try {
-			ipAddress = InetAddress.getByName(ipAddressString);		
-		} catch (Exception e) { 
-			System.err.println("IP-Adresse ungültig.");
-		}
-		} while (ipAddress != null);
+			System.out.println("Geben Sie die IP an:");
+			ipAddressString = scanner.nextLine();
+			try {
+				ipAddress = InetAddress.getByName(ipAddressString);		
+			} catch (Exception e) { 
+				System.err.println("IP-Adresse ungueltig.");
+			}
+		} while (ipAddress == null);
 		
-		System.out.println("Verbinde zum Server localhost:51515");
+		System.out.println("Verbinde zum Server " + ipAddressString + ":51515");
 		try {
 			client = new Client("test", ipAddress, 51515);
 			if (client != null) {
