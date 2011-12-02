@@ -2,6 +2,8 @@ package networkTest;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Scanner;
+
 import clientServerArchitecture.*;
 
 public class NetworkTestClient {
@@ -10,9 +12,24 @@ public class NetworkTestClient {
 		
 		Client client = null;
 		
+		Scanner scanner = new Scanner(System.in);
+		
+		String ipAddressString;
+		InetAddress ipAddress = null;
+		
+		do {
+		System.out.println("Geben Sie die IP an:");
+		ipAddressString = scanner.nextLine();
+		try {
+			ipAddress = InetAddress.getByName(ipAddressString);		
+		} catch (Exception e) { 
+			System.err.println("IP-Adresse ungültig.");
+		}
+		} while (ipAddress != null);
+		
 		System.out.println("Verbinde zum Server localhost:51515");
 		try {
-			client = new Client("Lars", InetAddress.getLocalHost(), 51515);
+			client = new Client("test", ipAddress, 51515);
 			if (client != null) {
 				System.out.println("Verbindung hergestellt.");
 				System.out.println("Sende Nachricht 'Hallo Welt'.");
@@ -25,12 +42,8 @@ public class NetworkTestClient {
 				System.out.println("Nachricht versendet.");						
 				
 				client.SendMessage(message);
-				System.out.println("Nachricht versendet.");							
-				
-				
+				System.out.println("Nachricht versendet.");		
 			}
-		} catch (UnknownHostException e) {
-			System.err.println("Konnte IP nicht auflösen.");
 		}
 		catch (RuntimeException e) {
 			System.err.println("Konnte verbindung zum Server nicht herstellen.");

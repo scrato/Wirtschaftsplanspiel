@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
 
-public class ClientHandler implements Comparable {
+public class ClientHandler implements Comparable<ClientHandler> {
 	
 	private Server parent;
 	
@@ -133,9 +133,8 @@ public class ClientHandler implements Comparable {
 	}
 
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(ClientHandler handler) {
 		try {
-			ClientHandler handler = (ClientHandler)o;
 			if (this.get_ID() > handler.get_ID()) { return 1; } else {
 				if (this.get_ID() < handler.get_ID()) { return -1; } else {
 					return 0;
