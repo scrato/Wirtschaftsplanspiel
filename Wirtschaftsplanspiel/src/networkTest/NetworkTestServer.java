@@ -2,7 +2,9 @@ package networkTest;
 
 import java.util.Scanner;
 
-import clientServerArchitecture.*;
+import NetworkCommunication.*;
+import Server.Netzwork.Server;
+
 
 public class NetworkTestServer {
 

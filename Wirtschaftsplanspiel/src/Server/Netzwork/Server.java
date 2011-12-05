@@ -1,4 +1,4 @@
-package clientServerArchitecture;
+package Server.Netzwork;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -8,6 +8,10 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
+
+import NetworkCommunication.MessageType;
+import NetworkCommunication.NetMessage;
+
 
 public class Server {
 

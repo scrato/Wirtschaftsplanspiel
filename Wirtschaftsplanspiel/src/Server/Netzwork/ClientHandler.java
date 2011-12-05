@@ -1,59 +1,40 @@
-package clientServerArchitecture;
+package Server.Netzwork;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
 
-public class Client {
+import NetworkCommunication.ByteConverter;
+import NetworkCommunication.NetMessage;
 
-	private String name;
-	private Integer id;
+
+public class ClientHandler implements Comparable<ClientHandler> {
 	
+	private Server parent;
+	
+	private Integer id;
+	private String name;
 	private Socket socket;
+	
 	private Thread listenerThread;
 	private boolean stopListener;
 	
-	private Semaphore lock_send = new Semaphore(1);
+	Semaphore lock_send = new Semaphore(1);
 	
-	public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
-		try {
-			if (Name.length() > 16) {
-				throw new RuntimeException("Name ist zu lang.");
+	public ClientHandler(Integer ID, String Name, Socket Socket, Server Parent) {
+		id = ID;
+		name = Name;
+		socket = Socket;
+		parent = Parent;
+		
+		listenerThread = new Thread() {
+			public void run() {
+				ReceiveMessage();
 			}
-			
-			socket = new Socket(Address, Port);	
-			listenerThread = new Thread() {
-				public void run() {
-					ReceiveMessage();
-				}
-			};			
-			name = Name;
-//			char[] nameChars = name.toCharArray();
-//			char[] sendChars = new char[16];
-//			System.arraycopy(nameChars, 0, sendChars, 0, nameChars.length);
-//			
-//			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
-//			outputStream.writeChars(name);
-			byte[] nameBytes = Name.getBytes();
-			byte[] nameBytesLength = ByteConverter.toBytes(nameBytes.length);
-			
-			byte[] nameMessage = new byte[nameBytes.length + 4];
-			System.arraycopy(nameBytesLength, 0, nameMessage, 0, 4);
-			System.arraycopy(nameBytes, 0, nameMessage, 4, nameBytes.length);
-			
-			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
-			outputStream.write(nameMessage);
-			
-			DataInputStream inputStream = new DataInputStream( socket.getInputStream());
-			id = inputStream.readInt();
-			
-			StartReceivingMessages();
-		} catch (IOException e) {
-			throw new RuntimeException("Verbindung konnte nicht hergestellt werden.");
-		}		
+		};		
+		StartReceivingMessages();
 	}
 	
 	public void StartReceivingMessages() {
@@ -67,7 +48,7 @@ public class Client {
 		stopListener = true;
 	}
 	
-	private void ReceiveMessage() {
+	private void ReceiveMessage() {	
 		while (!stopListener) {
 			byte[] messageContent;
 	        int messageType;        
@@ -76,41 +57,34 @@ public class Client {
 	        int checkint;
 		        
 		    try {
-				DataInputStream stream = new DataInputStream( socket.getInputStream());		
-				
+				DataInputStream stream = new DataInputStream( socket.getInputStream());
+		        
 		        while (!stopListener) {
-		        	messageType = stream.readInt();			        	
+		        	messageType = stream.readInt();
 		        	messageLength = stream.readInt();
 		        	if (messageLength > 0) {
 		        		messageContent = new byte[messageLength];
 		        		receivedBytes = stream.read(messageContent, 0, messageLength);
 		        		checkint = stream.readInt();
 		        		if (receivedBytes != messageLength || checkint != NetMessage.MESSAGE_END) {
-		        			System.err.println("Unvollstaendige Nachricht vom Server erhalten.");
+		        			System.err.println("Unvollstaendige Nachricht erhalten von Client " + this.id + ".");
 		        			stream.skip(stream.available());
 		        			break;
 		        		}
+
 		        		NetMessage message = new NetMessage(messageType, messageContent);
-		        		// for test purpose:
-		        		switch (messageType) {
-			        		case MessageType.CHATMESSAGE_TOCLIENT: {
-			        			String Message = new String(message.get_Content());
-			        			System.out.println("Nachricht erhalten: " + Message);			        			
-			        		}			        		
-		        		}
-		        		// end test
-		        		
-				        // TODO trigger BusinessLogic   
-		        	}      
+		        		parent.receiveMessage(message, this);
+		        	}		
 		        }		        
 			} catch (IOException e) {
-				System.err.println("Inputstream zum Server konnte nicht aufgebaut werden.");
-				// Verbindung zum Server verloren. TODO Darauf reagieren.
+				// Verbindung zum Client verloren. TODO darauf reagieren.
+				System.err.println("Verbindung zu Client "+ this.id + " verloren.");
+				parent.RemoveClient(this);
 				this.close();
 			}
 		}
 	}
-
+	
 	public void SendMessage(NetMessage message) {
 		try {
 			byte[] typeBytes = ByteConverter.toBytes(message.get_MessageType());
@@ -127,12 +101,11 @@ public class Client {
 			lock_send.release();
 			
 		} catch (IOException e) {
-			System.err.println("Nachricht an Server konnte nicht versendet werden.");
+			System.err.println("Nachricht an Client " + this.id + " konnte nicht versendet werden.");
 		}
 	}
 	
-	public void close()
-	{
+	public void close() {
 		stopListener = true;
 		try {
 			if (!socket.isInputShutdown()) {
@@ -146,8 +119,8 @@ public class Client {
 			}
 		} catch (IOException e) {
 			// should never reach this point!
-		} 
-		System.out.println("Verbindung zum Server getrennt.");
+		}
+		System.out.println("Client " + id + " hat das Spiel verlassen.");
 	}
 	
 	public String get_Name() {
@@ -157,4 +130,18 @@ public class Client {
 	public Integer get_ID() {
 		return id;
 	}
+
+	@Override
+	public int compareTo(ClientHandler handler) {
+		try {
+			if (this.get_ID() > handler.get_ID()) { return 1; } else {
+				if (this.get_ID() < handler.get_ID()) { return -1; } else {
+					return 0;
+				}
+			}				
+		} catch (RuntimeException e) {
+			return -1;
+		}
+	}
+	
 }

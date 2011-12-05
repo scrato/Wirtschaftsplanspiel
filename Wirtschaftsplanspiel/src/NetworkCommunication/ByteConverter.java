@@ -1,4 +1,4 @@
-package clientServerArchitecture;
+package NetworkCommunication;
 
 public class ByteConverter {
 

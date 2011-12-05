@@ -1,11 +1,11 @@
-package clientServerArchitecture;
+package NetworkCommunication;
 
 public class NetMessage {
 
 	private int messageType;
 	private byte[] content;
-	static final int MESSAGE_END = 1337;
-	static final byte[] MESSAGE_END_BYTES = ByteConverter.toBytes(MESSAGE_END);
+	public static final int MESSAGE_END = 1337;
+	public static final byte[] MESSAGE_END_BYTES = ByteConverter.toBytes(MESSAGE_END);
 	
 	public NetMessage(int MessageType, byte[] Content) {
 		messageType = MessageType;

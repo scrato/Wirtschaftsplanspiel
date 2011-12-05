@@ -3,7 +3,9 @@ package networkTest;
 import java.net.InetAddress;
 import java.util.Scanner;
 
-import clientServerArchitecture.*;
+import Client.Network.Client;
+import NetworkCommunication.*;
+
 
 public class NetworkTestClient {
 
