@@ -2,7 +2,6 @@ package networkTest;
 
 import java.util.Scanner;
 
-import NetworkCommunication.*;
 import Server.Netzwork.Server;
 
 
