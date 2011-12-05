@@ -16,8 +16,8 @@ public class NetworkTestServer {
 		do {
 			input = scanner.nextLine();
 		} while (!input.equals("-1"));
-		
-		server.StopAcceptClients();
+
+		server.close();
 	}
 	
 }

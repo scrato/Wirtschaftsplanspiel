@@ -1,26 +1,22 @@
 package clientServerArchitecture;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
 
 public class Client {
 
-	String name;
-	Integer id;
+	private String name;
+	private Integer id;
 	
-	Socket socket;
-	Thread listenerThread;
-	boolean stopListener;
+	private Socket socket;
+	private Thread listenerThread;
+	private boolean stopListener;
 	
-	Semaphore lock_send = new Semaphore(1);
+	private Semaphore lock_send = new Semaphore(1);
 	
 	public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
 		try {
@@ -110,21 +106,7 @@ public class Client {
 			} catch (IOException e) {
 				System.err.println("Inputstream zum Server konnte nicht aufgebaut werden.");
 				// Verbindung zum Server verloren. TODO Darauf reagieren.
-				try {
-					if (!socket.isInputShutdown()) {
-						socket.getInputStream().close();
-					}
-					if (!socket.isOutputShutdown()) {
-						socket.getOutputStream().close();
-					}
-					if (socket.isClosed()) {
-						socket.close();
-					}
-				} catch (IOException e1) {
-					// should never reach this point!
-				} finally {			
-					stopListener = true;
-				} 
+				this.close();
 			}
 		}
 	}
@@ -149,7 +131,30 @@ public class Client {
 		}
 	}
 	
+	public void close()
+	{
+		stopListener = true;
+		try {
+			if (!socket.isInputShutdown()) {
+				socket.getInputStream().close();
+			}
+			if (!socket.isOutputShutdown()) {
+				socket.getOutputStream().close();
+			}
+			if (socket.isClosed()) {
+				socket.close();
+			}
+		} catch (IOException e) {
+			// should never reach this point!
+		} 
+		System.out.println("Verbindung zum Server getrennt.");
+	}
+	
 	public String get_Name() {
 		return name;
+	}
+	
+	public Integer get_ID() {
+		return id;
 	}
 }
