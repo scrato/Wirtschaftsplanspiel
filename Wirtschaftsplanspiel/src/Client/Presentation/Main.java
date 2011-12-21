@@ -1,10 +1,16 @@
 package Client.Presentation;
 
 import java.awt.*;
+import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.*;
+
+import Client.Network.Client;
+import NetworkCommunication.*;
 
 public class Main extends JFrame{
 	private static final long serialVersionUID = 1L;
@@ -12,7 +18,12 @@ public class Main extends JFrame{
 	public Main(){
 		super("Business Basics");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
+		/* try{
+		Client c1 = new Client("Alex", InetAddress.getLocalHost(), 15151);
+		}catch(UnknownHostException ex){
+			System.err.println("Fehler beim Verbindugsaufbau! Adresse überprüfen!");
+		} */
 		
 		// Menü
 		JMenuBar menuBar = new JMenuBar();
@@ -49,22 +60,33 @@ public class Main extends JFrame{
 		
 		// EAST
 		east.setPreferredSize(new Dimension(200,(int)east.getSize().getHeight()));
-		east.setLayout(new GridLayout(3,1));
+		east.setLayout(new GridLayout(6,1));
 		
 		// UI-Elemente
+		JLabel imgBusinessBa = new JLabel(new ImageIcon(this.getClass().getResource("logo.png")));
+		JTextArea uebersicht = new JTextArea();
+		
+		uebersicht.setText("Bank \nForderungen \nVerbindlichkeiten \nGebäude");
+
 		JTextArea chatOutput = new JTextArea("Chat:");
 		chatOutput.setPreferredSize(new Dimension(150, 400));
 		chatOutput.setEditable(false);
 		JTextField chatInput = new JTextField("Chat Message");
 		chatInput.setPreferredSize(new Dimension(125, 30));
-		JPanel test = new JPanel();
+		
+		east.add(imgBusinessBa);
+		JPanel sendbar = new JPanel();
 		
 		chatOutput.setPreferredSize(new Dimension(200,250));
-		test.add(chatInput);
-		test.add(new JButton("send"));
+		sendbar.add(chatInput);
+		sendbar.add(new JButton("send"));
 		
 		east.add(chatOutput);
-		east.add(test);
+		east.add(sendbar);
+		east.add(uebersicht);
+
+		
+		
 
 		
 		// WEST
@@ -94,7 +116,7 @@ public class Main extends JFrame{
 		//center.add(new JButton("Center ist hier"));
 		
 		this.setVisible(true);
-		this.setSize(900,500);
+		this.setSize(1200,768);
 	}
 	
 	
