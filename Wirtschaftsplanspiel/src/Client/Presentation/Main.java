@@ -48,12 +48,28 @@ public class Main extends JFrame{
 		//north.add(new JButton("Button in the North"));
 		
 		// EAST
+		east.setPreferredSize(new Dimension(200,(int)east.getSize().getHeight()));
+		east.setLayout(new GridLayout(3,1));
+		
+		// UI-Elemente
+		JTextArea chatOutput = new JTextArea("Chat:");
+		chatOutput.setPreferredSize(new Dimension(150, 400));
+		chatOutput.setEditable(false);
+		JTextField chatInput = new JTextField("Chat Message");
+		chatInput.setPreferredSize(new Dimension(125, 30));
+		JPanel test = new JPanel();
+		
+		chatOutput.setPreferredSize(new Dimension(200,250));
+		test.add(chatInput);
+		test.add(new JButton("send"));
+		
+		east.add(chatOutput);
+		east.add(test);
 
 		
 		// WEST
-		west.setLayout(new GridLayout(8,1));
+		west.setLayout(new GridLayout(14,1));
 		JLabel lMenue = new JLabel("Menü");
-		lMenue.setLocation(100, (int) lMenue.getLocation().getY());
 		JButton werkstoffe = new JButton("Werkstoffe einkaufen");
 		JButton maschinen = new JButton("Maschinenverwaltung");
 		JButton personal = new JButton("Personalverwaltung");
@@ -78,7 +94,7 @@ public class Main extends JFrame{
 		//center.add(new JButton("Center ist hier"));
 		
 		this.setVisible(true);
-		this.setSize(1024,768);
+		this.setSize(900,500);
 	}
 	
 	
