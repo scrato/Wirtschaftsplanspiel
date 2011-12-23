@@ -116,7 +116,7 @@ public class Client {
 		}
 	}
 
-	public void SendMessage(NetMessage message) {
+	public void SendMessage(NetMessage message) throws RuntimeException {
 		try {
 			byte[] typeBytes = ByteConverter.toBytes(message.get_MessageType());
 			byte[] lengthBytes = ByteConverter.toBytes(message.get_Content().length);
@@ -132,7 +132,8 @@ public class Client {
 			lock_send.release();
 			
 		} catch (IOException e) {
-			System.err.println("Nachricht an Server konnte nicht versendet werden.");
+			//System.err.println("Nachricht an Server konnte nicht versendet werden.");
+			throw new RuntimeException("Nachricht an Server konnte nicht versendet werden.");
 		}
 	}
 	

@@ -2,8 +2,8 @@ package NetworkCommunication;
 
 public class NetMessage {
 
-	private int messageType;
-	private byte[] content;
+	protected int messageType;
+	protected byte[] content;
 	public static final int MESSAGE_END = 1337;
 	public static final byte[] MESSAGE_END_BYTES = ByteConverter.toBytes(MESSAGE_END);
 	
