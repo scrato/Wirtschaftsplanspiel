@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
 
+import Client.Application.ClientController;
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
@@ -96,16 +97,17 @@ public class Client {
 		        			break;
 		        		}
 		        		NetMessage message = new NetMessage(messageType, messageContent);
-		        		// for test purpose:
-		        		switch (messageType) {
-			        		case MessageType.CHATMESSAGE_TOCLIENT: {
-			        			String Message = new String(message.get_Content());
-			        			System.out.println("Nachricht erhalten: " + Message);			        			
-			        		}			        		
-		        		}
-		        		// end test
-		        		
-				        // TODO trigger BusinessLogic   
+//		        		// for test purpose:
+//		        		switch (messageType) {
+//			        		case MessageType.CHATMESSAGE_TOCLIENT: {
+//			        			String Message = new String(message.get_Content());
+//			        			System.out.println("Nachricht erhalten: " + Message);			        			
+//			        		}			        		
+//		        		}
+//		        		// end test
+		        		 
+		        		TriggerBusinessLogicThread triggerBusLogic = new TriggerBusinessLogicThread(message);		        				
+		        		triggerBusLogic.start();
 		        	}      
 		        }		        
 			} catch (IOException e) {

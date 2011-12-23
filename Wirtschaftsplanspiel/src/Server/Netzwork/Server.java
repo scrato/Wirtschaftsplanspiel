@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 
+import NetworkCommunication.ByteConverter;
 import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
 
@@ -102,7 +103,17 @@ public class Server {
 				
 				System.out.println("Chatnachricht gesendet von Client " + sender.get_ID());
 				
-				NetMessage sendMessage = new NetMessage(MessageType.CHATMESSAGE_TOCLIENT, message.get_Content());
+				byte[] contentLength = ByteConverter.toBytes(message.get_Content().length);
+				byte[] nameBytes = sender.get_Name().getBytes();
+				byte[] nameLength = ByteConverter.toBytes(nameBytes.length);
+				byte[] sendBytes = new byte[message.get_Content().length + 8 + nameBytes.length];
+				
+				System.arraycopy(contentLength, 0, sendBytes, 0, 4);
+				System.arraycopy(message.get_Content(), 0, sendBytes, 4, message.get_Content().length);
+				System.arraycopy(nameLength, 0, sendBytes, 4 + message.get_Content().length, 4);
+				System.arraycopy(nameBytes, 0, sendBytes, 8 + message.get_Content().length, nameBytes.length);				
+				
+				NetMessage sendMessage = new NetMessage(MessageType.CHATMESSAGE_TOCLIENT, sendBytes);
 				
 				lock_clients.acquireUninterruptibly();
 				for (ClientHandler client : clients.values()) {
