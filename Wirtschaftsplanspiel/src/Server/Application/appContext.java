@@ -2,6 +2,6 @@ package Server.Application;
 
 public class appContext {
 
-	public static int totalDemand = 1000;
+	public static int totalDemand = 2000;
 	
 }

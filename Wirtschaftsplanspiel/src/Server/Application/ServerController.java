@@ -10,6 +10,11 @@ import java.util.TreeMap;
 
 public class ServerController {
 
+	/**
+	 * determines contingents of total demand for all clients.
+	 * @param Supplies: Map of Supplies for all Client(ID)s.
+	 * @return Contingents: Map of Contingents for all Client(ID)s.
+	 */
 	public static Map<Integer, Integer> demandFunction(Map<Integer, Supply> Supplies) {
 		
 		// create a new map to keep input list unchanged -> faked call-by-value.
@@ -62,7 +67,6 @@ public class ServerController {
 					removedKeys.add(key);
 					
 					leftDemand -= supplies.get(key).quantity;
-					//supplies.remove(key);	
 				} else {
 					// player wants to sell more than he is able to.
 					Integer demand = (Integer)assignedDemand.get(key);
