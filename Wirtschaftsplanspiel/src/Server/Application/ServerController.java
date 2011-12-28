@@ -21,7 +21,7 @@ public class ServerController {
 		Map<Integer, Supply> supplies = new TreeMap<Integer, Supply>();
 		supplies.putAll(Supplies);
 		
-		int leftDemand = appContext.totalDemand;
+		int leftDemand = AppContext.totalDemand;
 		
 		// initialize assignedDemand
 		Map<Integer, Integer> assignedDemand = new TreeMap<Integer, Integer>();

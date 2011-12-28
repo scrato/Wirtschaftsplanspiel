@@ -1,4 +1,4 @@
-package Server.Netzwork;
+package Server.Network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

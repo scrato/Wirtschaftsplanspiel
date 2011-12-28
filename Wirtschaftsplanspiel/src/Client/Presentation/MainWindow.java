@@ -12,7 +12,7 @@ import javax.swing.*;
 import Client.Network.Client;
 import NetworkCommunication.*;
 
-public class Main extends JFrame{
+public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
 
 	JPanel north = new JPanel();
@@ -23,7 +23,7 @@ public class Main extends JFrame{
 	
 	
 	
-	public Main(){
+	public MainWindow(){
 		super("Business Basics");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		initBasis();
@@ -126,10 +126,6 @@ public class Main extends JFrame{
 
 		this.setSize(1200,768);
 		
-	}
-	
-	public static void main(String[] args){
-		Main main = new Main();
 	}
 	
 	

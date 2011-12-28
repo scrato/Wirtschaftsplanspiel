@@ -25,7 +25,7 @@ public class DemandFunctionTest {
 		Supply D = new Supply(750, 3.91d);
 		supplies.put(4, D);
 		
-		System.out.println("Nachfrage: " + appContext.totalDemand);
+		System.out.println("Nachfrage: " + AppContext.totalDemand);
 		
 		System.out.println("Angebot:");
 		//for (Supply sup : supplies.values()) {

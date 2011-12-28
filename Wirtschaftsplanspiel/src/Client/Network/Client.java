@@ -62,6 +62,7 @@ public class Client {
 		}		
 	}
 	
+	
 	public void StartReceivingMessages() {
 		if (!listenerThread.isAlive()) {	
 			stopListener = false;
