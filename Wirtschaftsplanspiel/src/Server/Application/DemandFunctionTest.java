@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import Server.Application.ServerController;
-import Server.Application.Supply;
+import Server.Model.Supply;
 
 public class DemandFunctionTest {
 

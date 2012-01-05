@@ -1,4 +1,4 @@
-package Server.Application;
+package Server.Model;
 
 public class Supply {
 	public Supply(int Quantity, double Price) {
