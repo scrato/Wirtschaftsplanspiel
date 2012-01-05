@@ -1,31 +1,47 @@
 package Client.Entities;
 
-public class Company {
-	private static Company company;
-private double money;
+import Client.Entities.Ressource.RessourceType;
 
-public static Company get_instance(){
+
+public class Company {
+private static Company company;
+
+public static Company getInstance(){
 	if (company != null)
 		return company;
 	company = new Company();
 	return company;
-	
 }
+
+
+//Hier werden Variablen verwaltet
+private double money;
 
 /*
  *  Prüft, ob das Unternehmen noch liquide Mittel zur Verfügung hat
  */
-public boolean isLiquid(){
-	//TODO: Bessere Abfrage finden
-	if(money < 0)
-	{
-		return false;
-	}
-	return true;
+
+public double getMoney(){
+	return this.money;
 }
 
+public void incMoney(double amount){
+	money += amount;
+}
 public void decMoney(double amount){
 	money -= amount;
 }
+
+public boolean isLiquid(double amount) {
+	if((this.money - amount) <= 0)
+		return false;
+	return true;
+		
+}
+
+
+
+
+
 
 }

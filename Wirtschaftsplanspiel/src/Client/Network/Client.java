@@ -7,14 +7,12 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
 
-import Client.Application.ClientController;
 import NetworkCommunication.ByteConverter;
-import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
 
 
 public class Client {
-
+	private static Client client;
 	private String name;
 	private Integer id;
 	
@@ -23,6 +21,7 @@ public class Client {
 	private boolean stopListener;
 	
 	private Semaphore lock_send = new Semaphore(1);
+	
 	
 	public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
 		try {
@@ -165,5 +164,10 @@ public class Client {
 	
 	public Integer get_ID() {
 		return id;
+	}
+
+
+	public static Client getInstance() {
+	 return client;
 	}
 }

@@ -3,6 +3,7 @@ package Client.Application;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import Client.Network.Client;
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.ChatMessage;
 import NetworkCommunication.MessageType;
@@ -13,7 +14,7 @@ public class ClientController {
 	public static void SendChatMessage(String Message) throws RuntimeException {
 		try {
 			ChatMessage message = new ChatMessage(Message, "");
-			AppContext.client.SendMessage(message);
+			Client.getInstance().SendMessage(message);
 		}
 		catch (RuntimeException e) {
 			throw e;
