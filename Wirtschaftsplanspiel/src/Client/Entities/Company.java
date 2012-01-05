@@ -1,16 +1,15 @@
-package Client.Model;
+package Client.Entities;
 
 public class Company {
+	private static Company company;
 private double money;
-private String name;
 
-public Company(String name){
-	this.name = name;
-}
-
-public String getName()
-{ 
-	return name;
+public static Company get_instance(){
+	if (company != null)
+		return company;
+	company = new Company();
+	return company;
+	
 }
 
 /*

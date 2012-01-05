@@ -1,14 +1,12 @@
 package Client.Application;
 
-import Client.Model.Company;
-import Client.Model.Ressource;
+import Client.Entities.Company;
+import Client.Entities.Ressource;
 import Client.Network.Client;
 
-public class AppContext {
+public abstract class AppContext {
 
-	public AppContext(){
-		InitializeController();
-	}
+
 	
 	public static Client client;
 	public static Company company;
@@ -23,7 +21,7 @@ public class AppContext {
 	/**
 	 * Initialisiert den Controller mit den vorgegebenen Startwerten
 	 */
-	protected void InitializeController(){
+	public static void InitializeController(){
 		//RessourceController initialisieren
 		String[] resNames = new String[] {"Rohfisch", "Salz"};
 		ressourceController = new RessourceController(resNames);

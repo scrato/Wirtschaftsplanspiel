@@ -1,6 +1,6 @@
 package Client.Application;
 
-import Client.Model.Ressource;
+import Client.Entities.Ressource;
 
 /**
  * @author Scrato

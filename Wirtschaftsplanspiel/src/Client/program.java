@@ -9,7 +9,7 @@ public class program {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		AppContext context = new AppContext();
+		AppContext.InitializeController();
 		MainWindow m = new MainWindow();
 		m.setVisible(true);
 	}
