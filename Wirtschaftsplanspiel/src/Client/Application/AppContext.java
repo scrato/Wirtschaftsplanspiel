@@ -27,10 +27,11 @@ public class AppContext {
 		//RessourceController initialisieren
 		String[] resNames = new String[] {"Rohfisch", "Salz"};
 		ressourceController = new RessourceController(resNames);
+		//Anzahl und Preis der Ware für Client für den Beginn festlegen
 		ressourceController.initRessource(0, 200, 12.50);
 		ressourceController.initRessource(1, 120, 4.00);
 		
-		companyController = new CompanyController(client.get_Name());
+		//companyController = new CompanyController(client.get_Name());
 	}
 	
 }
