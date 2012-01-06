@@ -4,6 +4,11 @@ import java.util.Dictionary;
 
 public class Ressource {
 	private static Dictionary<RessourceType, Ressource> ressources;
+	/**
+	 * RessourceTyp enthält die verfügbaren Typen von Ressourcen
+	 * @author Scrato
+	 *
+	 */
 	public enum RessourceType {
 		Plastic,
 		Color
@@ -55,6 +60,10 @@ public int getStoredUnits() {
 	return storedUnits;
 }
 
+/**
+ * Erhöht die Ressourcen, die im Lager liegen
+ * @param amount
+ */
 public void incStoredUnits(int amount){
 	storedUnits += amount;
 }
