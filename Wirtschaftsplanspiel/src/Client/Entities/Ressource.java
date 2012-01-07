@@ -14,6 +14,8 @@ public class Ressource {
 		Color
 	}
 	
+	
+	
 
 
 /**
@@ -29,7 +31,8 @@ public static Ressource getInstance(RessourceType type){
 	 * wird für jeden Ressourcetype ein Eintrag im Dictionary angelegt
 	 */
 	for(RessourceType t:RessourceType.values()){
-		ressources.put(t, new Ressource(t));
+		//TODO: Dynamische Methode zum setzen der Einheit implementieren
+		ressources.put(t, new Ressource("kilo"));
 	}
 	
 	
@@ -37,28 +40,40 @@ public static Ressource getInstance(RessourceType type){
 }
 
 
-private RessourceType type;
-private double pricePerKilo;
+private double pricePerUnit;
+private String unit;
 private int storedUnits;
 private int availableUnits;
 
-public Ressource(RessourceType type) {
-	this.type = type;
-}
-public RessourceType getType() {
-	return type;
+/**
+ * Konstruktor für einen neuen Typ, wird nur von getInstance benutzt.
+ * @param type
+ */
+private Ressource(String unit) {
+	this.unit = unit;
 }
 
-public double getPricePerKilo() {
-	return pricePerKilo;
+/**
+ * Gibt den derzeit gesetzten preis pro Einheit (Unit) zurück
+ * @return
+ */
+public double getPricePerUnit() {
+	return pricePerUnit;
 }
-public void setPricePerKilo(double pricePerKilo) {
-	this.pricePerKilo = pricePerKilo;
+
+
+public void setPricePerUnit(double pricePerUnit) {
+	this.pricePerUnit = pricePerUnit;
 }
 
 public int getStoredUnits() {
 	return storedUnits;
 }
+
+public String getUnit(){
+	return unit;
+}
+
 
 /**
  * Erhöht die Ressourcen, die im Lager liegen

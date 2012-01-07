@@ -23,15 +23,15 @@ public abstract class CompanyController {
 	// Begin Ressource-Abschnitt
 	/**
 	 * Initialisiert die Ressource des mitgegebenen typs 
-	 * mit neuer Anzahl von vorhandenen Einheiten und dem Preis pro Kilo.
-	 * Verwendbar für festlegung nach neuer Periode
+	 * mit neuer Anzahl von vorhandenen Einheiten und dem Preis pro Einheit.
+	 * Verwendbar für Festlegung nach neuer Periode
 	 * @param type Der RessourceTyp der zu kaufenden Ressource
 	 * @param availableUnits Die Anzahl der verfügbaren Ressorucen
-	 * @param pricePerKilo Den preis pro Kilo
+	 * @param pricePerUnit Den preis pro Kilo
 	 */
-	public static void initRessource(Ressource.RessourceType type, int availableUnits, double pricePerKilo){
+	public static void initRessource(Ressource.RessourceType type, int availableUnits, double pricePerUnit){
 		Ressource.getInstance(type).setAvailableUnits(availableUnits);
-		Ressource.getInstance(type).setPricePerKilo(pricePerKilo);
+		Ressource.getInstance(type).setPricePerUnit(pricePerUnit);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public abstract class CompanyController {
 		//Sind nicht genug Rohstoffe da, hol einfach den Rest
 		if(res.getAvailableUnits() > amount)
 			amount = res.getAvailableUnits();
-			buyItem(amount * res.getPricePerKilo());
+			buyItem(amount * res.getPricePerUnit());
 		
 	}
 
