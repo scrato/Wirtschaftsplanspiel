@@ -1,4 +1,4 @@
-package Client.Model;
+package Client.Entities;
 
 public class Machine {
 
