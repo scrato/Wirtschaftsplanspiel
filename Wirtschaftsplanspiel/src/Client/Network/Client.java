@@ -56,6 +56,8 @@ public class Client {
 			id = inputStream.readInt();
 			
 			StartReceivingMessages();
+			
+			client = this; // static member for GetInstance
 		} catch (IOException e) {
 			throw new RuntimeException("Verbindung konnte nicht hergestellt werden.");
 		}		
