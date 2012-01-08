@@ -1,6 +1,6 @@
 package Client.Network;
 
-import Client.Application.ClientController;
+import Client.Application.ChatController;
 import NetworkCommunication.NetMessage;
 
 public class TriggerBusinessLogicThread extends Thread {
@@ -12,7 +12,7 @@ public class TriggerBusinessLogicThread extends Thread {
 	private NetMessage message;
 	
 	public void run() {
-		ClientController.ReceiveNetMessage(message);
+		ChatController.ReceiveNetMessage(message);
 	}
 	
 }
