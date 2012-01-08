@@ -1,6 +1,11 @@
 package Client.Application;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import Client.Entities.Company;
+import Client.Entities.Machine;
+import Client.Entities.MachineType;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
 
@@ -51,4 +56,60 @@ public abstract class CompanyController {
 	}
 
 	//End of Ressource-Abschnitt
+// ------------------------------------------------------------
+	//Begin of Machine-Abschnitt
+	
+	public void buyMachine(Machine machine) throws MachineAlreadyBaughtException {
+		Company comp = Company.getInstance();
+		if (comp.getMachines().contains(machine)) {
+			throw new MachineAlreadyBaughtException();
+		}
+		if (comp.isLiquid(machine.getValue())) {
+			comp.addMachine(machine);
+			comp.decMoney(machine.getValue());
+		}
+	}
+	
+	public void sellMachine(Machine machine) throws MachineNotOwnedException {
+		Company comp = Company.getInstance();
+		if (!comp.getMachines().contains(machine)) {
+			throw new MachineNotOwnedException();
+		}
+		comp.incMoney(machine.getValue() / 2);
+		comp.removeMachine(machine);
+	}
+	
+	public int getCapacity(MachineType type) {
+		Company comp = Company.getInstance();
+		List<Machine> machines = comp.getMachines();
+		
+		int capacity = 0;		
+		for (Machine machine : machines) {
+			if (machine.getType() == type) {
+				capacity += machine.getCapacity();
+			}
+		}
+		return capacity;
+	}
+	
+	public double depcrecateMachines() {
+		Company comp = Company.getInstance();
+		List<Machine> machines = comp.getMachines();	
+		
+		double deprecation = 0d;		
+		List<Machine> deprecatedMachines = new LinkedList<Machine>();
+		
+		for (Machine machine : machines) {
+			deprecation += machine.deprecate();
+			if (machine.isCompletelyDeprecated()) {
+				deprecatedMachines.add(machine);
+			}
+		}
+		for (Machine machine : deprecatedMachines) {
+			comp.removeMachine(machine);
+		}
+		return deprecation;
+	}
+	
+	//End of Machine-Abschnitt
 }
