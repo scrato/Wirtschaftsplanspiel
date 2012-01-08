@@ -1,6 +1,6 @@
 package Client.Application;
 
-class UserCanNotPayException extends ApplicationException {
+public class UserCanNotPayException extends ApplicationException {
 
 	/**
 	 * 
