@@ -1,13 +1,17 @@
 package Client.Entities;
 
+import java.util.Dictionary;
 import java.util.LinkedList;
 import java.util.List;
+
+import Client.Entities.Ressource.RessourceType;
 
 
 
 public class Company {
 	
 	private static Company company;
+	private static Production prod;
 	
 	public static Company getInstance(){
 		if (company != null)
@@ -16,13 +20,22 @@ public class Company {
 		return company;
 	}
 	
+	private Company(){
+		/* Falls ressources noch nicht gewählt ist, 
+		 * wird für jeden Ressourcetype ein Eintrag im Dictionary angelegt
+		 */
+		for(RessourceType t:RessourceType.values()){
+			//TODO: Dynamische Methode zum setzen der Einheit implementieren
+			ressources.put(t, new Ressource("kilo"));
+		}
+	}
 	
 	//Hier werden Variablen verwaltet
 	private double money;
 	
 	//Hier liegen die Maschinen.
 	private List<Machine> machines = new LinkedList<Machine>();
-	
+	private Dictionary<RessourceType, Ressource> ressources;
 	/*
 	 *  Prüft, ob das Unternehmen noch liquide Mittel zur Verfügung hat
 	 */	
@@ -43,7 +56,17 @@ public class Company {
 		return true;
 			
 	}
+	//Produktion
+	public Production getProduction(){
+		if (prod != null)
+			return prod;
+		
+		prod = new Production();
+		return prod;
+	}
 	
+	
+	//Maschinen
 	public List<Machine> getMachines() {
 		return machines;
 	}
@@ -55,5 +78,10 @@ public class Company {
 	public void removeMachine(Machine machine) {
 		machines.remove(machine);
 	}
-
+   
+	//Ressourcen
+	
+	public Ressource getRessource(RessourceType type){
+		return ressources.get(type);
+	}
 }

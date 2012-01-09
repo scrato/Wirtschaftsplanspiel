@@ -3,7 +3,7 @@ package Client.Entities;
 import java.util.Dictionary;
 
 public class Ressource {
-	private static Dictionary<RessourceType, Ressource> ressources;
+
 	/**
 	 * RessourceTyp enthält die verfügbaren Typen von Ressourcen
 	 * @author Scrato
@@ -15,30 +15,6 @@ public class Ressource {
 	}
 	
 	
-	
-
-
-/**
- * Gibt das gewünschte Ressourcenobjekt von dem mitgegebenen Typ zurück
- * @param type Der Typ der Ressource
- * @return
- */
-public static Ressource getInstance(RessourceType type){
-	if(ressources != null)
-		return ressources.get(type);
-	
-	/* Falls ressources noch nicht gewählt ist, 
-	 * wird für jeden Ressourcetype ein Eintrag im Dictionary angelegt
-	 */
-	for(RessourceType t:RessourceType.values()){
-		//TODO: Dynamische Methode zum setzen der Einheit implementieren
-		ressources.put(t, new Ressource("kilo"));
-	}
-	
-	
-	return ressources.get(type);
-}
-
 
 private double pricePerUnit;
 private String unit;
@@ -49,7 +25,7 @@ private int availableUnits;
  * Konstruktor für einen neuen Typ, wird nur von getInstance benutzt.
  * @param type
  */
-private Ressource(String unit) {
+public Ressource(String unit) {
 	this.unit = unit;
 }
 

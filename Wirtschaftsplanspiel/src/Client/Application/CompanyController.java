@@ -6,6 +6,7 @@ import java.util.List;
 import Client.Entities.Company;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
+import Client.Entities.Production;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
 
@@ -35,8 +36,9 @@ public abstract class CompanyController {
 	 * @param pricePerUnit Den preis pro Kilo
 	 */
 	public static void initRessource(Ressource.RessourceType type, int availableUnits, double pricePerUnit){
-		Ressource.getInstance(type).setAvailableUnits(availableUnits);
-		Ressource.getInstance(type).setPricePerUnit(pricePerUnit);
+		Company comp = Company.getInstance();
+		comp.getRessource(type).setAvailableUnits(availableUnits);
+		comp.getRessource(type).setPricePerUnit(pricePerUnit);
 	}
 
 	/**
@@ -47,7 +49,8 @@ public abstract class CompanyController {
 	 * @throws UserCanNotPayException
 	 */
 	public static void buyRessources(Ressource.RessourceType type, int amount) throws UserCanNotPayException{
-		Ressource res = Ressource.getInstance(type); 
+		Company comp = Company.getInstance();
+		Ressource res = comp.getRessource(type); 
 		//Sind nicht genug Rohstoffe da, hol einfach den Rest
 		if(res.getAvailableUnits() > amount)
 			amount = res.getAvailableUnits();
@@ -112,4 +115,9 @@ public abstract class CompanyController {
 	}
 	
 	//End of Machine-Abschnitt
+	
+	//Begin Produktionsabschnitt
+	public void produceGoods(int Count){
+		Production prod = Company.getInstance().getProduction();
+	}
 }
