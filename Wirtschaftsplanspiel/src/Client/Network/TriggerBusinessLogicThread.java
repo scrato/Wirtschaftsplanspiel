@@ -1,6 +1,7 @@
 package Client.Network;
 
 import Client.Application.ChatController;
+import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
 
 public class TriggerBusinessLogicThread extends Thread {
@@ -12,7 +13,11 @@ public class TriggerBusinessLogicThread extends Thread {
 	private NetMessage message;
 	
 	public void run() {
-		ChatController.ReceiveNetMessage(message);
+		switch (message.get_MessageType()) {
+			case MessageType.CHATMESSAGE_TOCLIENT: {
+				ChatController.ReceiveNetMessage(message);
+			}
+		}
 	}
 	
 }

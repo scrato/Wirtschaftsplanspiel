@@ -78,6 +78,16 @@ public class Company {
 	public void removeMachine(Machine machine) {
 		machines.remove(machine);
 	}
+	
+	public int getMachineCapacity(MachineType type) {		
+		int capacity = 0;		
+		for (Machine machine : machines) {
+			if (machine.getType() == type) {
+				capacity += machine.getCapacity();
+			}
+		}
+		return capacity;
+	}
    
 	//Ressourcen
 	
