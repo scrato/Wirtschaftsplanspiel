@@ -36,6 +36,10 @@ public class Company {
 	//Hier liegen die Maschinen.
 	private List<Machine> machines = new LinkedList<Machine>();
 	private Dictionary<RessourceType, Ressource> ressources;
+	
+	//Hier sind die Mitarbeiter verwaltet
+	private List<Employee> employee = new LinkedList<Employee>();	
+	
 	/*
 	 *  Prüft, ob das Unternehmen noch liquide Mittel zur Verfügung hat
 	 */	
@@ -84,4 +88,18 @@ public class Company {
 	public Ressource getRessource(RessourceType type){
 		return ressources.get(type);
 	}
+	
+	//Mitarbeiter
+	public List<Employee> getEmployee() {
+		return employee;
+	}
+	
+	public void addEmployee(Employee newEmployee) {
+		employee.add(newEmployee);
+	}
+	
+	public void removeEmployee(Employee oldEmployee) {
+		employee.remove(oldEmployee);
+	}
+
 }

@@ -9,6 +9,8 @@ import Client.Entities.MachineType;
 import Client.Entities.Production;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
+import Client.Entities.Employee;
+import Client.Entities.EmployeeType;
 
 public abstract class CompanyController {
 	
@@ -120,4 +122,30 @@ public abstract class CompanyController {
 	public void produceGoods(int Count){
 		Production prod = Company.getInstance().getProduction();
 	}
+	
+	//End of Produktionsabschnitt
+	// ------------------------------------------------------------
+		//Begin of Employee-Abschnitt
+	
+	public void employSb(Employee newEmployee) throws UserCanNotPayException {
+		Company comp = Company.getInstance();
+			
+		if (comp.isLiquid(1000))		// habe jetzt mal angenommen jm einstellen kostet 1000 GE
+										// soll man wählen können welchem Mitarbeiter gekündigt werden soll?
+		{								// --> der der am längsten da ist kostet am meisten (Abfindung)
+			comp.addEmployee(newEmployee);
+			comp.decMoney(1000);
+		}
+	}
+	
+	public void dismissSb(Employee oldEmployee) throws UserCanNotPayException { //wie kann ich entscheiden was für ein Typ eingestellt werden soll?
+		Company comp = Company.getInstance();
+		
+		if (comp.isLiquid(1000))
+		{
+			comp.removeEmployee(oldEmployee);
+			comp.decMoney(oldEmployee.getSeverancePay());
+		}
+	}
+	
 }
