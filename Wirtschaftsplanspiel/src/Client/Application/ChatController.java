@@ -45,10 +45,10 @@ public class ChatController {
 		System.arraycopy(content, 8 + contentLength, nameBytes, 0, nameLength);
 		String name = new String(nameBytes);
 		
-		SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
+		SimpleDateFormat format = new SimpleDateFormat("kk:mm");
 		String time = format.format(new Date());
 		
-		String displayString = time + " " + name + " schreibt: " + message;
+		String displayString = time + " " + name + ": " + message;
 		//send displayString to GUI.
 		MainWindow wind = MainWindow.getInstance();
 		wind.addChatMessage(displayString);
