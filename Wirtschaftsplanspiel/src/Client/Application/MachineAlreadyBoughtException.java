@@ -1,6 +1,6 @@
 package Client.Application;
 
-public class MachineAlreadyBaughtException extends ApplicationException {
+public class MachineAlreadyBoughtException extends ApplicationException {
 
 	/**
 	 * 

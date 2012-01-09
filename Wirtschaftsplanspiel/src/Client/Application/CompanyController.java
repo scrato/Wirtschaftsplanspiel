@@ -59,10 +59,10 @@ public abstract class CompanyController {
 // ------------------------------------------------------------
 	//Begin of Machine-Abschnitt
 	
-	public void buyMachine(Machine machine) throws MachineAlreadyBaughtException {
+	public void buyMachine(Machine machine) throws MachineAlreadyBoughtException {
 		Company comp = Company.getInstance();
 		if (comp.getMachines().contains(machine)) {
-			throw new MachineAlreadyBaughtException();
+			throw new MachineAlreadyBoughtException();
 		}
 		if (comp.isLiquid(machine.getValue())) {
 			comp.addMachine(machine);

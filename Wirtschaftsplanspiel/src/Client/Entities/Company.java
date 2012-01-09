@@ -3,7 +3,6 @@ package Client.Entities;
 import java.util.LinkedList;
 import java.util.List;
 
-import Client.Entities.Ressource.RessourceType;
 
 
 public class Company {
