@@ -62,7 +62,7 @@ public abstract class CompanyController {
 // ------------------------------------------------------------
 	//Begin of Machine-Abschnitt
 	
-	public void buyMachine(Machine machine) throws MachineAlreadyBoughtException {
+	public static void buyMachine(Machine machine) throws MachineAlreadyBoughtException {
 		Company comp = Company.getInstance();
 		if (comp.getMachines().contains(machine)) {
 			throw new MachineAlreadyBoughtException();
@@ -73,7 +73,7 @@ public abstract class CompanyController {
 		}
 	}
 	
-	public void sellMachine(Machine machine) throws MachineNotOwnedException {
+	public static void sellMachine(Machine machine) throws MachineNotOwnedException {
 		Company comp = Company.getInstance();
 		if (!comp.getMachines().contains(machine)) {
 			throw new MachineNotOwnedException();
@@ -82,7 +82,7 @@ public abstract class CompanyController {
 		comp.removeMachine(machine);
 	}
 	
-	public int getCapacity(MachineType type) {
+	public static int getCapacity(MachineType type) {
 		Company comp = Company.getInstance();
 		List<Machine> machines = comp.getMachines();
 		
@@ -95,7 +95,7 @@ public abstract class CompanyController {
 		return capacity;
 	}
 	
-	public double depcrecateMachines() {
+	public static double depcrecateMachines() {
 		Company comp = Company.getInstance();
 		List<Machine> machines = comp.getMachines();	
 		
@@ -117,7 +117,8 @@ public abstract class CompanyController {
 	//End of Machine-Abschnitt
 	
 	//Begin Produktionsabschnitt
-	public void produceGoods(int Count){
+	public static void produceGoods(int Count){
 		Production prod = Company.getInstance().getProduction();
+		//TODO: Produktion weiterprogrammieren
 	}
 }

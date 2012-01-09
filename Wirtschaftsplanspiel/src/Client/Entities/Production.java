@@ -12,6 +12,7 @@ private Map<RessourceType,Integer> ressourceNeeded;
 	 * die für die Produktion benötigt sind.
 	 */
    public Production(){
+	   //TODO: Personalbedarf für Produktion
 	   ressourceNeeded =  new HashMap<RessourceType, Integer>();
 	   ressourceNeeded.put(RessourceType.Color, 2);
 	   ressourceNeeded.put(RessourceType.Plastic, 5);
