@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
@@ -100,7 +101,6 @@ public class ConnectionView extends JFrame{
 			this.ip = ip;
 			this.username = username;
 			this.connectionView = connectionView;
-			
 		}
 		
 		@Override
@@ -114,6 +114,7 @@ public class ConnectionView extends JFrame{
 					Client c1 = new Client(this.username.getText(), inetAddress, 51515);
 				}catch(RuntimeException ex){
 					System.err.println("Server nicht ereichbar!");
+					JOptionPane.showMessageDialog(new JFrame(),"Server nicht gefunden.");
 					error = true;
 				}
 			}catch(UnknownHostException ex){
@@ -121,11 +122,16 @@ public class ConnectionView extends JFrame{
 				error = true;
 			}
 			
-			if(!error){
+			if(!error && !this.username.getText().equals("") && !this.ip.getText().equals("")){
 				connectionView.setVisible(false);
 				mainWindow.setVisible(true);				
-			}else{
-				System.err.println("Verbindungsdaten überprüfen!");
+			}else if(this.username.getText().equals("")){
+				JOptionPane.showMessageDialog(new JFrame(),"Bitte geben Sie einen Spielernamen ein.");
+			}else if(this.ip.getText().equals("")){
+				JOptionPane.showMessageDialog(new JFrame(),"Bitte geben Sie eine IP Adresse ein.");
+			}		
+			else{
+				JOptionPane.showMessageDialog(new JFrame(),"Verbindungsdaten überprüfen.");
 			}		
 		}
 		
