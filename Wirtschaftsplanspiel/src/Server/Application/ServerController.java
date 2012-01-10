@@ -12,6 +12,9 @@ import Server.Entities.Supply;
 
 public class ServerController {
 
+	
+	
+	
 	/**
 	 * determines contingents of total demand for all clients.
 	 * @param Supplies: Map of Supplies for all Client(ID)s.

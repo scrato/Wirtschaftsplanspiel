@@ -24,6 +24,9 @@ public class TriggerBusinessLogicThread extends Thread {
 			case MessageType.PLAYER_LEFT: {
 				ClientController.PlayerLeft(message);
 			}
+			case MessageType.GAME_STARTED: {
+				ClientController.GameStartet();
+			}
 		}
 	}
 	

@@ -9,4 +9,6 @@ public abstract class MessageType {
 	public final static int PLAYER_JOINED        = 210;
 	public final static int PLAYER_LEFT          = 211;
 	
+	public static final int GAME_STARTED		 = 220;
+	
 }

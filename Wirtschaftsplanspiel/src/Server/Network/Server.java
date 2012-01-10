@@ -195,6 +195,19 @@ public class Server {
 			lock_clients.release();
 		}
 	}
+	
+	public void startGame() {
+		lock_clients.acquireUninterruptibly();
+		try {
+			for (ClientHandler client : clients.values()) {
+				client.SendMessage(new NetMessage(MessageType.GAME_STARTED, new byte[0]));
+			}
+			System.out.println("Spiel wurdegestartet.");
+		} catch (Exception exc) { 			
+		} finally {
+			lock_clients.release();
+		}
+	}
 
 	public void close() {
 		lock_clients.acquireUninterruptibly();

@@ -1,13 +1,15 @@
 package Client.Application;
 
 import Client.Entities.Player;
+import Client.Presentation.MainWindow;
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.NetMessage;
 
 public abstract class ClientController {
 	
-	public static void PlayerListReceived(Player[] players) {
-		//TODO Weitergabe zum WarteScreen im UI.
+	public static void PlayerListReceived() {
+		MainWindow wind = MainWindow.getInstance();
+		wind.setPlayers(Player.getPlayers());
 	}
 	
 	public static void NewPlayerJoined(NetMessage message) {
@@ -19,9 +21,13 @@ public abstract class ClientController {
 		System.arraycopy(content, 4, nameBytes, 0, 20);
 		String playerName = new String(nameBytes);
 		
-		Player newPlayer = new Player(playerID, playerName);
+		new Player(playerID, playerName);
 		
-		//TODO Weitergabe zum UI.
+		MainWindow wind = MainWindow.getInstance();
+		wind.setPlayers(Player.getPlayers());
+		
+		String displayString = playerName + " ist dem Spiel beigetreten.";
+		wind.addChatMessage(displayString);
 	}
 	
 	public static void PlayerLeft(NetMessage message) {
@@ -29,7 +35,17 @@ public abstract class ClientController {
 		Player leftPlayer = Player.getPlayer(ID);		
 		Player.removePlayer(ID);
 		
+		MainWindow wind = MainWindow.getInstance();
+		wind.setPlayers(Player.getPlayers());
+		
+		String displayString = leftPlayer.getName() + " hat das Spiel verlassen.";
+		wind.addChatMessage(displayString);
 		//TODO Weitergabe UI.
+	}
+	
+	public static void GameStartet() {
+		MainWindow wind = MainWindow.getInstance();
+		wind.startGame();
 	}
 	
 }

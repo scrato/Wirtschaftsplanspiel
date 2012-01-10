@@ -70,7 +70,6 @@ public class Client {
 			id = inputStream.readInt();
 			
 			int playersCount = inputStream.readInt();
-			Player[] players = new Player[playersCount];
 			
 			int playerID;
 			byte[] playerNameBytes = new byte[20];
@@ -80,11 +79,10 @@ public class Client {
 				playerID = inputStream.readInt();
 				inputStream.read(playerNameBytes, 0, 20);
 				playerName = new String(playerNameBytes);
-				Player player = new Player(playerID, playerName);
-				players[i] = player;
+				new Player(playerID, playerName);
 			}
 			
-			ClientController.PlayerListReceived(players);
+			ClientController.PlayerListReceived();
 			
 			StartReceivingMessages();
 			
