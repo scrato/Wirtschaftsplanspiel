@@ -62,15 +62,14 @@ public abstract class CompanyController {
 // ------------------------------------------------------------
 	//Begin of Machine-Abschnitt
 	
-	public static void buyMachine(Machine machine) throws MachineAlreadyBoughtException {
+	public static void buyMachine(Machine machine) throws MachineAlreadyBoughtException, UserCanNotPayException {
 		Company comp = Company.getInstance();
 		if (comp.getMachines().contains(machine)) {
 			throw new MachineAlreadyBoughtException();
 		}
-		if (comp.isLiquid(machine.getValue())) {
+			buyItem(machine.getValue());
 			comp.addMachine(machine);
-			comp.decMoney(machine.getValue());
-		}
+		
 	}
 	
 	public static void sellMachine(Machine machine) throws MachineNotOwnedException {

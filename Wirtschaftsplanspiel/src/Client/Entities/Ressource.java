@@ -18,6 +18,7 @@ public class Ressource {
 
 private double pricePerUnit;
 private String unit;
+private RessourceType type;
 private int storedUnits;
 private int availableUnits;
 
@@ -25,7 +26,7 @@ private int availableUnits;
  * Konstruktor für einen neuen Typ, wird nur von getInstance benutzt.
  * @param type
  */
-public Ressource(String unit) {
+public Ressource(RessourceType type, String unit) {
 	this.unit = unit;
 }
 
@@ -37,6 +38,9 @@ public double getPricePerUnit() {
 	return pricePerUnit;
 }
 
+public RessourceType getType(){
+	return this.type;
+}
 
 public void setPricePerUnit(double pricePerUnit) {
 	this.pricePerUnit = pricePerUnit;

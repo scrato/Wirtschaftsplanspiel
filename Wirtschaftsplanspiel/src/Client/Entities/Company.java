@@ -1,6 +1,7 @@
 package Client.Entities;
 
 import java.util.Dictionary;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class Company {
 		 */
 		for(RessourceType t:RessourceType.values()){
 			//TODO: Dynamische Methode zum setzen der Einheit implementieren
-			ressources.put(t, new Ressource("kilo"));
+			ressources.put(t, new Ressource(t, "kilo"));
 		}
 	}
 	
@@ -71,6 +72,16 @@ public class Company {
 		return machines;
 	}
 	
+	public List<Machine> getMachinesPerType(MachineType type){
+		List<Machine> machTypeList = new LinkedList<Machine>();
+		for(Iterator<Machine> mach = machines.iterator(); mach.hasNext();){
+			Machine m = mach.next();
+			if(m.getType() == type)
+				machTypeList.add(m);
+		}
+		return machTypeList;
+	}
+	
 	public void addMachine(Machine machine) {
 		machines.add(machine);
 	}
@@ -83,5 +94,9 @@ public class Company {
 	
 	public Ressource getRessource(RessourceType type){
 		return ressources.get(type);
+	}
+	
+	public Dictionary<RessourceType, Ressource> getAllRessources(){
+		return ressources;
 	}
 }
