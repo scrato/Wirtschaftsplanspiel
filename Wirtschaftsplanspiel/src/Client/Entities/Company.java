@@ -71,7 +71,20 @@ public class Company {
 	
 	//Maschinen
 	public List<Machine> getMachines() {
-		return machines;
+		List<Machine> retList = new LinkedList<Machine>();
+		retList.addAll(machines);
+		return retList;
+	}
+	
+	public int getMachineCapacity(MachineType type) {
+		int capacity = 0;
+		for (Machine mach : machines) {
+			if (mach.getType() == type)
+			{
+				capacity += mach.getCapacity();
+			}
+		}
+		return capacity;
 	}
 	
 	public void addMachine(Machine machine) {
@@ -82,8 +95,7 @@ public class Company {
 		machines.remove(machine);
 	}
    
-	//Ressourcen
-	
+	//Ressourcen	
 	public Ressource getRessource(RessourceType type){
 		return ressources.get(type);
 	}
