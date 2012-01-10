@@ -69,9 +69,8 @@ public abstract class CompanyController {
 		if (comp.getMachines().contains(machine)) {
 			throw new MachineAlreadyBoughtException();
 		}
-			buyItem(machine.getValue());
-			comp.addMachine(machine);
-		
+		buyItem(machine.getValue());
+		comp.addMachine(machine);
 	}
 	
 	public static void sellMachine(Machine machine) throws MachineNotOwnedException {
@@ -81,19 +80,6 @@ public abstract class CompanyController {
 		}
 		comp.incMoney(machine.getValue() / 2);
 		comp.removeMachine(machine);
-	}
-	
-	public static int getCapacity(MachineType type) {
-		Company comp = Company.getInstance();
-		List<Machine> machines = comp.getMachines();
-		
-		int capacity = 0;		
-		for (Machine machine : machines) {
-			if (machine.getType() == type) {
-				capacity += machine.getCapacity();
-			}
-		}
-		return capacity;
 	}
 	
 	public static double depcrecateMachines() {
