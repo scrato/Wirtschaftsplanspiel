@@ -1,6 +1,5 @@
 package Client.Entities;
 
-import java.util.Dictionary;
 
 public class Ressource {
 
@@ -36,6 +35,18 @@ public Ressource(RessourceType type, String unit) {
  */
 public double getPricePerUnit() {
 	return pricePerUnit;
+}
+
+public static String getUnit(RessourceType type){
+	//TODO: Units aktuell halten
+	switch(type){
+	case Plastic:
+		return "kg";
+	case Color:
+		return "l";
+	default:
+		return "Einheiten";
+	}
 }
 
 public RessourceType getType(){

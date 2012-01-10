@@ -18,7 +18,7 @@ private Map<MachineType, Integer> maxProdPerMach;
 	 */
    public Production(){
 	   //TODO: Personalbedarf für Produktion
-	   //TODO: Hier ändern, falls enum sich ändert
+	   //TODO: Produktionsverhältnisse aktuell halten / GetNeedForProduction implementieren
 	   ressourceNeeded =  new HashMap<RessourceType, Integer>();
 	   ressourceNeeded.put(RessourceType.Color, 2);
 	   ressourceNeeded.put(RessourceType.Plastic, 5);

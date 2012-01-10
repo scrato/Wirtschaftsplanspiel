@@ -26,8 +26,7 @@ public class Company {
 		 * wird für jeden Ressourcetype ein Eintrag im Dictionary angelegt
 		 */
 		for(RessourceType t:RessourceType.values()){
-			//TODO: Dynamische Methode zum setzen der Einheit implementieren
-			ressources.put(t, new Ressource(t, "kilo"));
+			ressources.put(t, new Ressource(t, Ressource.getUnit(t)));
 		}
 	}
 	
