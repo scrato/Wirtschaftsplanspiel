@@ -33,6 +33,4 @@ public class Employee
 	public double getSeverancePay() {
 		return severancePay;
 	}
-	
-
 }
