@@ -16,6 +16,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import Client.Network.Client;
+import Client.Presentation.*;
 
 public class ConnectionView extends JFrame{
 
@@ -27,21 +28,35 @@ public class ConnectionView extends JFrame{
 		setSize(400,200);
 		
 		setLayout(new GridLayout(4,2));
+		
+		
+		// UI Elemente
+		
+		JTextField ip = new JTextField("IP Adresse");
+		JTextField username = new JTextField("Username");
+		JButton connect = new JButton("Connect");
+		
+		
 		add(new JLabel("Verbindung zum Server aufbauen"));
 		add(new JSeparator());
 		add(new JLabel("IP Adresse des Servers:"));
-		JTextField ip = new JTextField("IP Address");
-		ip.addMouseListener(new SpecialMouseListener(ip));
 		add(ip);
 		add(new JLabel("Username:"));
-		JTextField username = new JTextField("Username");
-		username.addMouseListener(new SpecialMouseListener(username));
 		add(username);
-		
 		add(new JSeparator());
-		JButton connect = new JButton("Connect");
-		connect.addActionListener(new validateConnect(ip, username, this));
 		add(connect);
+		
+		ip.addMouseListener(new SpecialMouseListener(ip));
+		ip.addFocusListener(new SpecialFocusListener(ip));
+		username.addMouseListener(new SpecialMouseListener(username));
+		username.addFocusListener(new SpecialFocusListener(username));
+		connect.addActionListener(new validateConnect(ip, username, this));
+		
+		// Key Listener
+		connect.addKeyListener(new SpecialKeyListener(connect));
+		username.addKeyListener(new SpecialKeyListener(connect));
+		ip.addKeyListener(new SpecialKeyListener(connect));
+		
 		
 		setVisible(true);
 	}

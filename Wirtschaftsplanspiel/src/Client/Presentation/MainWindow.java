@@ -35,7 +35,7 @@ public class MainWindow extends JFrame{
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um neues zu laden.
 	JPanel lastUsed;
 	
-	JTextArea chatOutput = new JTextArea("Chat:\n", 6,15);
+	JTextArea chatOutput = new JTextArea("Chat:\n", 8,24);
 	static MainWindow instance;
 	
 	
@@ -52,7 +52,7 @@ public class MainWindow extends JFrame{
 		//north.add(new JButton("Button in the North"));
 					
 		// EAST
-		east.setPreferredSize(new Dimension(200,(int)east.getSize().getHeight()));
+		east.setPreferredSize(new Dimension(300,(int)east.getSize().getHeight()));
 		east.setLayout(new GridLayout(4,1));
 				
 		// UI-Elemente
@@ -63,7 +63,7 @@ public class MainWindow extends JFrame{
 						
 		// Chat
 		chatOutput.setLineWrap(true);
-		chatOutput.setPreferredSize(new Dimension(150, 500));
+		//chatOutput.setPreferredSize(new Dimension(150, 500));
 		chatOutput.setEditable(false);
 			
 		JTextField chatInput = new JTextField("Message");
@@ -73,7 +73,7 @@ public class MainWindow extends JFrame{
 		JPanel sendbar = new JPanel();
 							
 		sendbar.add(new JScrollPane(chatOutput));
-		chatOutput.setPreferredSize(new Dimension(200,250));
+		//chatOutput.setPreferredSize(new Dimension(200,250));
 		sendbar.add(chatInput);
 		JButton Jsend = new JButton("Send");
 		Jsend.addActionListener(new sendChatMessage(chatInput));
