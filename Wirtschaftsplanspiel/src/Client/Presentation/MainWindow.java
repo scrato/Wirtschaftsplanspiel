@@ -7,17 +7,22 @@ import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.*;
 
 import Client.Application.ChatController;
 import Client.Application.ClientController;
+import Client.Entities.Player;
 import Client.Network.Client;
 import NetworkCommunication.*;
+
+import java.util.List;
 
 public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
 
+	// Standardpanel
 	JPanel north = new JPanel();
 	JPanel east = new JPanel();
 	JPanel west = new JPanel();
@@ -32,14 +37,16 @@ public class MainWindow extends JFrame{
 	JPanel Pbericht = new JPanel();
 	JPanel Ppreiskal = new JPanel();
 	
-	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um neues zu laden.
+	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
+	DefaultListModel listModel = new DefaultListModel();
+	JList ListPlayers = new JList(listModel);
 	
-	JTextArea chatOutput = new JTextArea("Chat:\n", 8,24);
+	
+	JTextArea chatOutput = new JTextArea(9,26);
+	
+	// Singletonreferenz 
 	static MainWindow instance;
-	
-	
-	
 	
 	public MainWindow(){
 		super("Business Basics");
@@ -47,73 +54,11 @@ public class MainWindow extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		initBasis();
 		buildScreens();
-			
-		// North
-		//north.add(new JButton("Button in the North"));
-					
-		// EAST
-		east.setPreferredSize(new Dimension(300,(int)east.getSize().getHeight()));
-		east.setLayout(new GridLayout(4,1));
-				
-		// UI-Elemente
-		JLabel imgBusinessBa = new JLabel(new ImageIcon(this.getClass().getResource("logo.png")));
-		JTextArea uebersicht = new JTextArea();
-					
-		uebersicht.setText("Bank \nForderungen \nVerbindlichkeiten \nGebäude");
-						
-		// Chat
-		chatOutput.setLineWrap(true);
-		//chatOutput.setPreferredSize(new Dimension(150, 500));
-		chatOutput.setEditable(false);
-			
-		JTextField chatInput = new JTextField("Message");
-		chatInput.setPreferredSize(new Dimension(125, 30));	
-							
-		east.add(imgBusinessBa);
-		JPanel sendbar = new JPanel();
-							
-		sendbar.add(new JScrollPane(chatOutput));
-		//chatOutput.setPreferredSize(new Dimension(200,250));
-		sendbar.add(chatInput);
-		JButton Jsend = new JButton("Send");
-		Jsend.addActionListener(new sendChatMessage(chatInput));
-		sendbar.add(Jsend);
-							
-		//east.add(chatOutput);
-		east.add(sendbar);
-		east.add(uebersicht);
-				
-		// WEST
-		west.setLayout(new GridLayout(14,1));
-		JLabel lMenue = new JLabel("Menü");
-		JButton werkstoffe = new JButton("Werkstoffe einkaufen");
-		JButton maschinen = new JButton("Maschinenverwaltung");
-		JButton personal = new JButton("Personalverwaltung");
-		JButton darlehen = new JButton("Darlehen");
-		JButton bericht = new JButton("Berichtserstattung");
-		JButton preiskal = new JButton("Preiskalkulation");
-			
-		// Action Listener
-		werkstoffe.addActionListener(new showWerkstoffe(this));
-		maschinen.addActionListener(new showMaschinen(this));
-		personal.addActionListener(new showPersonal(this));
-		darlehen.addActionListener(new showDarlehen(this));
-		bericht.addActionListener(new showBericht(this));
-		preiskal.addActionListener(new showPreiskal(this));
-							
-		west.add(lMenue);
-		west.add(werkstoffe);
-		west.add(maschinen);
-		west.add(personal);
-		west.add(darlehen);
-		west.add(bericht);
-		west.add(preiskal);
-							
-							
-		// SOUTH
-			
-		// CENTER
-					
+		buildNorth();
+		buildEast();
+		buildWest();
+		buildSouth();
+		waitForOtherPlayers();
 	}
 	
 	
@@ -144,20 +89,22 @@ public class MainWindow extends JFrame{
 			
 		// Layout
 		this.setLayout(new BorderLayout() );
-
-			
+		this.setSize(1200,768);
 		this.add(north, BorderLayout.NORTH);
 		this.add(east, BorderLayout.EAST);
 		this.add(west, BorderLayout.WEST);
 		this.add(south, BorderLayout.SOUTH);
 		this.add(center, BorderLayout.CENTER);
 		lastUsed = center;
-				
-
-		this.setSize(1200,768);		
+		
+		// Willkommen Screen
+		center.add(new JLabel("Herzlich willkommen bei Business Basics!"));
+		
+		center.add(ListPlayers);
 	}
 	
 	public void buildScreens(){
+
 		// Werkstoffe
 		Pwerkstoffe.add(new JLabel("Werkstoffe einkaufen"));
 		Pwerkstoffe.add(new JButton("Werkstoffe einkaufen"));
@@ -179,6 +126,96 @@ public class MainWindow extends JFrame{
 		// Preiskalkulation
 		Ppreiskal.add(new JLabel("Verkaufspreis für Produkte bestimmen."));
 		
+	}
+	
+	public void buildNorth(){
+		
+	}
+	
+	public void buildEast(){
+		east.setPreferredSize(new Dimension(300,(int)east.getSize().getHeight()));
+		east.setLayout(new GridLayout(3,1));
+						
+		// UI-Elemente
+		JLabel imgBusinessBa = new JLabel(new ImageIcon(this.getClass().getResource("logo.png")));
+		JTextArea uebersicht = new JTextArea();
+		JTextField chatInput = new JTextField();
+		JPanel sendbar = new JPanel();
+		JButton Jsend = new JButton("Send");
+		JLabel chatLabel = new JLabel("Chat");
+							
+		uebersicht.setText("Bank \nForderungen \nVerbindlichkeiten \nGebäude");
+						
+		// Chat
+		chatInput.setPreferredSize(new Dimension(225, 30));	
+		
+		chatOutput.setLineWrap(true);
+		chatOutput.setEditable(false);
+		sendbar.add(chatLabel);
+		sendbar.add(new JScrollPane(chatOutput));
+		sendbar.add(chatInput);
+		sendbar.add(Jsend);			
+			
+		// Listener
+		Jsend.addActionListener(new sendChatMessage(chatInput));
+						
+		
+									
+		east.add(imgBusinessBa);
+		east.add(sendbar);
+		east.add(uebersicht);
+	}
+	
+	public void buildWest(){
+		west.setLayout(new GridLayout(14,1));
+		JLabel lMenue = new JLabel("Menü");
+		JButton werkstoffe = new JButton("Werkstoffe einkaufen");
+		JButton maschinen = new JButton("Maschinenverwaltung");
+		JButton personal = new JButton("Personalverwaltung");
+		JButton darlehen = new JButton("Darlehen");
+		JButton bericht = new JButton("Berichtserstattung");
+		JButton preiskal = new JButton("Preiskalkulation");
+					
+		// Action Listener
+		werkstoffe.addActionListener(new showWerkstoffe(this));
+		maschinen.addActionListener(new showMaschinen(this));
+		personal.addActionListener(new showPersonal(this));
+		darlehen.addActionListener(new showDarlehen(this));
+		bericht.addActionListener(new showBericht(this));
+		preiskal.addActionListener(new showPreiskal(this));
+									
+		west.add(lMenue);
+		west.add(werkstoffe);
+		west.add(maschinen);
+		west.add(personal);
+		west.add(darlehen);
+		west.add(bericht);
+		west.add(preiskal);	
+	}
+	
+	public void buildSouth(){
+		
+	}
+	
+
+	private void waitForOtherPlayers(){
+		west.setVisible(false);
+	}
+	
+	public void startGame(){
+		west.setVisible(true);
+	}
+	
+	public void setPlayers(List<Player> players){
+		listModel.clear();
+		System.out.println("an den Mitspielern hat sich etwas verändert!");
+		
+		Iterator<Player> i = players.iterator();
+		
+		while(i.hasNext()){
+			listModel.addElement(i.next().getName());
+		}
+		ListPlayers.repaint();
 	}
 	
 	public void addChatMessage(String message){
@@ -317,6 +354,7 @@ public class MainWindow extends JFrame{
 		}
 		public void actionPerformed(ActionEvent arg0) {
 			ChatController.SendChatMessage(s.getText());
+			s.setText("");
 		}
 		
 	}

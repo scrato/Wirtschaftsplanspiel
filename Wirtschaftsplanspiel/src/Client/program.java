@@ -1,6 +1,6 @@
 package Client;
 
-import Client.Presentation.ConnectionView;
+import Client.Presentation.*;
 
 public class program {
 
@@ -10,6 +10,7 @@ public class program {
 	 */
 	public static void main(String[] args) {
 		//MainWindow m = new MainWindow();
+		//m.setVisible(true);
 		ConnectionView connectionView = new ConnectionView();
 		connectionView.setVisible(true);
 	}
