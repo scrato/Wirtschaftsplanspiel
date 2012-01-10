@@ -1,6 +1,7 @@
 package Client.Entities;
 
 import java.util.Dictionary;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,8 +26,7 @@ public class Company {
 		 * wird für jeden Ressourcetype ein Eintrag im Dictionary angelegt
 		 */
 		for(RessourceType t:RessourceType.values()){
-			//TODO: Dynamische Methode zum setzen der Einheit implementieren
-			ressources.put(t, new Ressource("kilo"));
+			ressources.put(t, new Ressource(t, Ressource.getUnit(t)));
 		}
 	}
 	
@@ -93,5 +93,9 @@ public class Company {
 	
 	public Ressource getRessource(RessourceType type){
 		return ressources.get(type);
+	}
+	
+	public Dictionary<RessourceType, Ressource> getAllRessources(){
+		return ressources;
 	}
 }
