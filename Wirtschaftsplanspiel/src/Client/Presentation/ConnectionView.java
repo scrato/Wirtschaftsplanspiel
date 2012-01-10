@@ -24,17 +24,18 @@ public class ConnectionView extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
 	public ConnectionView(){
+		
+		//Layout
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(400,200);
-		
 		setLayout(new GridLayout(4,2));
 		
 		
 		// UI Elemente
-		
 		JTextField ip = new JTextField("IP Adresse");
 		JTextField username = new JTextField("Username");
 		JButton connect = new JButton("Connect");
+		JButton abbruch = new JButton("Abbrechen");
 		
 		
 		add(new JLabel("Verbindung zum Server aufbauen"));
@@ -43,20 +44,24 @@ public class ConnectionView extends JFrame{
 		add(ip);
 		add(new JLabel("Username:"));
 		add(username);
-		add(new JSeparator());
+		add(abbruch);
 		add(connect);
+		
 		
 		ip.addMouseListener(new SpecialMouseListener(ip));
 		ip.addFocusListener(new SpecialFocusListener(ip));
-		username.addMouseListener(new SpecialMouseListener(username));
-		username.addFocusListener(new SpecialFocusListener(username));
-		connect.addActionListener(new validateConnect(ip, username, this));
-		
-		// Key Listener
-		connect.addKeyListener(new SpecialKeyListener(connect));
-		username.addKeyListener(new SpecialKeyListener(connect));
 		ip.addKeyListener(new SpecialKeyListener(connect));
 		
+		username.addMouseListener(new SpecialMouseListener(username));
+		username.addFocusListener(new SpecialFocusListener(username));
+		username.addKeyListener(new SpecialKeyListener(connect));
+		
+		connect.addActionListener(new validateConnect(ip, username, this));
+		connect.addKeyListener(new SpecialKeyListener(connect));
+		
+		abbruch.addKeyListener(new SpecialKeyListener(abbruch));
+		abbruch.addActionListener(new close());
+			
 		
 		setVisible(true);
 	}
@@ -148,6 +153,14 @@ public class ConnectionView extends JFrame{
 			else{
 				JOptionPane.showMessageDialog(new JFrame(),"Verbindungsdaten überprüfen.");
 			}		
+		}
+		
+	}
+	private class close implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			System.exit(3);
 		}
 		
 	}
