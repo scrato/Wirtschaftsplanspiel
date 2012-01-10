@@ -6,4 +6,7 @@ public abstract class MessageType {
 	
 	public final static int CHATMESSAGE_TOCLIENT = 200;
 	
+	public final static int PLAYER_JOINED        = 210;
+	public final static int PLAYER_LEFT          = 211;
+	
 }

@@ -12,6 +12,7 @@ import java.util.concurrent.Semaphore;
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
+import NetworkCommunication.StringOperation;
 
 
 public class Server {
@@ -24,6 +25,8 @@ public class Server {
 	
 	Map<Integer, ClientHandler> clients;
 	//List<ClientHandler> clients;
+	
+	private boolean isClosed;
 	
 	public Server(int port) {
 		
@@ -50,7 +53,7 @@ public class Server {
 		DataOutputStream outputStream;
 		
 		int nameByteLength;
-		byte[] nameBytes;
+		byte[] nameBytes = new byte[20];
 		
 		String name;
 		ClientHandler newClient;
@@ -63,46 +66,68 @@ public class Server {
 				newSocket = listener.accept();
 		
 				inputStream = new DataInputStream( newSocket.getInputStream());
-				nameByteLength = inputStream.readInt();
-				nameBytes = new byte[nameByteLength];
-				inputStream.read(nameBytes, 0, nameByteLength);
+				//nameByteLength = inputStream.readInt();
+				//nameBytes = new byte[nameByteLength];
+				//inputStream.read(nameBytes, 0, nameByteLength);
+				//name = new String(nameBytes);
+				inputStream.read(nameBytes, 0, 20);
 				name = new String(nameBytes);
 				
-				newID = getNextFreePlayerID();
-				
-				outputStream = new DataOutputStream( newSocket.getOutputStream());
-				outputStream.writeInt(newID);
-				
-				//TODO playerList versenden.
-//				byte[] playerListBytes = new byte[24*clients.size()];
-				//int i = 0;
-				//byte[] playerIdBytes;
-				//String playerName;
-				//byte[] playerNameBytes;
-//				for (ClientHandler handler : clients.values()) {
-//					playerIdBytes = ByteConverter.toBytes(handler.get_ID());
-//					playerName = name;
-//					if (playerName.length() < 10) {
-//						int diff = 10 - playerName.length();
-//						for (int o = 0; o < diff; o++) {
-//							playerName = playerName + " ";
-//						}
-//					}
-//					playerNameBytes = playerName.getBytes();
-//					i++;
-//					
-//				}
-
-				newClient = new ClientHandler(newID, name, newSocket, this);
-				
 				lock_clients.acquireUninterruptibly();
-				clients.put(newID, newClient);
-				lock_clients.release();
-				
-				System.out.println("Neuer Client: ID=" + newClient.get_ID() + ", Name=" + newClient.get_Name());
+				try {
+					newID = getNextFreePlayerID();
+					
+					outputStream = new DataOutputStream( newSocket.getOutputStream());
+					outputStream.writeInt(newID);
+					
+					newClient = new ClientHandler(newID, name, newSocket, this);
+					
+					//Create List of all existing players and send it to the new client.
+					byte[] playerListBytes = new byte[4 + 24*clients.size()];
+					
+					int playersCount = clients.size();
+					byte[] playersCountBytes = ByteConverter.toBytes(playersCount);
+					System.arraycopy(playersCountBytes, 0, playerListBytes, 0, 4);
+					
+					byte[] playerIdBytes;
+					String playerName;
+					byte[] playerNameBytes;
+					
+					int i = 0;
+					for (ClientHandler handler : clients.values()) {
+						playerIdBytes = ByteConverter.toBytes(handler.get_ID());
+						playerName = StringOperation.padRight(name, 10);
+						playerNameBytes = playerName.getBytes();
+						
+						System.arraycopy(playerIdBytes, 0, playerListBytes, 4 + i * 24, 4);
+						System.arraycopy(playerNameBytes, 0, playerListBytes, 8 + i * 24, 20);
+						i++;	
+					}
+					
+					outputStream.write(playerListBytes);
+					
+					//Send NewPlayerDetail to other Players.
+					byte[] newPlayerInfo = new byte[24];
+					
+					byte[] newPlayerIDBytes = ByteConverter.toBytes(newID);
+					System.arraycopy(newPlayerIDBytes, 0, newPlayerInfo, 0, 4);
+					System.arraycopy(nameBytes, 0, newPlayerInfo, 4, 20);
+					
+					for (ClientHandler handler : clients.values()) {
+						handler.SendMessage(new NetMessage(MessageType.PLAYER_JOINED, newPlayerInfo));
+					}
+					
+					//Add new Client to clientMap.
+					clients.put(newID, newClient);
+					
+					System.out.println("Neuer Client: ID=" + newClient.get_ID() + ", Name=" + newClient.get_Name());
+				} catch (Exception exc) { }
+				finally {
+					lock_clients.release();
+				}
 				
 			} catch (IOException e) {
-				System.err.println("Client konnte nicht aktzeptiert werden.");
+				if (this.isClosed) System.err.println("Client konnte nicht aktzeptiert werden.");
 			}
 		}
 	}
@@ -137,9 +162,7 @@ public class Server {
 				
 				lock_clients.acquireUninterruptibly();
 				for (ClientHandler client : clients.values()) {
-					//if (client != sender) { // for test purposes removed
-						client.SendMessage(sendMessage);
-					//}
+					client.SendMessage(sendMessage);
 				}
 				lock_clients.release();
 				break;
@@ -161,8 +184,16 @@ public class Server {
 	
 	void RemoveClient(ClientHandler client) {
 		lock_clients.acquireUninterruptibly();
-		clients.remove(client.get_ID());
-		lock_clients.release();
+		try {
+			clients.remove(client.get_ID());
+			for (ClientHandler otherClient : clients.values()) {
+				otherClient.SendMessage(new NetMessage(MessageType.PLAYER_LEFT, ByteConverter.toBytes(client.get_ID())));
+			}
+			System.out.println(client.get_Name() + " hat das Spiel verlassen.");
+		} catch (Exception exc) { 			
+		} finally {
+			lock_clients.release();
+		}
 	}
 
 	public void close() {
@@ -181,7 +212,7 @@ public class Server {
 		} catch (IOException e) {
 			// should never reach this point!
 		} 
-		
+		this.isClosed = true;
 		System.out.println("Server wurde geschlossen.");
 	}
 	

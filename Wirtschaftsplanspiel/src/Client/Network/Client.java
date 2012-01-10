@@ -7,12 +7,22 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
 
+import Client.Application.ClientController;
+import Client.Entities.Player;
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.NetMessage;
+import NetworkCommunication.StringOperation;
 
 
 public class Client {
+	
 	private static Client client;
+	
+	public static Client getInstance() {
+		 return client;
+	}
+	
+	
 	private String name;
 	private Integer id;
 	
@@ -21,11 +31,11 @@ public class Client {
 	private boolean stopListener;
 	
 	private Semaphore lock_send = new Semaphore(1);
-	
+
 	
 	public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
 		try {
-			if (Name.length() > 16) {
+			if (Name.length() > 10) {
 				throw new RuntimeException("Name ist zu lang.");
 			}
 			
@@ -42,18 +52,39 @@ public class Client {
 //			
 //			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
 //			outputStream.writeChars(name);
-			byte[] nameBytes = Name.getBytes();
-			byte[] nameBytesLength = ByteConverter.toBytes(nameBytes.length);
 			
-			byte[] nameMessage = new byte[nameBytes.length + 4];
-			System.arraycopy(nameBytesLength, 0, nameMessage, 0, 4);
-			System.arraycopy(nameBytes, 0, nameMessage, 4, nameBytes.length);
+			//byte[] nameBytes = Name.getBytes();
+			//byte[] nameBytesLength = ByteConverter.toBytes(nameBytes.length);
+			
+			//byte[] nameMessage = new byte[nameBytes.length + 4];
+			//System.arraycopy(nameBytesLength, 0, nameMessage, 0, 4);
+			//System.arraycopy(nameBytes, 0, nameMessage, 4, nameBytes.length);
+			
+			String sendName = StringOperation.padRight(name, 10);
+			byte[] sendNameBytes = sendName.getBytes();
 			
 			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
-			outputStream.write(nameMessage);
+			outputStream.write(sendNameBytes);
 			
 			DataInputStream inputStream = new DataInputStream( socket.getInputStream());
 			id = inputStream.readInt();
+			
+			int playersCount = inputStream.readInt();
+			Player[] players = new Player[playersCount];
+			
+			int playerID;
+			byte[] playerNameBytes = new byte[20];
+			String playerName;
+			
+			for (int i = 0; i < playersCount; i++) {
+				playerID = inputStream.readInt();
+				inputStream.read(playerNameBytes, 0, 20);
+				playerName = new String(playerNameBytes);
+				Player player = new Player(playerID, playerName);
+				players[i] = player;
+			}
+			
+			ClientController.PlayerListReceived(players);
 			
 			StartReceivingMessages();
 			
@@ -168,8 +199,4 @@ public class Client {
 		return id;
 	}
 
-
-	public static Client getInstance() {
-	 return client;
-	}
 }

@@ -120,7 +120,6 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		} catch (IOException e) {
 			// should never reach this point!
 		}
-		System.out.println("Client " + id + " hat das Spiel verlassen.");
 	}
 	
 	public String get_Name() {
