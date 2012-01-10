@@ -100,6 +100,10 @@ public class Company {
 		return ressources.get(type);
 	}
 	
+	public Dictionary<RessourceType, Ressource> getAllRessources() {
+		return ressources;
+	}
+	
 	//Mitarbeiter
 	public List<Employee> getEmployee() {
 		return employee;
@@ -112,5 +116,7 @@ public class Company {
 	public void removeEmployee(Employee oldEmployee) {
 		employee.remove(oldEmployee);
 	}
+
+
 
 }

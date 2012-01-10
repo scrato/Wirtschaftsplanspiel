@@ -20,7 +20,7 @@ public abstract class CompanyController {
 	 * @param price Der Preis
 	 * @throws UserCanNotPayException
 	 */
-	public static void buyItem(double price) throws UserCanNotPayException{
+	public static void payItem(double price) throws UserCanNotPayException{
 		if(Company.getInstance().isLiquid(price))
 			throw new UserCanNotPayException();
 		Company.getInstance().decMoney(price);
@@ -56,7 +56,7 @@ public abstract class CompanyController {
 		//Sind nicht genug Rohstoffe da, hol einfach den Rest
 		if(res.getAvailableUnits() > amount)
 			amount = res.getAvailableUnits();
-			buyItem(amount * res.getPricePerUnit());
+			payItem(amount * res.getPricePerUnit());
 		
 	}
 
@@ -69,7 +69,7 @@ public abstract class CompanyController {
 		if (comp.getMachines().contains(machine)) {
 			throw new MachineAlreadyBoughtException();
 		}
-		buyItem(machine.getValue());
+		payItem(machine.getValue());
 		comp.addMachine(machine);
 	}
 	
@@ -115,23 +115,16 @@ public abstract class CompanyController {
 	
 	public void employSb(Employee newEmployee) throws UserCanNotPayException {
 		Company comp = Company.getInstance();
-			
-		if (comp.isLiquid(1000))		// habe jetzt mal angenommen jm einstellen kostet 1000 GE
-										// soll man wählen können welchem Mitarbeiter gekündigt werden soll?
-		{								// --> der der am längsten da ist kostet am meisten (Abfindung)
-			comp.addEmployee(newEmployee);
-			comp.decMoney(1000);
-		}
+			payItem(1000);  				// habe jetzt mal angenommen jm einstellen kostet 1000 GE
+			comp.addEmployee(newEmployee);	// soll man wählen können welchem Mitarbeiter gekündigt werden soll?
+											// --> der der am längsten da ist kostet am meisten (Abfindung)
 	}
 	
 	public void dismissSb(Employee oldEmployee) throws UserCanNotPayException { //wie kann ich entscheiden was für ein Typ eingestellt werden soll?
 		Company comp = Company.getInstance();
-		
-		if (comp.isLiquid(1000))
-		{
+			payItem(oldEmployee.getSeverancePay());
 			comp.removeEmployee(oldEmployee);
-			comp.decMoney(oldEmployee.getSeverancePay());
-		}
+		
 	}
 	
 }
