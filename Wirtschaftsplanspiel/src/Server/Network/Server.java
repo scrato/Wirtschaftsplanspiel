@@ -72,6 +72,26 @@ public class Server {
 				
 				outputStream = new DataOutputStream( newSocket.getOutputStream());
 				outputStream.writeInt(newID);
+				
+				//TODO playerList versenden.
+//				byte[] playerListBytes = new byte[24*clients.size()];
+				//int i = 0;
+				//byte[] playerIdBytes;
+				//String playerName;
+				//byte[] playerNameBytes;
+//				for (ClientHandler handler : clients.values()) {
+//					playerIdBytes = ByteConverter.toBytes(handler.get_ID());
+//					playerName = name;
+//					if (playerName.length() < 10) {
+//						int diff = 10 - playerName.length();
+//						for (int o = 0; o < diff; o++) {
+//							playerName = playerName + " ";
+//						}
+//					}
+//					playerNameBytes = playerName.getBytes();
+//					i++;
+//					
+//				}
 
 				newClient = new ClientHandler(newID, name, newSocket, this);
 				
