@@ -168,10 +168,14 @@ public class Server {
 				NetMessage sendMessage = new NetMessage(MessageType.CHATMESSAGE_TOCLIENT, sendBytes);
 				
 				lock_clients.acquireUninterruptibly();
-				for (ClientHandler client : clients.values()) {
-					client.SendMessage(sendMessage);
+				try {
+					for (ClientHandler client : clients.values()) {
+						client.SendMessage(sendMessage);
+					}
+				} catch (Exception e) {
+				} finally {
+					lock_clients.release();
 				}
-				lock_clients.release();
 				break;
 			}
 		}

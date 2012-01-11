@@ -96,10 +96,14 @@ public class ClientHandler implements Comparable<ClientHandler> {
 			System.arraycopy(NetMessage.MESSAGE_END_BYTES, 0, newMessage, 8 + message.get_Content().length, 4);
 			
 			lock_send.acquireUninterruptibly();
-			DataOutputStream stream = new DataOutputStream( socket.getOutputStream());
-			stream.write(newMessage);
-			lock_send.release();
-			
+			try {
+				DataOutputStream stream = new DataOutputStream( socket.getOutputStream());
+				stream.write(newMessage);
+			} catch (IOException e2) {
+				throw e2;
+			} finally {
+				lock_send.release();
+			}
 		} catch (IOException e) {
 			System.err.println("Nachricht an Client " + this.id + " konnte nicht versendet werden.");
 		}
