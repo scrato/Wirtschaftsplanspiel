@@ -48,7 +48,7 @@ public class MainWindow extends JFrame{
 	JList ListPlayers = new JList(listModel);
 	
 	
-	JTextArea chatOutput = new JTextArea(12,26);
+	JTextArea chatOutput = new JTextArea(19,25);
 	
 	// Singletonreferenz 
 	static MainWindow instance;
@@ -164,7 +164,7 @@ public class MainWindow extends JFrame{
 		sendbar.setBackground(Color.LIGHT_GRAY);		
 		chatOutput.setLineWrap(true);
 		chatOutput.setEditable(false);
-		sendbar.setPreferredSize(new Dimension(300, 260));
+		sendbar.setPreferredSize(new Dimension(290, 360));
 		sendbar.add(chatLabel);
 		sendbar.add(scrollPane);
 		sendbar.add(chatInput);
