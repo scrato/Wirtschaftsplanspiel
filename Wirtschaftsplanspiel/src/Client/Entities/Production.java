@@ -1,6 +1,7 @@
 package Client.Entities;
 
 import java.util.Dictionary;
+import java.util.Map;
 
 import Client.Application.NotEnoughMachinesException;
 import Client.Application.NotEnoughPersonalException;
@@ -12,10 +13,10 @@ public class Production {
 	public void enoughRessources(int units) throws NotEnoughRessourcesException
 	{
 			Company comp = Company.getInstance();
-		   Dictionary<RessourceType, Ressource> ressources = comp.getAllRessources();
+		   Map<RessourceType, Ressource> ressources = comp.getAllRessources();
 		   NotEnoughRessourcesException resExc = new NotEnoughRessourcesException();
-		   while(ressources.elements().hasMoreElements()){
-			   Ressource res = ressources.elements().nextElement();
+		   while(ressources.values().iterator().hasNext()){
+			   Ressource res = ressources.values().iterator().next();
 				//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Maschinen fehlen.
 			   int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getAvailableUnits();
 			   if (missingunits > 0)

@@ -1,8 +1,10 @@
 package Client.Entities;
 
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import Client.Entities.Ressource.RessourceType;
 
@@ -21,6 +23,7 @@ public class Company {
 		/* Falls ressources noch nicht gewählt ist, 
 		 * wird für jeden Ressourcetype ein Eintrag im Dictionary angelegt
 		 */
+		ressources = new HashMap<RessourceType, Ressource>();
 		for(RessourceType t:RessourceType.values()){
 			ressources.put(t, new Ressource(t, Ressource.getUnit(t)));
 		}
@@ -32,7 +35,7 @@ public class Company {
 	
 	//Hier liegen die Maschinen.
 	private List<Machine> machines = new LinkedList<Machine>();
-	private Dictionary<RessourceType, Ressource> ressources;
+	private Map<RessourceType, Ressource> ressources;
 	
 	//Hier sind die Mitarbeiter verwaltet
 	private List<Employee> employee = new LinkedList<Employee>();	
@@ -105,7 +108,7 @@ public class Company {
 		return ressources.get(type);
 	}
 	
-	public Dictionary<RessourceType, Ressource> getAllRessources() {
+	public Map<RessourceType, Ressource> getAllRessources() {
 		return ressources;
 	}
 	
