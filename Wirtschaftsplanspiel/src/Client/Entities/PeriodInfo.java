@@ -1,9 +1,10 @@
 package Client.Entities;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public  class PeriodInfo {
-   private  List<Period> periods;
+   private  List<Period> periods = new LinkedList<Period>();
    private int maxPeriods;
    private int actPeriod;
    
