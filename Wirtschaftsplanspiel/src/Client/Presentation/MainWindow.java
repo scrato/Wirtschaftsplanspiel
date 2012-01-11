@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public class MainWindow extends JFrame{
 		buildEast();
 		buildWest();
 		buildSouth();
-		waitForOtherPlayers();
+		//waitForOtherPlayers();
 	}
 	
 	
@@ -158,6 +160,7 @@ public class MainWindow extends JFrame{
 		
 		// Chat
 		chatInput.setPreferredSize(new Dimension(210, 30));
+		chatInput.addKeyListener(new chatKeyListener(Jsend));
 		sendbar.setBackground(Color.LIGHT_GRAY);		
 		chatOutput.setLineWrap(true);
 		chatOutput.setEditable(false);
@@ -248,6 +251,7 @@ public class MainWindow extends JFrame{
 	
 	public void addChatMessage(String message){
 		chatOutput.append(message + "\n"); 
+		chatOutput.setCaretPosition( chatOutput.getDocument().getLength());
 	}
 	
 	private class closeWindow implements ActionListener{
@@ -375,14 +379,45 @@ public class MainWindow extends JFrame{
 	
 	private class sendChatMessage implements ActionListener{
 		
-		JTextField s;
+		JTextField input;
+
 		
-		public sendChatMessage(JTextField s){
-			this.s = s;
+		public sendChatMessage(JTextField input){
+			this.input = input;
 		}
 		public void actionPerformed(ActionEvent arg0) {
-			ChatController.SendChatMessage(s.getText());
-			s.setText("");
+			ChatController.SendChatMessage(input.getText());
+			input.setText("");
+			chatOutput.setCaretPosition( chatOutput.getDocument().getLength());
+		}
+		
+	}
+	
+	private class chatKeyListener implements KeyListener{
+
+		JButton button;
+		
+		public chatKeyListener(JButton button){
+			this.button = button;
+		}
+		
+		@Override
+		public void keyPressed(KeyEvent arg0) {
+			if(arg0.getKeyCode() == 10){
+				button.doClick();
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 	}
