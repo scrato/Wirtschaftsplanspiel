@@ -169,15 +169,14 @@ public abstract class CompanyController {
 	
 	public static void employSb(Employee newEmployee) throws UserCanNotPayException {
 		Company comp = Company.getInstance();
-			payItem(1000);  				// habe jetzt mal angenommen jm einstellen kostet 1000 GE
-			comp.addEmployee(newEmployee);	// soll man wählen können welchem Mitarbeiter gekündigt werden soll?
-											// --> der der am längsten da ist kostet am meisten (Abfindung)
+		payItem(Employee.DISSMISSCOST);  	
+		comp.addEmployee(newEmployee);	
 	}
 	
-	public static void dismissSb(Employee oldEmployee) throws UserCanNotPayException { //wie kann ich entscheiden was für ein Typ eingestellt werden soll?
+	public static void dismissSb(Employee oldEmployee) throws UserCanNotPayException { 
 		Company comp = Company.getInstance();
-			payItem(oldEmployee.getSeverancePay());
-			comp.removeEmployee(oldEmployee);
+		payItem(oldEmployee.getSeverancePay());
+		comp.removeEmployee(oldEmployee);
 		
 	}
 	

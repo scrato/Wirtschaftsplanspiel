@@ -8,6 +8,8 @@ public class Employee
 		wage = Wage;		
 	}
 	
+	public static final double DISSMISSCOST = 1000d;
+	
 	private EmployeeType type;
 	private double wage;
 	private double severancePay;

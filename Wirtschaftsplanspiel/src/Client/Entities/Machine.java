@@ -2,12 +2,12 @@ package Client.Entities;
 
 public class Machine {
 
-	public Machine(MachineType Type, int Capacity, double Value, int Lifetime) {
+	public Machine(MachineType Type, int Capacity, double Value) { //, int Lifetime) {
 		type = Type;
 		capacity = Capacity;
 		initialValue = Value;
 		value = Value;
-		lifetime = Lifetime;		
+		//lifetime = Lifetime;
 	}
 	
 	private MachineType type;
@@ -15,8 +15,8 @@ public class Machine {
 	
 	private double initialValue;
 	private double value;
-	private int lifetime; 	// in years
-	private int age; 		// in years
+	private int lifetime = 5; 	// in years
+	private int age; 		    // in years
 	
 	public double deprecate() { // Abschreiben.		
 		age++;
@@ -47,6 +47,10 @@ public class Machine {
 	
 	public int getAge() {
 		return age;
+	}
+	
+	public int getRemaininTime() {
+		return lifetime - age;
 	}
 	
 }
