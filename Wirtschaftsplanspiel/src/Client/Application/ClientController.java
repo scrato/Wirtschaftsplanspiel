@@ -23,11 +23,11 @@ public abstract class ClientController {
 		System.arraycopy(content, 4, nameBytes, 0, 20);
 		String playerName = null;
 		try {
-			playerName = new String(nameBytes, "UTF-16");
+			playerName = new String(nameBytes, "UTF-16LE");
 		} catch (UnsupportedEncodingException e) {
 			// should never reach this point.
 		}
-		
+		playerName.trim();
 		new Player(playerID, playerName);
 		
 		MainWindow wind = MainWindow.getInstance();

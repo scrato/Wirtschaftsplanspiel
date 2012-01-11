@@ -17,15 +17,19 @@ public class TriggerBusinessLogicThread extends Thread {
 		switch (message.get_MessageType()) {
 			case MessageType.CHATMESSAGE_TOCLIENT: {
 				ChatController.ReceiveNetMessage(message);
+				break;
 			}
 			case MessageType.PLAYER_JOINED: {
 				ClientController.NewPlayerJoined(message);
+				break;
 			}
 			case MessageType.PLAYER_LEFT: {
 				ClientController.PlayerLeft(message);
+				break;
 			}
 			case MessageType.GAME_STARTED: {
 				ClientController.GameStartet();
+				break;
 			}
 		}
 	}
