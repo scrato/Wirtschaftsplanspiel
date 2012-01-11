@@ -111,38 +111,20 @@ public abstract class CompanyController {
 	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
 	    * @throws NotEnoughRessourcesException Wirft eine Exception, die die Information enthält, wieviele Units noch von welcher Ressource fehlen.
 	    * @throws NotEnoughMachinesException Wenn nicht genug Machinen eines Types für die Produktion da sind, wird diese Exception geworfen.
+	 * @throws NotEnoughPersonalException Wenn nicht genug Personal für die Produktion vorhanden ist, wird diese geworfen
 	    */
-	   public static void canProduce(int units) throws NotEnoughRessourcesException, NotEnoughMachinesException{
+	   public static void canProduce(int units) throws NotEnoughRessourcesException, NotEnoughMachinesException, NotEnoughPersonalException{
 		   Company comp = Company.getInstance();
 		   Production prod = comp.getProduction();
 		   
 		   //Ressourcen prüfen
-		   Dictionary<RessourceType, Ressource> ressources = comp.getAllRessources();
-		   NotEnoughRessourcesException resExc = new NotEnoughRessourcesException();
-		   while(ressources.elements().hasMoreElements()){
-			   Ressource res = ressources.elements().nextElement();
-				//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Maschinen fehlen.
-			   int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getAvailableUnits();
-			   if (missingunits > 0)
-				   resExc.addNewRessource(res.getType(), missingunits);
-		   }
-		   if(resExc.isFilled())
-			   throw resExc;
+		   prod.enoughRessources(units);
 		   
 		   //Maschinen prüfen
-		   NotEnoughMachinesException  macExc = new NotEnoughMachinesException();
-		   	for(MachineType type: MachineType.values()){
-		   		
-		   		//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Maschinen fehlen.
-		   		int missingunits = units - comp.getMachineCapacity(type);
-		   		if (missingunits > 0)
-		   			macExc.AddMachine(type, missingunits);
-		   	}
-		   	if(macExc.isFilled())
-		   		throw macExc;
+		   prod.enoughMachines(units);  	
 		   	
-		   	
-		   	//TODO: Personal prüfen
+		   	//Personal prüfen
+		   prod.enoughPersonal(units);
 	   }
 	   
 	   /**
@@ -150,8 +132,9 @@ public abstract class CompanyController {
 	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
 	    * @throws NotEnoughRessourcesException Wirft eine Exception, die die Information enthält, wieviele Units noch von welcher Ressource fehlen.
 	    * @throws NotEnoughMachinesException Wenn nicht genug Machinen eines Types für die Produktion da sind, wird diese Exception geworfen.
+	    * @throws NotEnoughPersonalException Wenn nicht genug Personal für die Produktion vorhanden ist, wird diese geworfen
 	    */
-	   public static void produce(int units) throws NotEnoughRessourcesException, NotEnoughMachinesException {
+	   public static void produce(int units, int priceperunit) throws NotEnoughRessourcesException, NotEnoughMachinesException, NotEnoughPersonalException {
 			canProduce(units);
 			Company comp = Company.getInstance();
 			Production prod = comp.getProduction();
@@ -159,7 +142,7 @@ public abstract class CompanyController {
 				comp.getRessource(t).decStoredUnits(units*Ressource.getNeed(t));
 			}
 			comp.incFinishedProducts(units);
-			
+			prod.setPricePerUnit(priceperunit);
 		}
 	
 	   //End of Produktionsabschnitt
