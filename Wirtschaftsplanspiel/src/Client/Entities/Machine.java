@@ -37,6 +37,10 @@ public class Machine {
 		return capacity;
 	}
 	
+	public double getInitialValue() {
+		return initialValue;
+	}
+	
 	public double getValue() {
 		return value;
 	}
