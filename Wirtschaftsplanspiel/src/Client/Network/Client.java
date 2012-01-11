@@ -61,7 +61,7 @@ public class Client {
 			//System.arraycopy(nameBytes, 0, nameMessage, 4, nameBytes.length);
 			
 			String sendName = StringOperation.padRight(name, 10);
-			byte[] sendNameBytes = sendName.getBytes("UTF-16");
+			byte[] sendNameBytes = sendName.getBytes("UTF-16LE");
 			
 			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
 			outputStream.write(sendNameBytes);
@@ -78,7 +78,7 @@ public class Client {
 			for (int i = 0; i < playersCount; i++) {
 				playerID = inputStream.readInt();
 				inputStream.read(playerNameBytes, 0, 20);
-				playerName = new String(playerNameBytes, "UTF-16");
+				playerName = new String(playerNameBytes, "UTF-16LE");
 				new Player(playerID, playerName);
 			}
 			

@@ -73,7 +73,7 @@ public class Server {
 				//name = new String(nameBytes);
 				inputStream.read(nameBytes, 0, 20);
 
-				name = new String(nameBytes, "UTF-16");
+				name = new String(nameBytes, "UTF-16LE");
 				
 				lock_clients.acquireUninterruptibly();
 				try {
@@ -99,7 +99,7 @@ public class Server {
 					for (ClientHandler handler : clients.values()) {
 						playerIdBytes = ByteConverter.toBytes(handler.get_ID());
 						playerName = StringOperation.padRight(name, 10);
-						playerNameBytes = playerName.getBytes("UTF-16");
+						playerNameBytes = playerName.getBytes("UTF-16LE");
 						
 						System.arraycopy(playerIdBytes, 0, playerListBytes, 4 + i * 24, 4);
 						System.arraycopy(playerNameBytes, 0, playerListBytes, 8 + i * 24, 20);
@@ -153,7 +153,7 @@ public class Server {
 				byte[] contentLength = ByteConverter.toBytes(message.get_Content().length);
 				byte[] nameBytes = null;
 				try {
-					nameBytes = sender.get_Name().getBytes("UTF-16");
+					nameBytes = sender.get_Name().getBytes("UTF-16LE");
 				} catch (UnsupportedEncodingException e) {
 					//should never reach this point.
 				}
