@@ -1,6 +1,7 @@
 package Client.Entities;
 
 
+
 public class Ressource {
 
 	/**
@@ -13,6 +14,29 @@ public class Ressource {
 		Color
 	}
 	
+	public static String getUnit(RessourceType type){
+		//TODO: Units aktuell halten
+		switch(type){
+		case Plastic:
+			return "g";
+		case Color:
+			return "ml";
+		default:
+			return "Einheiten";
+		}
+	}
+	
+	public static int getNeed(RessourceType type){
+		switch(type){
+		case Plastic:
+			return 300;
+		case Color:
+			return 200;
+		default:
+			//Typ wurde noch nicht
+			throw new UnsupportedOperationException();
+		}
+	}
 	
 
 private double pricePerUnit;
@@ -37,17 +61,7 @@ public double getPricePerUnit() {
 	return pricePerUnit;
 }
 
-public static String getUnit(RessourceType type){
-	//TODO: Units aktuell halten
-	switch(type){
-	case Plastic:
-		return "kg";
-	case Color:
-		return "l";
-	default:
-		return "Einheiten";
-	}
-}
+
 
 public RessourceType getType(){
 	return this.type;

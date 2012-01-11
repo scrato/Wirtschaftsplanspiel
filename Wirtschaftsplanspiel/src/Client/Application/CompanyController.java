@@ -1,5 +1,6 @@
 package Client.Application;
 
+import java.util.Dictionary;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
 import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
+import Client.Entities.Ressource.RessourceType;
 
 public abstract class CompanyController {
 	
@@ -18,7 +20,7 @@ public abstract class CompanyController {
 	 * Ein mitgegebener Preis wird vom Guthaben des Unternehmens abgezogen.
 	 * Sollte das Unternehmen nicht mehr liquide sein, wird eine UserCanNotPayException geworfen
 	 * @param price Der Preis
-	 * @throws UserCanNotPayException
+	 * @throws UserCanNotPayException Nutzer kann nicht zahlen
 	 */
 	public static void payItem(double price) throws UserCanNotPayException{
 		if(Company.getInstance().isLiquid(price))
@@ -30,7 +32,7 @@ public abstract class CompanyController {
 	
 	// Begin Ressource-Abschnitt
 	/**
-	 * Initialisiert die Ressource des mitgegebenen typs 
+	 * Initialisiert die Ressource des mitgegebenen typs (für neue Periode)
 	 * mit neuer Anzahl von vorhandenen Einheiten und dem Preis pro Einheit.
 	 * Verwendbar für Festlegung nach neuer Periode
 	 * @param type Der RessourceTyp der zu kaufenden Ressource
@@ -102,29 +104,84 @@ public abstract class CompanyController {
 	}
 	
 	//End of Machine-Abschnitt
-	
+	// ------------------------------------------------------------
 	//Begin Produktionsabschnitt
-	public static void produceGoods(int Count){
-		Production prod = Company.getInstance().getProduction();
-		//TODO: Produktion weiterprogrammieren
-	}
+	   /**
+	    * Prüft, ob die mitgegebene Menge an Einheiten produziert werden kann.
+	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
+	    * @throws NotEnoughRessourcesException Wirft eine Exception, die die Information enthält, wieviele Units noch von welcher Ressource fehlen.
+	    * @throws NotEnoughMachinesException Wenn nicht genug Machinen eines Types für die Produktion da sind, wird diese Exception geworfen.
+	    */
+	   public static void canProduce(int units) throws NotEnoughRessourcesException, NotEnoughMachinesException{
+		   Company comp = Company.getInstance();
+		   Production prod = comp.getProduction();
+		   
+		   //Ressourcen prüfen
+		   Dictionary<RessourceType, Ressource> ressources = comp.getAllRessources();
+		   NotEnoughRessourcesException resExc = new NotEnoughRessourcesException();
+		   while(ressources.elements().hasMoreElements()){
+			   Ressource res = ressources.elements().nextElement();
+				//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Maschinen fehlen.
+			   int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getAvailableUnits();
+			   if (missingunits > 0)
+				   resExc.addNewRessource(res.getType(), missingunits);
+		   }
+		   if(resExc.isFilled())
+			   throw resExc;
+		   
+		   //Maschinen prüfen
+		   NotEnoughMachinesException  macExc = new NotEnoughMachinesException();
+		   	for(MachineType type: MachineType.values()){
+		   		
+		   		//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Maschinen fehlen.
+		   		int missingunits = units - comp.getMachineCapacity(type);
+		   		if (missingunits > 0)
+		   			macExc.AddMachine(type, missingunits);
+		   	}
+		   	if(macExc.isFilled())
+		   		throw macExc;
+		   	
+		   	
+		   	//TODO: Personal prüfen
+	   }
+	   
+	   /**
+	    * Produziert die mitgegebene Anzahl an Fertigkprodukten
+	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
+	    * @throws NotEnoughRessourcesException Wirft eine Exception, die die Information enthält, wieviele Units noch von welcher Ressource fehlen.
+	    * @throws NotEnoughMachinesException Wenn nicht genug Machinen eines Types für die Produktion da sind, wird diese Exception geworfen.
+	    */
+	   public static void produce(int units) throws NotEnoughRessourcesException, NotEnoughMachinesException {
+			canProduce(units);
+			Company comp = Company.getInstance();
+			Production prod = comp.getProduction();
+			for(RessourceType t: Ressource.RessourceType.values()) {
+				comp.getRessource(t).decStoredUnits(units*Ressource.getNeed(t));
+			}
+			comp.incFinishedProducts(units);
+			
+		}
 	
-	//End of Produktionsabschnitt
+	   //End of Produktionsabschnitt
 	// ------------------------------------------------------------
 		//Begin of Employee-Abschnitt
 	
-	public void employSb(Employee newEmployee) throws UserCanNotPayException {
+	public static void employSb(Employee newEmployee) throws UserCanNotPayException {
 		Company comp = Company.getInstance();
 			payItem(1000);  				// habe jetzt mal angenommen jm einstellen kostet 1000 GE
 			comp.addEmployee(newEmployee);	// soll man wählen können welchem Mitarbeiter gekündigt werden soll?
 											// --> der der am längsten da ist kostet am meisten (Abfindung)
 	}
 	
-	public void dismissSb(Employee oldEmployee) throws UserCanNotPayException { //wie kann ich entscheiden was für ein Typ eingestellt werden soll?
+	public static void dismissSb(Employee oldEmployee) throws UserCanNotPayException { //wie kann ich entscheiden was für ein Typ eingestellt werden soll?
 		Company comp = Company.getInstance();
 			payItem(oldEmployee.getSeverancePay());
 			comp.removeEmployee(oldEmployee);
 		
 	}
 	
+	//End of Employee-Abschnitt
+	// -------------------------------------------------------------
+
+
 }

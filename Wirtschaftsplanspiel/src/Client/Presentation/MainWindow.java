@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import Client.Application.ChatController;
 import Client.Application.ClientController;
@@ -39,11 +40,13 @@ public class MainWindow extends JFrame{
 	
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
+	
+	// Playerliste
 	DefaultListModel listModel = new DefaultListModel();
 	JList ListPlayers = new JList(listModel);
 	
 	
-	JTextArea chatOutput = new JTextArea(9,26);
+	JTextArea chatOutput = new JTextArea(12,26);
 	
 	// Singletonreferenz 
 	static MainWindow instance;
@@ -133,9 +136,14 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void buildEast(){
-		east.setPreferredSize(new Dimension(300,(int)east.getSize().getHeight()));
-		east.setLayout(new GridLayout(3,1));
-						
+		
+		east.setBackground(Color.LIGHT_GRAY);
+		//east.setBorder(BorderFactory.createLineBorder(Color.black));
+		east.setPreferredSize(new Dimension(300, (int)east.getSize().getHeight()));
+		GridBagLayout layout = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
+		east.setLayout(layout);
+		
 		// UI-Elemente
 		JLabel imgBusinessBa = new JLabel(new ImageIcon(this.getClass().getResource("logo.png")));
 		JTextArea uebersicht = new JTextArea();
@@ -143,27 +151,48 @@ public class MainWindow extends JFrame{
 		JPanel sendbar = new JPanel();
 		JButton Jsend = new JButton("Send");
 		JLabel chatLabel = new JLabel("Chat");
+		JScrollPane scrollPane = new JScrollPane(chatOutput);
 							
 		uebersicht.setText("Bank \nForderungen \nVerbindlichkeiten \nGebäude");
 						
-		// Chat
-		chatInput.setPreferredSize(new Dimension(225, 30));	
 		
+		// Chat
+		chatInput.setPreferredSize(new Dimension(210, 30));
+		sendbar.setBackground(Color.LIGHT_GRAY);		
 		chatOutput.setLineWrap(true);
 		chatOutput.setEditable(false);
+		sendbar.setPreferredSize(new Dimension(300, 260));
 		sendbar.add(chatLabel);
-		sendbar.add(new JScrollPane(chatOutput));
+		sendbar.add(scrollPane);
 		sendbar.add(chatInput);
 		sendbar.add(Jsend);			
 			
 		// Listener
 		Jsend.addActionListener(new sendChatMessage(chatInput));
 						
+		// Übersicht Layout
+		uebersicht.setSize(200,200);
 		
-									
-		east.add(imgBusinessBa);
-		east.add(sendbar);
-		east.add(uebersicht);
+		uebersicht.validate();
+		uebersicht.repaint();
+						
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.ipady = 20;
+		east.add(imgBusinessBa, c);
+		
+		c.gridx = 0;
+		c.gridy = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		east.add(sendbar,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.insets = new Insets(10,10,0,5);  //top padding
+		east.add(uebersicht,c); 
 	}
 	
 	public void buildWest(){
@@ -197,7 +226,6 @@ public class MainWindow extends JFrame{
 		
 	}
 	
-
 	private void waitForOtherPlayers(){
 		west.setVisible(false);
 	}

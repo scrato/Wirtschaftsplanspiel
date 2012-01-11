@@ -9,10 +9,7 @@ import Client.Entities.Ressource.RessourceType;
 
 
 public class Company {
-	
 	private static Company company;
-	private static Production prod;
-	
 	public static Company getInstance(){
 		if (company != null)
 			return company;
@@ -31,6 +28,7 @@ public class Company {
 	
 	//Hier werden Variablen verwaltet
 	private double money;
+	private int finishedproducts;
 	
 	//Hier liegen die Maschinen.
 	private List<Machine> machines = new LinkedList<Machine>();
@@ -39,9 +37,15 @@ public class Company {
 	//Hier sind die Mitarbeiter verwaltet
 	private List<Employee> employee = new LinkedList<Employee>();	
 	
-	/*
-	 *  Prüft, ob das Unternehmen noch liquide Mittel zur Verfügung hat
-	 */	
+
+	public void incFinishedProducts(int prod){
+	finishedproducts -= prod;
+	}
+	
+	public int getFinishedProducts(){
+		return finishedproducts;
+	}
+	
 	public double getMoney(){
 		return this.money;
 	}
@@ -60,6 +64,7 @@ public class Company {
 			
 	}
 	//Produktion
+	private static Production prod;
 	public Production getProduction(){
 		if (prod != null)
 			return prod;
