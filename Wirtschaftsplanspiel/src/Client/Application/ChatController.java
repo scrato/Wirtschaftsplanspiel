@@ -1,5 +1,6 @@
 package Client.Application;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,7 +36,12 @@ public class ChatController {
 		
 		byte[] messageBytes = new byte[contentLength];
 		System.arraycopy(content, 4, messageBytes, 0, contentLength);
-		String message = new String(messageBytes);
+		String message = null;
+		try {
+			message = new String(messageBytes, "UTF-16");
+		} catch (UnsupportedEncodingException e) {
+			// should never reach this point.
+		}
 		
 		byte[] nameLengthBytes = new byte[4];
 		System.arraycopy(content, 4 + contentLength, nameLengthBytes, 0, 4);
@@ -43,7 +49,12 @@ public class ChatController {
 		
 		byte[] nameBytes = new byte[nameLength];
 		System.arraycopy(content, 8 + contentLength, nameBytes, 0, nameLength);
-		String name = new String(nameBytes);
+		String name = null;
+		try {
+			name = new String(nameBytes, "UTF-16");
+		} catch (UnsupportedEncodingException e) {
+			// should never reach this point.
+		}
 		
 		SimpleDateFormat format = new SimpleDateFormat("kk:mm");
 		String time = format.format(new Date());

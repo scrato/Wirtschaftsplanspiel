@@ -3,6 +3,7 @@ package Server.Network;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
@@ -71,7 +72,8 @@ public class Server {
 				//inputStream.read(nameBytes, 0, nameByteLength);
 				//name = new String(nameBytes);
 				inputStream.read(nameBytes, 0, 20);
-				name = new String(nameBytes);
+
+				name = new String(nameBytes, "UTF-16");
 				
 				lock_clients.acquireUninterruptibly();
 				try {
@@ -97,7 +99,7 @@ public class Server {
 					for (ClientHandler handler : clients.values()) {
 						playerIdBytes = ByteConverter.toBytes(handler.get_ID());
 						playerName = StringOperation.padRight(name, 10);
-						playerNameBytes = playerName.getBytes();
+						playerNameBytes = playerName.getBytes("UTF-16");
 						
 						System.arraycopy(playerIdBytes, 0, playerListBytes, 4 + i * 24, 4);
 						System.arraycopy(playerNameBytes, 0, playerListBytes, 8 + i * 24, 20);
@@ -149,7 +151,12 @@ public class Server {
 				System.out.println("Chatnachricht gesendet von Client " + sender.get_ID());
 				
 				byte[] contentLength = ByteConverter.toBytes(message.get_Content().length);
-				byte[] nameBytes = sender.get_Name().getBytes();
+				byte[] nameBytes = null;
+				try {
+					nameBytes = sender.get_Name().getBytes("UTF-16");
+				} catch (UnsupportedEncodingException e) {
+					//should never reach this point.
+				}
 				byte[] nameLength = ByteConverter.toBytes(nameBytes.length);
 				byte[] sendBytes = new byte[message.get_Content().length + 8 + nameBytes.length];
 				

@@ -1,5 +1,7 @@
 package Client.Application;
 
+import java.io.UnsupportedEncodingException;
+
 import Client.Entities.Player;
 import Client.Presentation.MainWindow;
 import NetworkCommunication.ByteConverter;
@@ -19,7 +21,12 @@ public abstract class ClientController {
 		int playerID = ByteConverter.toInt(idBytes);
 		byte[] nameBytes = new byte[20];
 		System.arraycopy(content, 4, nameBytes, 0, 20);
-		String playerName = new String(nameBytes);
+		String playerName = null;
+		try {
+			playerName = new String(nameBytes, "UTF-16");
+		} catch (UnsupportedEncodingException e) {
+			// should never reach this point.
+		}
 		
 		new Player(playerID, playerName);
 		
