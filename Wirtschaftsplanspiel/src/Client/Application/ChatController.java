@@ -64,7 +64,7 @@ public class ChatController {
 		SimpleDateFormat format = new SimpleDateFormat("kk:mm");
 		String time = format.format(new Date());
 		
-		String displayString = time + " " + name + "schreibt:\n" + message;
+		String displayString = time + " " + name + "\n" + message;
 		//send displayString to GUI.
 		MainWindow wind = MainWindow.getInstance();
 		wind.addChatMessage(displayString);
