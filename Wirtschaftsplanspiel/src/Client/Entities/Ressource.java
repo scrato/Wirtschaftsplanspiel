@@ -69,10 +69,12 @@ public RessourceType getType(){
 
 public void setPricePerUnit(double pricePerUnit) {
 	this.pricePerUnit = pricePerUnit;
+	
 }
 
 public int getStoredUnits() {
 	return storedUnits;
+	
 }
 
 public String getUnit(){
@@ -86,17 +88,19 @@ public String getUnit(){
  */
 public void incStoredUnits(int amount){
 	storedUnits += amount;
+	Company.getInstance().getActualPeriod().addBoughtRessource(this, amount);
 }
 
 public void decStoredUnits(int amount){
 	storedUnits -= amount;
+	Company.getInstance().getActualPeriod().addUsedRessource(this, amount);
 }
 
-public int getAvailableUnits() {
+public int getBuyableUnits() {
 	return availableUnits;
 }
 
-public void setAvailableUnits(int units){
+public void setBuyableUnits(int units){
 	availableUnits = units;
 }
 

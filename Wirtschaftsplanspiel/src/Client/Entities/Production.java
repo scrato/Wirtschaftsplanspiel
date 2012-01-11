@@ -30,7 +30,7 @@ public class Production {
 		for(RessourceType type: RessourceType.values()){
 			Ressource res = comp.getRessource(type);
 
-			int unitsWhichCanBeProduced = Ressource.getNeed(type) / res.getAvailableUnits();
+			int unitsWhichCanBeProduced = Ressource.getNeed(type) / res.getStoredUnits();
 			if (units > unitsWhichCanBeProduced)
 					units = unitsWhichCanBeProduced;
 		}

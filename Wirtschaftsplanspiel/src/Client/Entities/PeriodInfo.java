@@ -2,13 +2,12 @@ package Client.Entities;
 
 import java.util.List;
 
-public abstract class PeriodInfo {
+public  class PeriodInfo {
    private  List<Period> periods;
    private int maxPeriods;
    private int actPeriod;
    
-   public PeriodInfo(int maxPeriods){
-	   this.maxPeriods = maxPeriods;
+   public PeriodInfo(){
 	   this.actPeriod = 0;
 	   periods.add(new Period());
    }
@@ -22,19 +21,23 @@ public abstract class PeriodInfo {
    }
 
    public void nextPeriod(){
-	   incActPeriod();
+	   incNumberOfActPeriod();
 	   periods.add(new Period());
    }
 
    public int getMaxPeriods() {
 	return maxPeriods;
    }
+   
+   public void setMaxPeriods(int maxPeriods){
+	   this.maxPeriods = maxPeriods;
+   }
 
-   public int getActPeriod() {
+   public int getNumberOfActPeriod() {
 	return actPeriod;
 }
 
-   private void incActPeriod(){
+   private void incNumberOfActPeriod(){
 	actPeriod++;
    }
 	

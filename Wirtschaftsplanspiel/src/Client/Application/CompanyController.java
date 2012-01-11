@@ -42,7 +42,7 @@ public abstract class CompanyController {
 	 */
 	public static void initRessource(Ressource.RessourceType type, int availableUnits, double pricePerUnit){
 		Company comp = Company.getInstance();
-		comp.getRessource(type).setAvailableUnits(availableUnits);
+		comp.getRessource(type).setBuyableUnits(availableUnits);
 		comp.getRessource(type).setPricePerUnit(pricePerUnit);
 	}
 
@@ -57,8 +57,8 @@ public abstract class CompanyController {
 		Company comp = Company.getInstance();
 		Ressource res = comp.getRessource(type); 
 		//Sind nicht genug Rohstoffe da, hol einfach den Rest
-		if(res.getAvailableUnits() > amount)
-			amount = res.getAvailableUnits();
+		if(res.getBuyableUnits() > amount)
+			amount = res.getBuyableUnits();
 			payItem(amount * res.getPricePerUnit());
 		
 	}
@@ -141,7 +141,7 @@ public abstract class CompanyController {
 			   while(ressources.values().iterator().hasNext()){
 				   Ressource res = ressources.values().iterator().next();
 					//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Rohstoffe fehlen.
-				   int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getAvailableUnits();
+				   int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getStoredUnits();
 				   if (missingunits > 0)
 					   missingUnitPerRessource.put(res.getType(), missingunits);
 			   }
@@ -207,7 +207,6 @@ public abstract class CompanyController {
 		   }
 	   }
 	 
-	   
 	  //End of Produktionsabschnitt
 	// ------------------------------------------------------------
 		//Begin of Employee-Abschnitt
