@@ -50,4 +50,28 @@ public class Production {
 	public void setPricePerUnit(double price){
 		this.pricePerUnit = price;
 	}
+
+	public int getMaxProducableUnits() {
+		int units=Integer.MAX_VALUE;
+		Company comp = Company.getInstance();
+		
+		//Wieviel können mit den Ressourcen produziert werden
+		for(RessourceType type: RessourceType.values()){
+			Ressource res = comp.getRessource(type);
+
+			int unitsWhichCanBeProduced = Ressource.getNeed(type) / res.getAvailableUnits();
+			if (units > unitsWhichCanBeProduced)
+					units = unitsWhichCanBeProduced;
+		}
+		
+		//Wieviel können mit den Ressourcen produziert werden
+		for(MachineType type: MachineType.values()){
+			int unitsWhichCanBeProduced = comp.getMachineCapacity(type);
+			if (units > unitsWhichCanBeProduced)
+					units = unitsWhichCanBeProduced;
+		}
+		
+		//TODO: Wieviel können mit dem Person produziert werden
+		return units;
+	}
 }

@@ -128,7 +128,7 @@ public abstract class CompanyController {
 	   }
 	   
 	   /**
-	    * Produziert die mitgegebene Anzahl an Fertigkprodukten
+	    * Produziert die mitgegebene Anzahl an Fertigprodukten
 	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
 	    * @throws NotEnoughRessourcesException Wirft eine Exception, die die Information enthält, wieviele Units noch von welcher Ressource fehlen.
 	    * @throws NotEnoughMachinesException Wenn nicht genug Machinen eines Types für die Produktion da sind, wird diese Exception geworfen.
@@ -145,6 +145,24 @@ public abstract class CompanyController {
 			prod.setPricePerUnit(priceperunit);
 		}
 	
+	   /**
+	    * Produziert die maximale Menge an Fertigprodukten, sucht sich selbst wieviele Fertigprodukte er produzieren kannst
+	    * @param pricePerUnit
+	    */
+	   public static void produce(int pricePerUnit) 
+	   {
+		   
+		   Company comp = Company.getInstance();
+		   Production prod = comp.getProduction();
+		   int units = prod.getMaxProducableUnits();
+		   try{ 
+		   produce(units, pricePerUnit);
+		   }
+		   catch(ApplicationException appExc){
+			   //Falsche Zahl an priceperUnit wurde gefunden
+				throw new UnsupportedOperationException("Hier dürfte was an prod.GetMaxProducableUnits falsch sein");
+		   }
+	   }
 	   //End of Produktionsabschnitt
 	// ------------------------------------------------------------
 		//Begin of Employee-Abschnitt
