@@ -98,7 +98,7 @@ public class Server {
 					int i = 0;
 					for (ClientHandler handler : clients.values()) {
 						playerIdBytes = ByteConverter.toBytes(handler.get_ID());
-						playerName = StringOperation.padRight(name, 10);
+						playerName = StringOperation.padRight(handler.get_Name(), 10);
 						playerNameBytes = playerName.getBytes("UTF-16LE");
 						
 						System.arraycopy(playerIdBytes, 0, playerListBytes, 4 + i * 24, 4);
