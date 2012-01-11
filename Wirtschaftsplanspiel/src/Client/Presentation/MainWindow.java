@@ -95,6 +95,7 @@ public class MainWindow extends JFrame{
 		// Layout
 		this.setLayout(new BorderLayout() );
 		this.setSize(1200,768);
+		this.setMinimumSize(new Dimension(800,680));
 		this.add(north, BorderLayout.NORTH);
 		this.add(east, BorderLayout.EAST);
 		this.add(west, BorderLayout.WEST);
@@ -103,9 +104,32 @@ public class MainWindow extends JFrame{
 		lastUsed = center;
 		
 		// Willkommen Screen
-		center.add(new JLabel("Herzlich willkommen bei Business Basics!"));
+		center.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		JLabel welcome = new JLabel("Herzlich willkommen bei Business Basics!");
+		JLabel LabelActivePlayers = new JLabel("Zur Zeit sind folgende Spieler verbunden");
+		welcome.setFont(new Font("Dialog", 0, 20));
 		
-		center.add(ListPlayers);
+		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.ipady = 30;
+		center.add(welcome,c);
+		
+		
+		c.gridx = 0;
+		c.gridy = 1;
+		c.ipady = 20;
+		center.add(LabelActivePlayers, c);
+		
+		
+		ListPlayers.setFont(new Font("Dialog", 0,16));
+		ListPlayers.setBackground(Color.LIGHT_GRAY);
+		//ListPlayers.setPreferredSize( new Dimension((ListPlayers.getWidth()+200), (ListPlayers.getHeight()+200)));
+		c.gridy = 2;
+		c.gridx = 0;
+		c.ipady = 0;
+		center.add(ListPlayers,c);
 	}
 	
 	public void buildScreens(){
@@ -175,6 +199,7 @@ public class MainWindow extends JFrame{
 						
 		// Übersicht Layout
 		uebersicht.setSize(200,200);
+		uebersicht.setBackground(Color.LIGHT_GRAY);
 		
 		uebersicht.validate();
 		uebersicht.repaint();
