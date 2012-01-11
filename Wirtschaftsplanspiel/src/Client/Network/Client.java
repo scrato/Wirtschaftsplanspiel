@@ -63,6 +63,8 @@ public class Client {
 			String sendName = StringOperation.padRight(name, 10);
 			byte[] sendNameBytes = sendName.getBytes("UTF-16LE");
 			
+			name = name.trim();
+			
 			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
 			outputStream.write(sendNameBytes);
 			
@@ -79,6 +81,7 @@ public class Client {
 				playerID = inputStream.readInt();
 				inputStream.read(playerNameBytes, 0, 20);
 				playerName = new String(playerNameBytes, "UTF-16LE");
+				playerName = playerName.trim();
 				new Player(playerID, playerName);
 			}
 			
