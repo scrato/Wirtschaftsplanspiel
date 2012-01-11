@@ -1,8 +1,9 @@
 package Client.Application;
 
-import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import Client.Entities.Company;
 import Client.Entities.Machine;
@@ -109,33 +110,74 @@ public abstract class CompanyController {
 	   /**
 	    * Prüft, ob die mitgegebene Menge an Einheiten produziert werden kann.
 	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
-	    * @throws NotEnoughRessourcesException Wirft eine Exception, die die Information enthält, wieviele Units noch von welcher Ressource fehlen.
-	    * @throws NotEnoughMachinesException Wenn nicht genug Machinen eines Types für die Produktion da sind, wird diese Exception geworfen.
-	 * @throws NotEnoughPersonalException Wenn nicht genug Personal für die Produktion vorhanden ist, wird diese geworfen
 	    */
-	   public static void canProduce(int units) throws NotEnoughRessourcesException, NotEnoughMachinesException, NotEnoughPersonalException{
+	   public static boolean canProduce(int units){
 		   Company comp = Company.getInstance();
 		   Production prod = comp.getProduction();
+		   boolean canProduce = true;
 		   
 		   //Ressourcen prüfen
-		   prod.enoughRessources(units);
+		   if(!(missingRessources(units).isEmpty()))
+			   canProduce = false;
+		   	
 		   
 		   //Maschinen prüfen
-		   prod.enoughMachines(units);  	
+		   if(!(missingMachines(units).isEmpty()))
+				canProduce = false;
 		   	
 		   	//Personal prüfen
-		   prod.enoughPersonal(units);
+		   if(!(missingEmployees(units).isEmpty()))
+				canProduce = false;		   
+		   
+		   return canProduce;
 	   }
+	   
+		public static Map<RessourceType, Integer> missingRessources(int units) 
+		{
+				Company comp = Company.getInstance();
+			   Map<RessourceType, Ressource> ressources = comp.getAllRessources();
+			   Map<RessourceType, Integer> missingUnitPerRessource = new HashMap<RessourceType,Integer>();
+			   
+			   while(ressources.values().iterator().hasNext()){
+				   Ressource res = ressources.values().iterator().next();
+					//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Rohstoffe fehlen.
+				   int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getAvailableUnits();
+				   if (missingunits > 0)
+					   missingUnitPerRessource.put(res.getType(), missingunits);
+			   }
+			   return missingUnitPerRessource;
+		}
+	   
+		public static Map<MachineType, Integer> missingMachines(int units) 
+		{
+			Company comp = Company.getInstance();
+			Map<MachineType, Integer> missingUnitPerMachine = new HashMap<MachineType, Integer>();
+		   	for(MachineType type: MachineType.values()){
+		   		
+		   		//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Maschinen fehlen.
+		   		int missingunits = units - comp.getMachineCapacity(type);
+		   		if (missingunits > 0)
+		   			missingUnitPerMachine.put(type, missingunits);
+		   	}
+		   	return missingUnitPerMachine;	
+		}
+	 
+		public static Map<EmployeeType, Integer> missingEmployees(int units) 
+		{
+			//TODO: Prüfen, ob genug Personal für die Produktion vorhanden ist
+			throw new UnsupportedOperationException("Noch nicht implementiert");
+		}
 	   
 	   /**
 	    * Produziert die mitgegebene Anzahl an Fertigprodukten
-	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
-	    * @throws NotEnoughRessourcesException Wirft eine Exception, die die Information enthält, wieviele Units noch von welcher Ressource fehlen.
-	    * @throws NotEnoughMachinesException Wenn nicht genug Machinen eines Types für die Produktion da sind, wird diese Exception geworfen.
-	    * @throws NotEnoughPersonalException Wenn nicht genug Personal für die Produktion vorhanden ist, wird diese geworfen
+	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.	    
+	    * @throws CannotProduceException - Wenn nicht produziert werden kan, 
+	    * weil Maschinen/Employees/Ressources fehlen, wird diese Exception geworfen.
 	    */
-	   public static void produce(int units, int priceperunit) throws NotEnoughRessourcesException, NotEnoughMachinesException, NotEnoughPersonalException {
-			canProduce(units);
+	   public static void produce(int units, int priceperunit) throws CannotProduceException
+	   {
+			if(!(canProduce(units)))
+				throw new CannotProduceException();
 			Company comp = Company.getInstance();
 			Production prod = comp.getProduction();
 			for(RessourceType t: Ressource.RessourceType.values()) {
@@ -155,15 +197,18 @@ public abstract class CompanyController {
 		   Company comp = Company.getInstance();
 		   Production prod = comp.getProduction();
 		   int units = prod.getMaxProducableUnits();
-		   try{ 
+		   try
+		   {
 		   produce(units, pricePerUnit);
 		   }
-		   catch(ApplicationException appExc){
-			   //Falsche Zahl an priceperUnit wurde gefunden
-				throw new UnsupportedOperationException("Hier dürfte was an prod.GetMaxProducableUnits falsch sein");
+		   catch (ApplicationException ex)
+		   {
+			   throw new UnsupportedOperationException("In der getMaxProducableUnits ist was falsch.");
 		   }
 	   }
-	   //End of Produktionsabschnitt
+	 
+	   
+	  //End of Produktionsabschnitt
 	// ------------------------------------------------------------
 		//Begin of Employee-Abschnitt
 	

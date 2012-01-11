@@ -18,11 +18,11 @@ public class Credit {
 		//TODO: Sind Kreditvorraussetzungen so ok?
 		Client cli = Client.getInstance();
 		if (creditHeight > 100.000)
-			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeExceptionReason.CreditTooHigh);
+			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.CreditTooHigh);
 		if (contractPeriod > (cli.getMaxSessions() - cli.getActSessions()))
-			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeExceptionReason.PeriodLongerThanPlaytime);
+			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.PeriodLongerThanPlaytime);
 		if (contractPeriod > 10)
-			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeExceptionReason.PeriodTooLong);
+			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.PeriodTooLong);
 		
 	}
 }

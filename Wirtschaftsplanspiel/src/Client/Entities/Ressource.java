@@ -10,17 +10,17 @@ public class Ressource {
 	 *
 	 */
 	public enum RessourceType {
-		Plastic,
-		Color
+		Stockfisch,
+		Verpackungsmaterial
 	}
 	
 	public static String getUnit(RessourceType type){
 		//TODO: Units aktuell halten
 		switch(type){
-		case Plastic:
-			return "g";
-		case Color:
-			return "ml";
+		case Stockfisch:
+			return " Stück";
+		case Verpackungsmaterial:
+			return " Einheiten";
 		default:
 			return "Einheiten";
 		}
@@ -28,10 +28,10 @@ public class Ressource {
 	
 	public static int getNeed(RessourceType type){
 		switch(type){
-		case Plastic:
-			return 300;
-		case Color:
-			return 200;
+		case Stockfisch:
+			return 10;
+		case Verpackungsmaterial:
+			return 1;
 		default:
 			//Typ wurde noch nicht festeglegt;
 			throw new UnsupportedOperationException();
