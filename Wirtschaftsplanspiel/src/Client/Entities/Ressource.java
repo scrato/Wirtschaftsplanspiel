@@ -20,7 +20,7 @@ public class Ressource {
 		case Stockfisch:
 			return " Stück";
 		case Verpackungsmaterial:
-			return " Einheiten";
+			return " Dosen";
 		default:
 			return "Einheiten";
 		}

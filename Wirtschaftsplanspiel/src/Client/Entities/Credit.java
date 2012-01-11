@@ -4,6 +4,8 @@ import Client.Application.UnableToTakeCreditException;
 import Client.Network.Client;
 
 public class Credit {
+	
+	//TODO: Weiterbauen (Micha)
 	private double creditTaken;
 	private double creditPaidBack;
 	private double interestPercentage;
