@@ -96,10 +96,10 @@ public class MainWindow extends JFrame{
 		this.setLayout(new BorderLayout() );
 		this.setSize(1200,768);
 		this.setMinimumSize(new Dimension(800,680));
-		this.add(north, BorderLayout.NORTH);
+		//this.add(north, BorderLayout.NORTH);
 		this.add(east, BorderLayout.EAST);
 		this.add(west, BorderLayout.WEST);
-		this.add(south, BorderLayout.SOUTH);
+		//this.add(south, BorderLayout.SOUTH);
 		this.add(center, BorderLayout.CENTER);
 		lastUsed = center;
 		
@@ -107,7 +107,7 @@ public class MainWindow extends JFrame{
 		center.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		JLabel welcome = new JLabel("Herzlich willkommen bei Business Basics!");
-		JLabel LabelActivePlayers = new JLabel("Zur Zeit sind folgende Spieler verbunden");
+		JLabel LabelActivePlayers = new JLabel("Zur Zeit sind folgende Spieler verbunden:");
 		welcome.setFont(new Font("Dialog", 0, 20));
 		
 		
@@ -224,7 +224,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void buildWest(){
-		west.setLayout(new GridLayout(14,1));
+		west.setLayout(new GridLayout(18,1));
 		JLabel lMenue = new JLabel("Menü");
 		JButton werkstoffe = new JButton("Werkstoffe einkaufen");
 		JButton maschinen = new JButton("Maschinenverwaltung");
