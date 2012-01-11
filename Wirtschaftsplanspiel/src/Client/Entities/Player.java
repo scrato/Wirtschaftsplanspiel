@@ -26,7 +26,7 @@ public class Player {
 	
 	
 	//PlayerList
-	private static TreeMap<Integer, Player> playerDict;
+	private static TreeMap<Integer, Player> playerDict = new TreeMap<Integer, Player>();
 	
 	public static List<Player> getPlayers() {
 		List<Player> retList = new LinkedList<Player>();

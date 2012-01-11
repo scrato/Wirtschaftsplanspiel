@@ -1,9 +1,11 @@
 package NetworkCommunication;
 
+import java.io.UnsupportedEncodingException;
+
 public class ChatMessage extends NetMessage {
 
-	public ChatMessage(String Message, String Sender) {
-		super(MessageType.CHATMASSAGE_TOSERVER, Message.getBytes());
+	public ChatMessage(String Message, String Sender) throws UnsupportedEncodingException {
+		super(MessageType.CHATMASSAGE_TOSERVER, Message.getBytes("UFT16-LE"));
 		this.message = Message;
 		this.sender = Sender;
 	}

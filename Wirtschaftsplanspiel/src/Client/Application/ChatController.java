@@ -15,7 +15,12 @@ public class ChatController {
 
 	public static void SendChatMessage(String Message) throws RuntimeException {
 		try {
-			ChatMessage message = new ChatMessage(Message, "");
+			ChatMessage message = null;
+			try {
+				message = new ChatMessage(Message, "");
+			} catch (UnsupportedEncodingException e) {
+				// should never reach this point;
+			}
 			Client.getInstance().SendMessage(message);
 		}
 		catch (RuntimeException e) {
@@ -38,7 +43,7 @@ public class ChatController {
 		System.arraycopy(content, 4, messageBytes, 0, contentLength);
 		String message = null;
 		try {
-			message = new String(messageBytes, "UTF-16");
+			message = new String(messageBytes, "UTF-16LE");
 		} catch (UnsupportedEncodingException e) {
 			// should never reach this point.
 		}
@@ -51,7 +56,7 @@ public class ChatController {
 		System.arraycopy(content, 8 + contentLength, nameBytes, 0, nameLength);
 		String name = null;
 		try {
-			name = new String(nameBytes, "UTF-16");
+			name = new String(nameBytes, "UTF-16LE");
 		} catch (UnsupportedEncodingException e) {
 			// should never reach this point.
 		}
