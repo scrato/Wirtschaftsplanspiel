@@ -165,6 +165,10 @@ public abstract class CompanyController {
 	
 	//End of Employee-Abschnitt
 	// -------------------------------------------------------------
-
+	//Begin Darlehensabschnitt
+	public static void takeCredit(double heigh){
+		Company comp = Company.getInstance();
+		
+	}
 
 }
