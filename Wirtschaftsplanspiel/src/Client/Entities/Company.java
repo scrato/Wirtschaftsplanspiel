@@ -1,8 +1,9 @@
 package Client.Entities;
 
-import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import Client.Entities.Ressource.RessourceType;
 
@@ -21,9 +22,13 @@ public class Company {
 		/* Falls ressources noch nicht gewählt ist, 
 		 * wird für jeden Ressourcetype ein Eintrag im Dictionary angelegt
 		 */
+		ressources = new HashMap<RessourceType, Ressource>();
 		for(RessourceType t:RessourceType.values()){
 			ressources.put(t, new Ressource(t, Ressource.getUnit(t)));
 		}
+		
+		//TODO: Dynamische Lösung finden
+		periodInfo.setMaxPeriods(15);
 	}
 	
 	//Hier werden Variablen verwaltet
@@ -32,14 +37,15 @@ public class Company {
 	
 	//Hier liegen die Maschinen.
 	private List<Machine> machines = new LinkedList<Machine>();
-	private Dictionary<RessourceType, Ressource> ressources;
-	
-	//Hier sind die Mitarbeiter verwaltet
+	private Map<RessourceType, Ressource> ressources;
 	private List<Employee> employee = new LinkedList<Employee>();	
+	private PeriodInfo periodInfo = new PeriodInfo();
 	
 
 	public void incFinishedProducts(int prod){
-	finishedproducts -= prod;
+	finishedproducts += prod;
+	//Logging
+	periodInfo.getActualPeriod().incFinishedProducts(prod);
 	}
 	
 	public int getFinishedProducts(){
@@ -52,9 +58,13 @@ public class Company {
 	
 	public void incMoney(double amount){
 		money += amount;
+		//Logging
+		periodInfo.getActualPeriod().incEarnedMoney(amount);
 	}
 	public void decMoney(double amount){
 		money -= amount;
+		//Logging
+		periodInfo.getActualPeriod().incPaidMoney(amount);
 	}
 	
 	public boolean isLiquid(double amount) {
@@ -94,10 +104,14 @@ public class Company {
 	
 	public void addMachine(Machine machine) {
 		machines.add(machine);
+		//Logging
+		periodInfo.getActualPeriod().addBoughtMachine(machine);
 	}
 	
 	public void removeMachine(Machine machine) {
 		machines.remove(machine);
+		//Logging
+		periodInfo.getActualPeriod().addSoldMachine(machine);
 	}
    
 	//Ressourcen	
@@ -105,7 +119,7 @@ public class Company {
 		return ressources.get(type);
 	}
 	
-	public Dictionary<RessourceType, Ressource> getAllRessources() {
+	public Map<RessourceType, Ressource> getAllRessources() {
 		return ressources;
 	}
 	
@@ -116,12 +130,19 @@ public class Company {
 	
 	public void addEmployee(Employee newEmployee) {
 		employee.add(newEmployee);
+		//Logging
+		periodInfo.getActualPeriod().addHiredEmployee(newEmployee);
 	}
 	
 	public void removeEmployee(Employee oldEmployee) {
 		employee.remove(oldEmployee);
+		//Logging
+		periodInfo.getActualPeriod().addFiredEmployee(oldEmployee);
 	}
 
-
+	//Periodeninfo
+	public Period getActualPeriod(){
+		return periodInfo.getActualPeriod();
+	}
 
 }

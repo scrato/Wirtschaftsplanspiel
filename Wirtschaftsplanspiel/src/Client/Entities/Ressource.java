@@ -10,17 +10,17 @@ public class Ressource {
 	 *
 	 */
 	public enum RessourceType {
-		Plastic,
-		Color
+		Stockfisch,
+		Verpackungsmaterial
 	}
 	
 	public static String getUnit(RessourceType type){
 		//TODO: Units aktuell halten
 		switch(type){
-		case Plastic:
-			return "g";
-		case Color:
-			return "ml";
+		case Stockfisch:
+			return " Stück";
+		case Verpackungsmaterial:
+			return " Dosen";
 		default:
 			return "Einheiten";
 		}
@@ -28,10 +28,10 @@ public class Ressource {
 	
 	public static int getNeed(RessourceType type){
 		switch(type){
-		case Plastic:
-			return 300;
-		case Color:
-			return 200;
+		case Stockfisch:
+			return 10;
+		case Verpackungsmaterial:
+			return 1;
 		default:
 			//Typ wurde noch nicht festeglegt;
 			throw new UnsupportedOperationException();
@@ -69,10 +69,12 @@ public RessourceType getType(){
 
 public void setPricePerUnit(double pricePerUnit) {
 	this.pricePerUnit = pricePerUnit;
+	
 }
 
 public int getStoredUnits() {
 	return storedUnits;
+	
 }
 
 public String getUnit(){
@@ -86,17 +88,19 @@ public String getUnit(){
  */
 public void incStoredUnits(int amount){
 	storedUnits += amount;
+	Company.getInstance().getActualPeriod().addBoughtRessource(this, amount);
 }
 
 public void decStoredUnits(int amount){
 	storedUnits -= amount;
+	Company.getInstance().getActualPeriod().addUsedRessource(this, amount);
 }
 
-public int getAvailableUnits() {
+public int getBuyableUnits() {
 	return availableUnits;
 }
 
-public void setAvailableUnits(int units){
+public void setBuyableUnits(int units){
 	availableUnits = units;
 }
 

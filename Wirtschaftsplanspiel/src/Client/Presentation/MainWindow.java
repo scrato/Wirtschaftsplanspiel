@@ -16,7 +16,10 @@ import javax.swing.border.Border;
 
 import Client.Application.ChatController;
 import Client.Application.ClientController;
+import Client.Entities.Company;
+import Client.Entities.Machine;
 import Client.Entities.Player;
+import Client.Entities.MachineType;
 import Client.Network.Client;
 import NetworkCommunication.*;
 
@@ -134,14 +137,32 @@ public class MainWindow extends JFrame{
 	
 	public void buildScreens(){
 
+		GridBagConstraints c = new GridBagConstraints();
+		
 		// Werkstoffe
 		Pwerkstoffe.add(new JLabel("Werkstoffe einkaufen"));
 		Pwerkstoffe.add(new JButton("Werkstoffe einkaufen"));
 		
 		// Maschinen
-		Pmaschinen.add(new JLabel("Maschinen einkaufen und verkaufen"));
-		Pmaschinen.add(new JButton("Maschinen einkaufen"));
-		Pmaschinen.add(new JButton("Maschinen verkaufen"));
+		Company company = Company.getInstance();
+		company.addMachine(new Machine(MachineType.Filitiermaschine, 100, 2000.0));
+		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 240, 1000.0));
+		String[][] data = { {"A", "B" }, { "U", "V" } };
+		
+		JTable table = new JTable(10,10);
+		
+		
+		Pmaschinen.setLayout(new GridBagLayout());
+		c.gridx = 0;
+		c.gridy = 0;
+		Pmaschinen.add(new JLabel("Maschinen einkaufen und verkaufen"), c);
+		
+		c.gridx = 0;
+		c.gridy = 1;
+		Pmaschinen.add(table,c);
+		
+		Pmaschinen.add(new JButton("Einkaufen"));
+		Pmaschinen.add(new JButton("Verkaufen"));
 		
 		// Personal
 		Ppersonal.add(new JLabel("Personalverwaltung"));

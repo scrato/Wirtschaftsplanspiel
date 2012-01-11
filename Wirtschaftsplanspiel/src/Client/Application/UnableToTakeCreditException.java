@@ -7,14 +7,14 @@ public class UnableToTakeCreditException extends ApplicationException {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public enum TakeExceptionReason{
+	public enum TakeCreditReason{
 		CannotAffordPayBack,
 		CreditTooHigh,
 		PeriodLongerThanPlaytime,
 		PeriodTooLong
 	}
 	
-	public UnableToTakeCreditException(TakeExceptionReason reason){
+	public UnableToTakeCreditException(TakeCreditReason reason){
 		
 	}
 
