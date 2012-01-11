@@ -310,7 +310,7 @@ public class MainWindow extends JFrame{
 			 machine = machineItr.next();
 			 machineData[i][0] = machine.getType().toString();
 			 machineData[i][1] = ""+ machine.getCapacity();
-			 machineData[i][2] = ""; //machine.getInitialValue() + "";
+			 machineData[i][2] = machine.getInitialValue() + "";
 			 machineData[i][3] = machine.getRemaininTime()+ "";
 			 machineData[i][4] = machine.getValue() + "";
 			 i++;
