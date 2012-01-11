@@ -22,7 +22,15 @@ public class NotEnoughRessourcesException extends ApplicationException {
 		return !(missingUnits.isEmpty());
 	}
 	
+	/**
+	 * 
+	 * @param type
+	 * @return Die Anzahl der fehlenden Einheiten / Ist missingUnit nicht enthälten wird -1 zurückgegeben
+	 */
 	public int getMissingUnits(RessourceType type) {
-		return missingUnits.get(type);
+		if(missingUnits.containsKey(type))
+			return missingUnits.get(type);
+		
+		return -1;
 	}
 }

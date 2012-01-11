@@ -33,7 +33,7 @@ public class Ressource {
 		case Color:
 			return 200;
 		default:
-			//Typ wurde noch nicht
+			//Typ wurde noch nicht festeglegt;
 			throw new UnsupportedOperationException();
 		}
 	}
