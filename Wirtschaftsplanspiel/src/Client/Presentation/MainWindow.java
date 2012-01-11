@@ -13,6 +13,8 @@ import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import Client.Application.ChatController;
 import Client.Application.ClientController;
@@ -147,10 +149,29 @@ public class MainWindow extends JFrame{
 		Company company = Company.getInstance();
 		company.addMachine(new Machine(MachineType.Filitiermaschine, 100, 2000.0));
 		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 240, 1000.0));
-		String[][] data = { {"A", "B" }, { "U", "V" } };
 		
-		JTable table = new JTable(10,10);
+		DefaultTableModel tabModel = new DefaultTableModel();
+		String[] columnNames = {"Typ", "Kapazität", "Anschaffungswert", "Restlaufzeit", "Restwert"};
+		JTable table;
+		Object[][] data2 =  new String[company.getMachines().size()][5];
+			
+				
+		Iterator<Machine> machineItr = company.getMachines().iterator();
+		Machine machine;
+		int i = 0;
+		while(machineItr.hasNext()){
+			 machine = machineItr.next();
+			 data2[i][0] = machine.getType().toString();
+			 data2[i][1] = ""+ machine.getCapacity();
+			 data2[i][2] = machine.getInitialValue() + "";
+			 data2[i][3] = machine.getRemaininTime()+ "";
+			 data2[i][4] = machine.getValue() + "";
+			 i++;
+		}
 		
+		tabModel = new DefaultTableModel(data2, columnNames);
+		table = new JTable(tabModel);
+		JScrollPane scrollPane = new JScrollPane(table);
 		
 		Pmaschinen.setLayout(new GridBagLayout());
 		c.gridx = 0;
@@ -159,10 +180,10 @@ public class MainWindow extends JFrame{
 		
 		c.gridx = 0;
 		c.gridy = 1;
-		Pmaschinen.add(table,c);
+		Pmaschinen.add(scrollPane,c);
 		
-		Pmaschinen.add(new JButton("Einkaufen"));
-		Pmaschinen.add(new JButton("Verkaufen"));
+		//Pmaschinen.add(new JButton("Einkaufen"));
+		//Pmaschinen.add(new JButton("Verkaufen"));
 		
 		// Personal
 		Ppersonal.add(new JLabel("Personalverwaltung"));
