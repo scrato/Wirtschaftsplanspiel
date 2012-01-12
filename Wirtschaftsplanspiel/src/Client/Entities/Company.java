@@ -144,5 +144,9 @@ public class Company {
 	public Period getActualPeriod(){
 		return periodInfo.getActualPeriod();
 	}
+	
+	public PeriodInfo getPeriodInfo(){
+		return periodInfo;
+	}
 
 }

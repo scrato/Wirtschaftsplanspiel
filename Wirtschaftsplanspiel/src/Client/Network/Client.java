@@ -21,31 +21,7 @@ public class Client {
 	public static Client getInstance() {
 		 return client;
 	}
-	
-	
-	//Anzahl der Spielrunden
-	private int MaxSessions;
-	public int getMaxSessions() {
-		return MaxSessions;
-	}
-	public void setMaxSessions(int maxSessions) {
-		MaxSessions = maxSessions;
-	}
-	
-	// In welcher Runde befinden wir uns?
-	private int actSessions;
-	/**
-	 * 
-	 * @return Die Runde, in der wir uns gerade befinden
-	 */
-	public int getActSessions() {
-		return actSessions;
-	}
-	
-	//TODO: Bei Rundenende muss hier das erhöht werden
-	public void incActSession(){
-		this.actSessions ++;
-	}
+
 	
 	private String name;
 	private Integer id;
@@ -114,8 +90,6 @@ public class Client {
 			
 			StartReceivingMessages();
 			
-			//TODO: Server broadcastet die maximalen Spielrunden
-			this.MaxSessions = 14;
 			client = this; // static member for GetInstance
 		} catch (IOException e) {
 			throw new RuntimeException("Verbindung konnte nicht hergestellt werden.");

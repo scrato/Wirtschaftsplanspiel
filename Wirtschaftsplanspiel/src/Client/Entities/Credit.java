@@ -7,7 +7,7 @@ public class Credit {
 	
 	//TODO: Weiterbauen (Micha)
 	private double creditTaken;
-	private double creditPaidBack;
+	private double creditPayBack;
 	private double interestPercentage;
 	
 	public Credit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException{
@@ -18,10 +18,11 @@ public class Credit {
 
 	private void CanTakeCredit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException {
 		//TODO: Sind Kreditvorraussetzungen so ok?
-		Client cli = Client.getInstance();
-		if (creditHeight > 100.000)
+		Company comp = Company.getInstance();
+		PeriodInfo perInf = comp.getPeriodInfo();
+		if (creditHeight > 900000)
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.CreditTooHigh);
-		if (contractPeriod > (cli.getMaxSessions() - cli.getActSessions()))
+		if (contractPeriod > (perInf.getMaxPeriods()- perInf.getNumberOfActPeriod()))
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.PeriodLongerThanPlaytime);
 		if (contractPeriod > 10)
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.PeriodTooLong);
