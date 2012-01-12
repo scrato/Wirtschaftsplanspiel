@@ -236,7 +236,13 @@ public abstract class CompanyController {
 		comp.setCredit(credit);
 	}
 	
-	public static void payCreditAmortisation(){
+	public static void payCreditAmortisation() throws UserCanNotPayException{
+		Company comp = Company.getInstance();
+		Credit cred = comp.getCredit();
+		payItem(cred.getAnuity());
+		//Wenn Credit abbezahlt
+		if(cred.payAmortisation())
+			comp.removeCredit();
 		
 	}
 

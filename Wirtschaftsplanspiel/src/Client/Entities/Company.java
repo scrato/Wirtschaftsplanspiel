@@ -169,4 +169,9 @@ public class Company {
 		periodInfo.getActualPeriod().addTakenCredit(cred);
 	}
 
+	public void removeCredit() {
+		actCredit = null;
+		
+	}
+
 }

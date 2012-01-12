@@ -1,26 +1,48 @@
 package Client.Entities;
 
+import Client.Application.CompanyController;
 import Client.Application.UnableToTakeCreditException;
+import Client.Application.UserCanNotPayException;
 import Client.Network.Client;
 
 public class Credit {
 	
 	//TODO: Weiterbauen (Micha)
-	private double creditTaken;
-	private double creditPayBack;
+	private double creditLeft;
+	private double anuity;
+	
 	private int contractPeriod;
+	
 	private double interestPercentage;
-	private double baseInterestPercentage = 0.5;
+	private double baseInterestPercentage = 5;
 	
 	public Credit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException{
-		this.interestPercentage = (contractPeriod * baseInterestPercentage) + 5;
-		this.creditTaken = creditHeight;
+		//Dynamische Anpassung des Zinsatzes -> (Laufzeit * 0,5) + Basissatz von 5%... heißt Kredit über 10 Jahre hat 10% Zinsen 
+		this.interestPercentage = (contractPeriod * 0.5) + baseInterestPercentage;
+		this.creditLeft = creditHeight;
+		this.contractPeriod = contractPeriod;
+		setAnuity(creditHeight);
 		CanTakeCredit(creditHeight, contractPeriod);
+	}
+
+	/**
+	 * Setzt die Annuität (periodische Abzugsrate) gemäß folgender Logik:
+	 * Jahreswert: K * ((q^n)*(q-1))/((q^n)-1)
+	 * 
+	 * K -> Barwert des Darlehens
+	 * q -> Zinsatz + 1 (100% + Zinssatz) 
+	 * n -> Laufzeit des Darlehens pro Periode
+	 * @param creditHeight -> K
+	 * @param contractPeriod -> n
+	 */
+	private void setAnuity(double creditHeight) {
+		
+		this.anuity = creditHeight * (Math.pow(1+interestPercentage,contractPeriod)*interestPercentage)/(Math.pow(1+interestPercentage,contractPeriod)-1);
 	}
 
 	public Credit(double creditHeight, int contractPeriod, double baseInterestPercentage) throws UnableToTakeCreditException{
 		this.interestPercentage = (contractPeriod * baseInterestPercentage) + 5;
-		this.creditTaken = creditHeight;
+		this.creditLeft = creditHeight;
 		CanTakeCredit(creditHeight, contractPeriod);
 		this.baseInterestPercentage = baseInterestPercentage;
 	}
@@ -38,5 +60,26 @@ public class Credit {
 		
 	}
 
-
+	/**
+	 * Senkt den genommenen Kredit um die errechnete Tilgung und gibt zurück ob die Gesamtsumme getilgt wurde
+	 * @return true => Kredit wurde vollständig zurückbezahlt
+	 */
+	public boolean payAmortisation(){
+		double amortisation = (anuity - (creditLeft * interestPercentage));
+		if(amortisation >= creditLeft){
+			creditLeft = 0;
+			return true;
+		}
+		
+		creditLeft -= amortisation;
+		return false;
+	}
+	
+	/**
+	 * Gibt den zu zahlenen Betrag (Anuität) zurück
+	 * @return Anuität
+	 */
+	public double getAnuity(){
+		return anuity;
+	}
 }
