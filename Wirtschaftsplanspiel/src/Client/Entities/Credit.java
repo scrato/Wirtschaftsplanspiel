@@ -1,9 +1,6 @@
 package Client.Entities;
 
-import Client.Application.CompanyController;
-import Client.Application.UnableToTakeCreditException;
-import Client.Application.UserCanNotPayException;
-import Client.Network.Client;
+	import Client.Application.UnableToTakeCreditException;
 
 public class Credit {
 	
@@ -14,11 +11,11 @@ public class Credit {
 	private int contractPeriod;
 	
 	private double interestPercentage;
-	private double baseInterestPercentage = 5;
+	private double baseInterestInPercent = 5;
 	
 	public Credit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException{
 		//Dynamische Anpassung des Zinsatzes -> (Laufzeit * 0,5) + Basissatz von 5%... heißt Kredit über 10 Jahre hat 10% Zinsen 
-		this.interestPercentage = (contractPeriod * 0.5) + baseInterestPercentage;
+		this.interestPercentage = ((contractPeriod * 0.5) + baseInterestInPercent) / 100;
 		this.creditLeft = creditHeight;
 		this.contractPeriod = contractPeriod;
 		setAnuity(creditHeight);
@@ -40,11 +37,11 @@ public class Credit {
 		this.anuity = creditHeight * (Math.pow(1+interestPercentage,contractPeriod)*interestPercentage)/(Math.pow(1+interestPercentage,contractPeriod)-1);
 	}
 
-	public Credit(double creditHeight, int contractPeriod, double baseInterestPercentage) throws UnableToTakeCreditException{
-		this.interestPercentage = (contractPeriod * baseInterestPercentage) + 5;
+	public Credit(double creditHeight, int contractPeriod, double baseInterestInPercent) throws UnableToTakeCreditException{
+		this.interestPercentage = ((contractPeriod * 0.5) + baseInterestInPercent) / 100;
 		this.creditLeft = creditHeight;
 		CanTakeCredit(creditHeight, contractPeriod);
-		this.baseInterestPercentage = baseInterestPercentage;
+		this.baseInterestInPercent = baseInterestInPercent;
 	}
 	
 	private void CanTakeCredit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException {
@@ -66,7 +63,7 @@ public class Credit {
 	 */
 	public boolean payAmortisation(){
 		double amortisation = (anuity - (creditLeft * interestPercentage));
-		if(amortisation >= creditLeft){
+		if((int) amortisation >=  (int) creditLeft - 1){
 			creditLeft = 0;
 			return true;
 		}

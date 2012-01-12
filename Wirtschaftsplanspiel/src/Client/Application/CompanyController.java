@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import Client.Entities.Company;
+import Client.Entities.Credit;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
 import Client.Entities.Production;
@@ -14,7 +15,6 @@ import Client.Application.UserCanNotPayException;
 import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
 import Client.Entities.Ressource.RessourceType;
-import Client.Entities.Credit;
 
 public abstract class CompanyController {
 	
@@ -25,7 +25,7 @@ public abstract class CompanyController {
 	 * @throws UserCanNotPayException Nutzer kann nicht zahlen
 	 */
 	public static void payItem(double price) throws UserCanNotPayException{
-		if(Company.getInstance().isLiquid(price))
+		if(Company.getInstance().isLiquid(price) == false)
 			throw new UserCanNotPayException();
 		Company.getInstance().decMoney(price);
 	}
@@ -232,8 +232,10 @@ public abstract class CompanyController {
 		Company comp = Company.getInstance();
 		if(comp.creditExist())
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.CreditAlreadyExists);
+		
 		Credit credit = new Credit(height, periods);
 		comp.setCredit(credit);
+		comp.incMoney(height);
 	}
 	
 	public static void payCreditAmortisation() throws UserCanNotPayException{
