@@ -16,7 +16,10 @@ public class Period {
 	private List<Machine> boughtMachines = new LinkedList<Machine>();
 	private List<Employee> firedEmployees = new LinkedList<Employee>();
 	private List<Machine> soldMachines = new LinkedList<Machine>();
-	private List<Credit> takenCredits = new LinkedList<Credit>();
+	private double deprecationValue;
+	private Credit takenCredit;
+	private Credit paidCredit;
+	private double interestPayment;
 	
 	public double getEarnedMoney() {
 		return earnedMoney;
@@ -43,9 +46,6 @@ public class Period {
 		this.finishedProducts += finishedProducts;
 	}
 	
-	public void deccFinishedProducts(int finishedProducts) {
-		this.finishedProducts -= finishedProducts;
-	}
 	
 	
 	public double getPricePerFinishedProduct() {
@@ -56,6 +56,8 @@ public class Period {
 	}
 	
 	
+	
+	//Ressource-Abschnitt
 	public Map<Ressource, Integer> getBoughtRessources() {
 		return boughtRessources;
 	}
@@ -70,6 +72,7 @@ public class Period {
 		this.usedRessources.put(res, count);
 	}
 	
+	//Employee-Abschnitt
 	public List<Employee> getHiredEmployees() {
 		return hiredEmployees;
 	}
@@ -80,14 +83,7 @@ public class Period {
 		this.hiredEmployees.add(emp);
 	}
 	
-	public List<Machine> getBoughtMachines() {
-		return boughtMachines;
-	}
-	public void addBoughtMachine(Machine mach) {
-		this.boughtMachines.add(mach);
-	}
-	
-	
+
 	public List<Employee> getFiredEmployees() {
 		return firedEmployees;
 	}
@@ -98,18 +94,53 @@ public class Period {
 		this.firedEmployees.add(emp);
 	}
 	
+	//Machine-Abschnitt
+	public List<Machine> getBoughtMachines() {
+		return boughtMachines;
+	}
+	public void addBoughtMachine(Machine mach) {
+		this.boughtMachines.add(mach);
+	}
+	
+	
 	public List<Machine> getSoldMachines() {
 		return soldMachines;
 	}
 	public void addSoldMachine(Machine mach) {
 	soldMachines.add(mach);
 	}
-
-	public List<Credit> getTakenCredits() {
-		return takenCredits;
+	
+	public void setDeprecation(double value){
+		deprecationValue = value;
+	}
+	
+	public double getDeprecation(){
+		return deprecationValue;
+	}
+	
+	//Credit-Abschnitt
+	public Credit getTakenCredit() {
+		return takenCredit;
 	}
 	public void addTakenCredit(Credit cred) {
-	takenCredits.add(cred);
+	takenCredit = cred;
+	}
+	
+	public Credit getPaidCredit() {
+		return paidCredit;
+	}
+	public void addPaidCredit(Credit cred) {
+	paidCredit = cred;
+	}
+
+	public void setInterestPayment(double interestPayment) {
+		this.interestPayment = interestPayment;
+		
+	}
+	
+	public double getInterestPayment() {
+		return interestPayment;
+		
 	}
 
 }

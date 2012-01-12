@@ -4,7 +4,6 @@ package Client.Entities;
 
 public class Credit {
 	
-	//TODO: Weiterbauen (Micha)
 	private double creditLeft;
 	private double anuity;
 	
@@ -62,7 +61,11 @@ public class Credit {
 	 * @return true => Kredit wurde vollständig zurückbezahlt
 	 */
 	public boolean payAmortisation(){
-		double amortisation = (anuity - (creditLeft * interestPercentage));
+		double interestPayment = (creditLeft * interestPercentage);
+		//Logging
+		Company.getInstance().getActualPeriod().setInterestPayment(interestPayment);
+		
+		double amortisation = (anuity - interestPayment);
 		if((int) amortisation >=  (int) creditLeft - 1){
 			creditLeft = 0;
 			return true;
@@ -79,4 +82,9 @@ public class Credit {
 	public double getAnuity(){
 		return anuity;
 	}
+
+	public double getCreditLeft() {
+		return creditLeft;
+	}
+
 }

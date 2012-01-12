@@ -18,13 +18,26 @@ public class Ressource {
 		//TODO: Units aktuell halten
 		switch(type){
 		case Stockfisch:
-			return " Stück";
+			return " Kilo";
 		case Verpackungsmaterial:
-			return " Dosen";
+			return " Tonnen";
 		default:
-			return "Einheiten";
+			return " Einheiten";
 		}
 	}
+	
+	public static double getFixedCosts(RessourceType type){
+		switch(type){
+		case Stockfisch:
+			return 125.00;
+		case Verpackungsmaterial:
+			return 100;
+		default:
+			//Typ wurde noch nicht festeglegt;
+			throw new UnsupportedOperationException();
+		}
+	}
+	
 	
 	public static int getNeed(RessourceType type){
 		switch(type){
@@ -42,8 +55,8 @@ public class Ressource {
 private double pricePerUnit;
 private String unit;
 private RessourceType type;
-private int storedUnits;
-private int availableUnits;
+private int storedUnits = 0;
+private int availableUnits = 0;
 
 /**
  * Konstruktor für einen neuen Typ, wird nur von getInstance benutzt.
@@ -88,12 +101,31 @@ public String getUnit(){
  */
 public void incStoredUnits(int amount){
 	storedUnits += amount;
-	Company.getInstance().getActualPeriod().addBoughtRessource(this, amount);
+	
+	
+	//Logging
+	Period p = Company.getInstance().getActualPeriod();
+	
+	Ressource res = new Ressource(this.type, getUnit(this.type));
+	res.setPricePerUnit(this.getPricePerUnit());
+	res.incStoredUnits(this.getStoredUnits());
+	
+	p.addBoughtRessource(this, p.getBoughtRessources().get(res) + amount);
 }
 
 public void decStoredUnits(int amount){
 	storedUnits -= amount;
-	Company.getInstance().getActualPeriod().addUsedRessource(this, amount);
+	
+	//Logging
+	
+	Period p = Company.getInstance().getActualPeriod();
+	
+	Ressource res = new Ressource(this.type, getUnit(this.type));
+	res.setPricePerUnit(this.getPricePerUnit());
+	res.incStoredUnits(this.getStoredUnits());
+	
+		p.addUsedRessource(this, p.getUsedRessources().get(res) + amount);
+
 }
 
 public int getBuyableUnits() {

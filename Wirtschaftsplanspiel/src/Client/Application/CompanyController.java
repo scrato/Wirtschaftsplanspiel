@@ -60,7 +60,7 @@ public abstract class CompanyController {
 		//Sind nicht genug Rohstoffe da, hol einfach den Rest
 		if(res.getBuyableUnits() > amount)
 			amount = res.getBuyableUnits();
-			payItem(amount * res.getPricePerUnit());
+			payItem((amount * res.getPricePerUnit()) + Ressource.getFixedCosts(res.getType()) );
 		
 	}
 
@@ -102,6 +102,7 @@ public abstract class CompanyController {
 		for (Machine machine : deprecatedMachines) {
 			comp.removeMachine(machine);
 		}
+		comp.getActualPeriod().setDeprecation(deprecation);
 		return deprecation;
 	}
 	
@@ -208,6 +209,8 @@ public abstract class CompanyController {
 		   }
 	   }
 	 
+	   
+	   
 	  //End of Produktionsabschnitt
 	// ------------------------------------------------------------
 		//Begin of Employee-Abschnitt
