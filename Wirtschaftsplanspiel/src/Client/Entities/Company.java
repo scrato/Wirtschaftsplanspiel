@@ -40,6 +40,7 @@ public class Company {
 	private Map<RessourceType, Ressource> ressources;
 	private List<Employee> employee = new LinkedList<Employee>();	
 	private PeriodInfo periodInfo = new PeriodInfo();
+	private Credit actCredit;
 	
 
 	public void incFinishedProducts(int prod){
@@ -147,6 +148,25 @@ public class Company {
 	
 	public PeriodInfo getPeriodInfo(){
 		return periodInfo;
+	}
+	
+	//Credit
+	/**
+	 * Gibt den aktuellen Credit zurück.
+	 * Achtung: Wenn kein Credit gesetzt wird, kommt null zurück!
+	 */
+	public Credit getCredit(){
+		return actCredit;
+	}
+	
+	public boolean creditExist(){
+		return (actCredit != null);
+	}
+	
+	public void setCredit(Credit cred){
+		actCredit = cred;
+		//Logging
+		periodInfo.getActualPeriod().addTakenCredit(cred);
 	}
 
 }

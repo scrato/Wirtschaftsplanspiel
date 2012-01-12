@@ -14,6 +14,7 @@ import Client.Application.UserCanNotPayException;
 import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
 import Client.Entities.Ressource.RessourceType;
+import Client.Entities.Credit;
 
 public abstract class CompanyController {
 	
@@ -227,8 +228,15 @@ public abstract class CompanyController {
 	//End of Employee-Abschnitt
 	// -------------------------------------------------------------
 	//Begin Darlehensabschnitt
-	public static void takeCredit(double heigh){
+	public static void takeCredit(double height, int periods) throws UnableToTakeCreditException{
 		Company comp = Company.getInstance();
+		if(comp.creditExist())
+			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.CreditAlreadyExists);
+		Credit credit = new Credit(height, periods);
+		comp.setCredit(credit);
+	}
+	
+	public static void payCreditAmortisation(){
 		
 	}
 

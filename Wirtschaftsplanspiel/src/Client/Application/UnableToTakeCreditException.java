@@ -11,7 +11,8 @@ public class UnableToTakeCreditException extends ApplicationException {
 		CannotAffordPayBack,
 		CreditTooHigh,
 		PeriodLongerThanPlaytime,
-		PeriodTooLong
+		PeriodTooLong,
+		CreditAlreadyExists
 	}
 	
 	public UnableToTakeCreditException(TakeCreditReason reason){

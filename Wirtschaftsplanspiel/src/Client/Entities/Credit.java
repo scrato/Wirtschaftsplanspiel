@@ -8,14 +8,23 @@ public class Credit {
 	//TODO: Weiterbauen (Micha)
 	private double creditTaken;
 	private double creditPayBack;
+	private int contractPeriod;
 	private double interestPercentage;
+	private double baseInterestPercentage = 0.5;
 	
 	public Credit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException{
-		this.interestPercentage = (contractPeriod * 0.5) + 5;
+		this.interestPercentage = (contractPeriod * baseInterestPercentage) + 5;
 		this.creditTaken = creditHeight;
 		CanTakeCredit(creditHeight, contractPeriod);
 	}
 
+	public Credit(double creditHeight, int contractPeriod, double baseInterestPercentage) throws UnableToTakeCreditException{
+		this.interestPercentage = (contractPeriod * baseInterestPercentage) + 5;
+		this.creditTaken = creditHeight;
+		CanTakeCredit(creditHeight, contractPeriod);
+		this.baseInterestPercentage = baseInterestPercentage;
+	}
+	
 	private void CanTakeCredit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException {
 		//TODO: Sind Kreditvorraussetzungen so ok?
 		Company comp = Company.getInstance();
@@ -28,4 +37,6 @@ public class Credit {
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.PeriodTooLong);
 		
 	}
+
+
 }

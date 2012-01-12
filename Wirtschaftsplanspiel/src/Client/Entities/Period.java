@@ -16,6 +16,7 @@ public class Period {
 	private List<Machine> boughtMachines = new LinkedList<Machine>();
 	private List<Employee> firedEmployees = new LinkedList<Employee>();
 	private List<Machine> soldMachines = new LinkedList<Machine>();
+	private List<Credit> takenCredits = new LinkedList<Credit>();
 	
 	public double getEarnedMoney() {
 		return earnedMoney;
@@ -103,4 +104,12 @@ public class Period {
 	public void addSoldMachine(Machine mach) {
 	soldMachines.add(mach);
 	}
+
+	public List<Credit> getTakenCredits() {
+		return takenCredits;
+	}
+	public void addTakenCredit(Credit cred) {
+	takenCredits.add(cred);
+	}
+
 }
