@@ -46,9 +46,14 @@ public class Company {
 	public void incFinishedProducts(int prod){
 	finishedproducts += prod;
 	//Logging
-	periodInfo.getActualPeriod().incFinishedProducts(prod);
+	periodInfo.getActualPeriod().incFinishedProductCountDelta(prod);
 	}
 	
+	public void decFinishedProducts(int prod){
+		finishedproducts -= prod;
+		//Logging
+		periodInfo.getActualPeriod().decFinishedProductCountDelta(prod);
+	}
 	
 	public int getFinishedProducts(){
 		return finishedproducts;

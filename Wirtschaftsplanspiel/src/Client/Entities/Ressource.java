@@ -106,10 +106,15 @@ public void incStoredUnits(int amount){
 	//Logging
 	Period p = Company.getInstance().getActualPeriod();
 	
+
+	
+	//Bestandsveränderung
+	p.decRessourcePriceDelta(amount * this.getPricePerUnit());
+	
+	//Kopie der Ressource-Klasse wird in gekaufte Ressource mitgegeben
 	Ressource res = new Ressource(this.type, getUnit(this.type));
 	res.setPricePerUnit(this.getPricePerUnit());
 	res.incStoredUnits(this.getStoredUnits());
-	
 	p.addBoughtRessource(this, p.getBoughtRessources().get(res) + amount);
 }
 
@@ -120,12 +125,15 @@ public void decStoredUnits(int amount){
 	
 	Period p = Company.getInstance().getActualPeriod();
 	
+
+	//Bestandsveränderung
+	p.decRessourcePriceDelta(amount * this.getPricePerUnit());
+
+	//Kopie der Ressource-Klasse wird in verkaufte Ressource mitgegeben
 	Ressource res = new Ressource(this.type, getUnit(this.type));
 	res.setPricePerUnit(this.getPricePerUnit());
 	res.incStoredUnits(this.getStoredUnits());
-	
-		p.addUsedRessource(this, p.getUsedRessources().get(res) + amount);
-
+	p.addUsedRessource(this, p.getUsedRessources().get(res) + amount);
 }
 
 public int getBuyableUnits() {

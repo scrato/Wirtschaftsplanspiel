@@ -88,8 +88,6 @@ public  class PeriodInfo {
 	   Company comp = Company.getInstance();
 
 	   
-
-	   
 	   //AfA an SA 
 		g.deprecation += p.getDeprecation();
 
@@ -118,9 +116,8 @@ public  class PeriodInfo {
 	   
 	   //Aufwendungen für Personaleinstellungen
 	   for(Iterator<Employee> it = p.getHiredEmployees().iterator(); it.hasNext();){
-		   Employee next = it.next();
-		   //TODO: Einstellugnskosten
-		  // g.employeeHiringCosts += next.getHiringCost();
+		   //TODO: DISSMISSCOST bei einstellung seltsam ^^
+		  //g.employeeHiringCosts += Employee.DISSMISSCOST;
 	   }
 	   
 	   
@@ -137,16 +134,32 @@ public  class PeriodInfo {
 	   }
 
 	   //TODO: Fertigprodukte verkaufen
+	   //g.sold
 	   
-	   //TODO: Miete + Energiekosten + ?
+	   //Miete
 	   
-	   //TODO: Bestandsveränderungen
+	   //Unternehmerlohn
 	   
-	   //TODO: Rückstellungen?
+	   //Bestandsveränderungen Endprodukte
+	   double productionPrice = 0;
+	   for(RessourceType t: RessourceType.values()){
+		   productionPrice += Ressource.getNeed(t) * comp.getRessource(t).getPricePerUnit();
+	   }
+	   g.changeInStockFinishedProducts = p.getFinishedProductCountDelta() * productionPrice;
+	   
+	   //Bestandsveränderungen Ressourcen
+	   g.changeInStockRessources = p.getRessourcePriceDelta();
+	   
 	   return g;
    }
    
    public class GuV {
+
+		public double changeInStockRessources;
+
+		public double changeInStockFinishedProducts;
+
+		public double employeeHiringCosts;
 
 		public double wages;
 

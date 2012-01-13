@@ -102,6 +102,8 @@ public abstract class CompanyController {
 		for (Machine machine : deprecatedMachines) {
 			comp.removeMachine(machine);
 		}
+		
+		//Logging
 		comp.getActualPeriod().setDeprecation(deprecation);
 		return deprecation;
 	}
@@ -176,7 +178,7 @@ public abstract class CompanyController {
 	    * @throws CannotProduceException - Wenn nicht produziert werden kan, 
 	    * weil Maschinen/Employees/Ressources fehlen, wird diese Exception geworfen.
 	    */
-	   public static void produce(int units, int priceperunit) throws CannotProduceException
+	   public static void produce(int units) throws CannotProduceException
 	   {
 			if(!(canProduce(units)))
 				throw new CannotProduceException();
@@ -186,14 +188,13 @@ public abstract class CompanyController {
 				comp.getRessource(t).decStoredUnits(units*Ressource.getNeed(t));
 			}
 			comp.incFinishedProducts(units);
-			prod.setPricePerUnit(priceperunit);
 		}
 	
 	   /**
 	    * Produziert die maximale Menge an Fertigprodukten, sucht sich selbst wieviele Fertigprodukte er produzieren kannst
 	    * @param pricePerUnit
 	    */
-	   public static void produce(int pricePerUnit) 
+	   public static void produce() 
 	   {
 		   
 		   Company comp = Company.getInstance();
@@ -201,7 +202,7 @@ public abstract class CompanyController {
 		   int units = prod.getMaxProducableUnits();
 		   try
 		   {
-		   produce(units, pricePerUnit);
+		   produce(units);
 		   }
 		   catch (ApplicationException ex)
 		   {
