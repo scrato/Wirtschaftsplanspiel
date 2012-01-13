@@ -168,9 +168,18 @@ public abstract class CompanyController {
 	 
 		public static Map<EmployeeType, Integer> missingEmployees(int units) 
 		{
-			//TODO: Prüfen, ob genug Personal für die Produktion vorhanden ist
-			throw new UnsupportedOperationException("Noch nicht implementiert");
+			Company comp = Company.getInstance();
+			Map<EmployeeType, Integer> missingEmployees = new HashMap<EmployeeType, Integer>();
+		   	for(EmployeeType type: EmployeeType.values()){
+		   		
+		   		//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Mitarbeiter fehlen.
+		   		int missingunits = units - comp.getEmployeeCapacity(type);
+		   		if (missingunits > 0)
+		   			missingEmployees.put(type, missingunits);
+		   	}
+		   	return missingEmployees;
 		}
+		
 	   
 	   /**
 	    * Produziert die mitgegebene Anzahl an Fertigprodukten
@@ -218,13 +227,13 @@ public abstract class CompanyController {
 	
 	public static void employSb(Employee newEmployee) throws UserCanNotPayException {
 		Company comp = Company.getInstance();
-		payItem(Employee.DISSMISSCOST);  	
+		payItem(Employee.getEmploycost());  	
 		comp.addEmployee(newEmployee);	
 	}
 	
 	public static void dismissSb(Employee oldEmployee) throws UserCanNotPayException { 
 		Company comp = Company.getInstance();
-		payItem(oldEmployee.getSeverancePay());
+		payItem(oldEmployee.getDismisscost());
 		comp.removeEmployee(oldEmployee);
 		
 	}
@@ -251,5 +260,16 @@ public abstract class CompanyController {
 			comp.removeCredit();
 		
 	}
-
+	
+	//end of Darlehensabschnitt
+	//-------------------------------------------------
+	//begin of fixtkostenabschnitt :)
+	
+	public static void payRent() throws UserCanNotPayException {
+		payItem(Company.getInstance().FACILITIESRENT);
+	}
+	
+	public static void payEmployersSalery() throws UserCanNotPayException {
+		payItem(Company.getInstance().EMPLOYERSSALLERY);
+	}
 }
