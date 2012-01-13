@@ -1,6 +1,7 @@
 package Client.Application;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -53,15 +54,17 @@ public abstract class CompanyController {
 	 * @param type Der RessourceTyp der zu kaufenden Ressource
 	 * @param amount Die Anzahl der zu kaufenden Ressourcen
 	 * @throws UserCanNotPayException
+	 * @throws NotEnoughRessourcesException 
 	 */
-	public static void buyRessources(Ressource.RessourceType type, int amount) throws UserCanNotPayException{
+	public static void buyRessources(Ressource.RessourceType type, int amount) throws UserCanNotPayException, NotEnoughRessourcesException{
 		Company comp = Company.getInstance();
 		Ressource res = comp.getRessource(type); 
 		//Sind nicht genug Rohstoffe da, hol einfach den Rest
 		if(res.getBuyableUnits() > amount)
 			amount = res.getBuyableUnits();
-			payItem((amount * res.getPricePerUnit()) + Ressource.getFixedCosts(res.getType()) );
-		
+		payItem((amount * res.getPricePerUnit()) + Ressource.getFixedCosts(res.getType()) );
+		res.decBuyableUnits(amount);
+		res.incStoredUnits(amount);
 	}
 
 	//End of Ressource-Abschnitt
@@ -142,8 +145,8 @@ public abstract class CompanyController {
 			   Map<RessourceType, Ressource> ressources = comp.getAllRessources();
 			   Map<RessourceType, Integer> missingUnitPerRessource = new HashMap<RessourceType,Integer>();
 			   
-			   while(ressources.values().iterator().hasNext()){
-				   Ressource res = ressources.values().iterator().next();
+			   for(Iterator<Ressource> it = ressources.values().iterator(); it.hasNext();){
+				   Ressource res = it.next();
 					//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Rohstoffe fehlen.
 				   int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getStoredUnits();
 				   if (missingunits > 0)

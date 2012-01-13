@@ -1,5 +1,7 @@
 package Client.Entities;
 
+import Client.Application.NotEnoughRessourcesException;
+
 
 
 public class Ressource {
@@ -63,6 +65,7 @@ private int availableUnits = 0;
  * @param type
  */
 public Ressource(RessourceType type, String unit) {
+	this.type = type;
 	this.unit = unit;
 }
 
@@ -109,13 +112,22 @@ public void incStoredUnits(int amount){
 
 	
 	//Bestandsveränderung
-	p.decRessourcePriceDelta(amount * this.getPricePerUnit());
+	p.incRessourcePriceDelta(amount * this.getPricePerUnit());
 	
 	//Kopie der Ressource-Klasse wird in gekaufte Ressource mitgegeben
 	Ressource res = new Ressource(this.type, getUnit(this.type));
 	res.setPricePerUnit(this.getPricePerUnit());
-	res.incStoredUnits(this.getStoredUnits());
-	p.addBoughtRessource(this, p.getBoughtRessources().get(res) + amount);
+	res.setStoredUnits(storedUnits);
+	
+	if(p.getBoughtRessources().get(res) != null)
+		p.addBoughtRessource(res, p.getBoughtRessources().get(res) + amount);
+	else
+		p.addBoughtRessource(res, amount);
+}
+
+private void setStoredUnits(int storedUnits2) {
+	storedUnits = storedUnits2;
+	
 }
 
 public void decStoredUnits(int amount){
@@ -132,8 +144,13 @@ public void decStoredUnits(int amount){
 	//Kopie der Ressource-Klasse wird in verkaufte Ressource mitgegeben
 	Ressource res = new Ressource(this.type, getUnit(this.type));
 	res.setPricePerUnit(this.getPricePerUnit());
-	res.incStoredUnits(this.getStoredUnits());
-	p.addUsedRessource(this, p.getUsedRessources().get(res) + amount);
+	res.setStoredUnits(this.getStoredUnits());
+	//p.addUsedRessource(this, p.getUsedRessources().get(res) + amount);
+	
+	if(p.getUsedRessources().get(res) != null)
+		p.addUsedRessource(res, p.getUsedRessources().get(res) + amount);
+	else
+		p.addUsedRessource(res, amount);
 }
 
 public int getBuyableUnits() {
@@ -142,6 +159,16 @@ public int getBuyableUnits() {
 
 public void setBuyableUnits(int units){
 	availableUnits = units;
+}
+
+public void incBuyableUnits(int units){
+	availableUnits += units;
+}
+
+public void decBuyableUnits(int units) throws NotEnoughRessourcesException{
+	if((availableUnits - units) < 0)
+		throw new NotEnoughRessourcesException();
+	availableUnits -= units;
 }
 
 }

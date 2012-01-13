@@ -15,8 +15,9 @@ public class Production {
 		//Wieviel können mit den Ressourcen produziert werden
 		for(RessourceType type: RessourceType.values()){
 			Ressource res = comp.getRessource(type);
-
-			int unitsWhichCanBeProduced = Ressource.getNeed(type) / res.getStoredUnits();
+			if(res.getStoredUnits() <= 0)
+				return 0;
+			int unitsWhichCanBeProduced = res.getStoredUnits() / Ressource.getNeed(type);
 			if (units > unitsWhichCanBeProduced)
 					units = unitsWhichCanBeProduced;
 		}

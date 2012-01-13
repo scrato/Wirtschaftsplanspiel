@@ -95,8 +95,8 @@ public  class PeriodInfo {
 		//Aufwendungen für Ressourcen
 	   for(Iterator<Entry<Ressource, Integer>> it = p.getBoughtRessources().entrySet().iterator(); it.hasNext();){
 		   Entry<Ressource, Integer> next = it.next();
-		   g.ressourceProduced += next.getValue() * next.getKey().getPricePerUnit();
-		   g.ressourceProduced += Ressource.getFixedCosts(next.getKey().getType());
+		   g.ressourceCost += next.getValue() * next.getKey().getPricePerUnit();
+		   g.ressourceCost += Ressource.getFixedCosts(next.getKey().getType());
 	   }
 	   
 	   
@@ -108,17 +108,12 @@ public  class PeriodInfo {
 	   
 	   
 	   //Sonstige tarifliche oder vertragliche Aufwendungen für Lohnempfäner
-	   for(Iterator<Employee> it = p.getFiredEmployees().iterator(); it.hasNext();){
-		   Employee next = it.next();
-		   g.employeeDismissalCosts += next.getSeverancePay();
-	   }
+		   g.employeeDismissalCosts = p.getFiredEmployees().size() * Employee.getDismisscost();
 	   
 	   
 	   //Aufwendungen für Personaleinstellungen
-	   for(Iterator<Employee> it = p.getHiredEmployees().iterator(); it.hasNext();){
 		   //TODO: DISSMISSCOST bei einstellung seltsam ^^
-		  //g.employeeHiringCosts += Employee.DISSMISSCOST;
-	   }
+		  g.employeeHiringCosts = Employee.EMPLOYCOST * p.getHiredEmployees().size();
 	   
 	   
 	   //Zinszahlungen
@@ -130,7 +125,7 @@ public  class PeriodInfo {
 	   for(Iterator<Machine> i = p.getSoldMachines().iterator(); i.hasNext();){
 		   Machine next = i.next();
 		   //TODO: Verkaufsaufwand für Maschinen berechnen
-		   //g.machineSellingCharge += (next.getValue() - next.getPrice)
+		   //g.machineSellingCharge += (next.getValue() - next.g)
 	   }
 
 	   //TODO: Fertigprodukte verkaufen
@@ -138,9 +133,9 @@ public  class PeriodInfo {
 	   
 	   //Miete
 	   g.rental = comp.FACILITIESRENT;
-	   
 	   //Unternehmerlohn
 	   g.employerSallery = comp.EMPLOYERSSALLERY;
+	   
 	   //Bestandsveränderungen Endprodukte
 	   double productionPrice = 0;
 	   for(RessourceType t: RessourceType.values()){
@@ -172,7 +167,7 @@ public  class PeriodInfo {
 
 		public double deprecation;
 
-		public double ressourceProduced;
+		public double ressourceCost;
 		public double interest;
 
 	}
