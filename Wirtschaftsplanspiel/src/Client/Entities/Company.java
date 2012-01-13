@@ -34,6 +34,8 @@ public class Company {
 	//Hier werden Variablen verwaltet
 	private double money;
 	private int finishedproducts;
+	public final double EMPLOYERSSALLERY = 45000d;
+	public final double FACILITIESRENT = 30000d;
 	
 	//Hier liegen die Maschinen.
 	private List<Machine> machines = new LinkedList<Machine>();
@@ -141,6 +143,29 @@ public class Company {
 		//Logging
 		periodInfo.getActualPeriod().addFiredEmployee(oldEmployee);
 	}
+	
+	public double getWages(){
+		double totalWages = 0;
+		for (Employee empl : employee) {
+			totalWages += empl.getWage();
+		}
+		return totalWages;
+	}
+	
+	public List<Employee> getEmployees() {
+		List<Employee> employeeList = new LinkedList<Employee>();
+		employeeList.addAll(employee);
+		return employeeList;
+	}
+	
+	public int getEmployeeCapacity(EmployeeType type) {
+		int capacity = 0;
+		for (Employee empl : employee) {
+			if (empl.getType() == type)
+				capacity += empl.getCapacity();
+		}
+		return capacity;
+	}
 
 	//Periodeninfo
 	public Period getActualPeriod(){
@@ -169,6 +194,7 @@ public class Company {
 		//Logging
 		periodInfo.getActualPeriod().addTakenCredit(cred);
 	}
+	
 
 	public void removeCredit() {
 		//Logging
