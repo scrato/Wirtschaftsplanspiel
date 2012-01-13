@@ -1,20 +1,99 @@
 package Server.Application;
 
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import NetworkCommunication.ByteConverter;
+import NetworkCommunication.MessageType;
+import NetworkCommunication.NetMessage;
+import NetworkCommunication.SendAssignedDemandMessage;
+import Server.Network.Server;
+import Server.Network.ClientHandler;
 import common.entities.Supply;
 
 
 
 public class ServerController {
-
 	
+	// BEGIN OF Chatnachricht weiterleiten.
 	
+	public static void redirectChatMessage(ClientHandler sender, NetMessage message) {
+		System.out.println("Chatnachricht gesendet von Client " + sender.get_ID());
+		
+		byte[] contentLength = ByteConverter.toBytes(message.get_Content().length);
+		byte[] nameBytes = null;
+		try {
+			nameBytes = sender.get_Name().getBytes("UTF-16LE");
+		} catch (UnsupportedEncodingException e) {
+			//should never reach this point.
+		}
+		byte[] nameLength = ByteConverter.toBytes(nameBytes.length);
+		byte[] sendBytes = new byte[message.get_Content().length + 8 + nameBytes.length];
+		
+		System.arraycopy(contentLength, 0, sendBytes, 0, 4);
+		System.arraycopy(message.get_Content(), 0, sendBytes, 4, message.get_Content().length);
+		System.arraycopy(nameLength, 0, sendBytes, 4 + message.get_Content().length, 4);
+		System.arraycopy(nameBytes, 0, sendBytes, 8 + message.get_Content().length, nameBytes.length);				
+		
+		NetMessage sendMessage = new NetMessage(MessageType.CHATMESSAGE_TOCLIENT, sendBytes);
+		
+		//lock_clients.acquireUninterruptibly();
+		List<ClientHandler> clients = Server.getInstance().getClients();
+		for (ClientHandler client : clients) {
+			try {
+				client.SendMessage(sendMessage);
+			} catch (Exception e) { }
+		}
+	}
+	
+	// END OF Chatnachricht weiterleiten.
+	// -----------------------------------------
+	// BEGIN OF Perdiodenabschluss.
+	
+	private static Map<Integer, Supply> supplies = new TreeMap<Integer, Supply>();
+	
+	public static void receiveSupply(ClientHandler Sender, NetMessage Message) {
+		byte[] supBytes = Message.get_Content();
+		
+		byte[] quantityBytes = new byte[4];
+		byte[] priceBytes = new byte[8];
+		
+		System.arraycopy(supBytes, 0, quantityBytes, 0, 4);
+		System.arraycopy(supBytes, 4, priceBytes, 0, 8);
+		
+		int quantity = ByteConverter.toInt(quantityBytes);
+		double price = ByteConverter.toDouble(priceBytes);		
+		Supply supply = new Supply(quantity, price);
+		
+		supplies.put(Sender.get_ID(), supply);
+		checkSupplies();
+	}
+	
+	/**
+	 * Prüft, ob alle Spieler ihre Angebote abgegeben haben, führt die Verteilung aus und übermittelt die zugewiesene Nachfrage an die Spieler.
+	 */
+	public static void checkSupplies() {
+		List<ClientHandler> clients = Server.getInstance().getClients();		
+		if (clients.isEmpty()) return;
+		
+		for (ClientHandler client : clients) {
+			if (!supplies.containsKey(client.get_ID())) return;
+		}
+		// alle Angebote wurden abgebgeben. Führe demandFunction aus.
+		Map<Integer, Integer> assignedDemands = demandFunction(supplies);
+		
+		int quantity;
+		for (ClientHandler client : clients) {
+			// TODO assigned Demand an Client übergeben.
+			quantity = assignedDemands.get(client.get_ID());
+			client.SendMessage(new SendAssignedDemandMessage(quantity));
+		}
+	}
 	
 	/**
 	 * determines contingents of total demand for all clients.
@@ -94,4 +173,6 @@ public class ServerController {
 		
 		return assignedDemand;
 	}
+	
+	// END OF Pediodenabschluss.
 }

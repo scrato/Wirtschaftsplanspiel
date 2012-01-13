@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
 
+import Server.Network.TriggerBusinessLogicThread;
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.NetMessage;
 
@@ -37,14 +38,14 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		StartReceivingMessages();
 	}
 	
-	public void StartReceivingMessages() {
+	void StartReceivingMessages() {
 		if (!listenerThread.isAlive()) {	
 			stopListener = false;
 			listenerThread.start();
 		}
 	}
 	
-	public void StopReceivingMessages() {
+	void StopReceivingMessages() {
 		stopListener = true;
 	}
 	
@@ -73,7 +74,10 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		        		}
 
 		        		NetMessage message = new NetMessage(messageType, messageContent);
-		        		parent.receiveMessage(message, this);
+
+		        		TriggerBusinessLogicThread triggerBusLogic = new TriggerBusinessLogicThread(this, message);		        				
+		        		triggerBusLogic.start();
+		        		//parent.receiveMessage(message, this);
 		        	}		
 		        }		        
 			} catch (IOException e) {
@@ -109,7 +113,7 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		}
 	}
 	
-	public void close() {
+	void close() {
 		stopListener = true;
 		try {
 			if (!socket.isInputShutdown()) {
