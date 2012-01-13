@@ -8,8 +8,9 @@ import java.util.Map;
 public class Period {
 	private double earnedMoney;
 	private double paidMoney;
-	private int finishedProducts;
-	private double pricePerFinishedProduct;
+	private int finishedProductDelta;
+	private double changeInStockRessources;
+	private double ressourceDelta;
 	private Map<Ressource, Integer> boughtRessources = new HashMap<Ressource, Integer> ();
 	private Map<Ressource, Integer> usedRessources = new HashMap<Ressource, Integer> ();
 	private List<Employee> hiredEmployees = new LinkedList<Employee>();
@@ -39,23 +40,17 @@ public class Period {
 	}
 	
 	
-	public int getFinishedProducts() {
-		return finishedProducts;
+	public int getFinishedProductCountDelta() {
+		return finishedProductDelta;
 	}
-	public void incFinishedProducts(int finishedProducts) {
-		this.finishedProducts += finishedProducts;
-	}
-	
-	
-	
-	public double getPricePerFinishedProduct() {
-		return pricePerFinishedProduct;
-	}
-	public void setPricePerFinishedProduct(double pricePerFinishedProduct) {
-		this.pricePerFinishedProduct = pricePerFinishedProduct;
+	public void incFinishedProductCountDelta(int finishedProducts) {
+		this.finishedProductDelta += finishedProducts;
 	}
 	
-	
+	public void decFinishedProductCountDelta(int finishedProductsLeft) {
+		this.finishedProductDelta += finishedProductDelta;
+	}
+
 	
 	//Ressource-Abschnitt
 	public Map<Ressource, Integer> getBoughtRessources() {
@@ -72,6 +67,18 @@ public class Period {
 		this.usedRessources.put(res, count);
 	}
 	
+	public void incRessourcePriceDelta(double ressourceDelta) {
+		this.ressourceDelta += ressourceDelta;
+	}
+	
+	public void decRessourcePriceDelta(double ressourceDelta) {
+		this.ressourceDelta -= ressourceDelta;
+	}
+
+	public double getRessourcePriceDelta() {
+		return ressourceDelta;
+	}
+
 	//Employee-Abschnitt
 	public List<Employee> getHiredEmployees() {
 		return hiredEmployees;
@@ -142,5 +149,15 @@ public class Period {
 		return interestPayment;
 		
 	}
+
+	public void setChangeInStockRessources(double changeInStockRessources) {
+		this.changeInStockRessources = changeInStockRessources;
+	}
+
+	public double getChangeInStockRessources() {
+		return changeInStockRessources;
+	}
+
+
 
 }

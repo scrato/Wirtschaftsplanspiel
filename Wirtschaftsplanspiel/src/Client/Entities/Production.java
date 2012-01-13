@@ -3,21 +3,6 @@ package Client.Entities;
 import Client.Entities.Ressource.RessourceType;
 
 public class Production {
-    private double pricePerUnit;
-
-	
-	public void setPricePerUnit(double price){
-		this.pricePerUnit = price;
-		Company.getInstance().getActualPeriod().setPricePerFinishedProduct(price);
-	}
-
-	/**
-	 * Gibt den festgelegten PreisPerEinheit zurück, die maximal festgelegt werden kann
-	 * @return
-	 */
-	public double getPricePerUnit(){
-		return pricePerUnit;
-	}
 	
 	/**
 	 * Gibt die Menge an Fertigprodukten zurück, die maximal produziert werden kann
