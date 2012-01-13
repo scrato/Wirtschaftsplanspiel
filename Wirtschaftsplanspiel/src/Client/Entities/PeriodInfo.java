@@ -137,9 +137,10 @@ public  class PeriodInfo {
 	   //g.sold
 	   
 	   //Miete
+	   g.rental = comp.FACILITIESRENT;
 	   
 	   //Unternehmerlohn
-	   
+	   g.employerSallery = comp.EMPLOYERSSALLERY;
 	   //Bestandsveränderungen Endprodukte
 	   double productionPrice = 0;
 	   for(RessourceType t: RessourceType.values()){
@@ -154,6 +155,10 @@ public  class PeriodInfo {
    }
    
    public class GuV {
+
+		public double employerSallery;
+
+		public double rental;
 
 		public double changeInStockRessources;
 
