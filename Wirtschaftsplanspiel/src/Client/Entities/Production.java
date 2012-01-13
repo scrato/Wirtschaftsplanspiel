@@ -8,6 +8,7 @@ public class Production {
 	
 	public void setPricePerUnit(double price){
 		this.pricePerUnit = price;
+		Company.getInstance().getActualPeriod().setPricePerFinishedProduct(price);
 	}
 
 	/**

@@ -25,6 +25,7 @@ public class Machine {
 		return deprecation;
 	}
 	
+	
 	public boolean isCompletelyDeprecated() {
 		return age == lifetime ? true : false;
 	}

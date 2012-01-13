@@ -49,6 +49,7 @@ public class Company {
 	periodInfo.getActualPeriod().incFinishedProducts(prod);
 	}
 	
+	
 	public int getFinishedProducts(){
 		return finishedproducts;
 	}
@@ -192,5 +193,14 @@ public class Company {
 		periodInfo.getActualPeriod().addTakenCredit(cred);
 	}
 	
+
+	public void removeCredit() {
+		//Logging
+		Company.getInstance().getActualPeriod().addPaidCredit(actCredit);
+		
+		
+		actCredit = null;
+		
+	}
 
 }

@@ -1,28 +1,46 @@
 package Client.Entities;
 
-import Client.Application.UnableToTakeCreditException;
-import Client.Network.Client;
+	import Client.Application.UnableToTakeCreditException;
 
 public class Credit {
 	
-	//TODO: Weiterbauen (Micha)
-	private double creditTaken;
-	private double creditPayBack;
+	private double creditLeft;
+	private double anuity;
+	
 	private int contractPeriod;
+	
 	private double interestPercentage;
-	private double baseInterestPercentage = 0.5;
+	private double baseInterestInPercent = 5;
 	
 	public Credit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException{
-		this.interestPercentage = (contractPeriod * baseInterestPercentage) + 5;
-		this.creditTaken = creditHeight;
+		//Dynamische Anpassung des Zinsatzes -> (Laufzeit * 0,5) + Basissatz von 5%... heißt Kredit über 10 Jahre hat 10% Zinsen 
+		this.interestPercentage = ((contractPeriod * 0.5) + baseInterestInPercent) / 100;
+		this.creditLeft = creditHeight;
+		this.contractPeriod = contractPeriod;
+		setAnuity(creditHeight);
 		CanTakeCredit(creditHeight, contractPeriod);
 	}
 
-	public Credit(double creditHeight, int contractPeriod, double baseInterestPercentage) throws UnableToTakeCreditException{
-		this.interestPercentage = (contractPeriod * baseInterestPercentage) + 5;
-		this.creditTaken = creditHeight;
+	/**
+	 * Setzt die Annuität (periodische Abzugsrate) gemäß folgender Logik:
+	 * Jahreswert: K * ((q^n)*(q-1))/((q^n)-1)
+	 * 
+	 * K -> Barwert des Darlehens
+	 * q -> Zinsatz + 1 (100% + Zinssatz) 
+	 * n -> Laufzeit des Darlehens pro Periode
+	 * @param creditHeight -> K
+	 * @param contractPeriod -> n
+	 */
+	private void setAnuity(double creditHeight) {
+		
+		this.anuity = creditHeight * (Math.pow(1+interestPercentage,contractPeriod)*interestPercentage)/(Math.pow(1+interestPercentage,contractPeriod)-1);
+	}
+
+	public Credit(double creditHeight, int contractPeriod, double baseInterestInPercent) throws UnableToTakeCreditException{
+		this.interestPercentage = ((contractPeriod * 0.5) + baseInterestInPercent) / 100;
+		this.creditLeft = creditHeight;
 		CanTakeCredit(creditHeight, contractPeriod);
-		this.baseInterestPercentage = baseInterestPercentage;
+		this.baseInterestInPercent = baseInterestInPercent;
 	}
 	
 	private void CanTakeCredit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException {
@@ -38,5 +56,35 @@ public class Credit {
 		
 	}
 
+	/**
+	 * Senkt den genommenen Kredit um die errechnete Tilgung und gibt zurück ob die Gesamtsumme getilgt wurde
+	 * @return true => Kredit wurde vollständig zurückbezahlt
+	 */
+	public boolean payAmortisation(){
+		double interestPayment = (creditLeft * interestPercentage);
+		//Logging
+		Company.getInstance().getActualPeriod().setInterestPayment(interestPayment);
+		
+		double amortisation = (anuity - interestPayment);
+		if((int) amortisation >=  (int) creditLeft - 1){
+			creditLeft = 0;
+			return true;
+		}
+		
+		creditLeft -= amortisation;
+		return false;
+	}
+	
+	/**
+	 * Gibt den zu zahlenen Betrag (Anuität) zurück
+	 * @return Anuität
+	 */
+	public double getAnuity(){
+		return anuity;
+	}
+
+	public double getCreditLeft() {
+		return creditLeft;
+	}
 
 }
