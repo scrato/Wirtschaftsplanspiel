@@ -19,4 +19,5 @@ public class NetMessage {
 	public int get_MessageType() {
 		return messageType;
 	}
+	
 }

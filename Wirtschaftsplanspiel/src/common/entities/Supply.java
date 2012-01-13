@@ -1,4 +1,4 @@
-package Server.Entities;
+package common.entities;
 
 public class Supply {
 	public Supply(int Quantity, double Price) {
