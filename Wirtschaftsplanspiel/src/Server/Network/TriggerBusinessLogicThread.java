@@ -18,7 +18,7 @@ public class TriggerBusinessLogicThread extends Thread {
 	
 	public void run() {
 		switch (message.get_MessageType()) {
-			case MessageType.CHATMESSAGE_TOCLIENT: {
+			case MessageType.CHATMASSAGE_TOSERVER: {
 				ServerController.redirectChatMessage(sender, new ChatMessageToServer(message.get_Content()));
 				break;
 			}
