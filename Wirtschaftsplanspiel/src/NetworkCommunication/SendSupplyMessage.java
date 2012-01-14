@@ -9,10 +9,20 @@ public class SendSupplyMessage extends NetMessage {
 		supply = Supply;
 	}
 	
-//	public SendSupplyMessage(byte[] content) {
-//		super(MessageType.SEND_SUPPLY, content);
-//		supply = getSupply(content);
-//	}
+	public SendSupplyMessage(byte[] content) {
+		super(MessageType.SEND_SUPPLY, content);
+		
+		byte[] quantityBytes = new byte[4];
+		byte[] priceBytes = new byte[8];
+		
+		System.arraycopy(content, 0, quantityBytes, 0, 4);
+		System.arraycopy(content, 4, priceBytes, 0, 8);
+		
+		int quantity = ByteConverter.toInt(quantityBytes);
+		double price = ByteConverter.toDouble(priceBytes);
+		
+		supply = new Supply(quantity, price);
+	}
 	
 	private Supply supply;
 	
@@ -31,19 +41,6 @@ public class SendSupplyMessage extends NetMessage {
 		return supBytes;
 	}
 	
-//	private static Supply getSupply(byte[] supBytes) {
-//		byte[] quantityBytes = new byte[4];
-//		byte[] priceBytes = new byte[8];
-//		
-//		System.arraycopy(supBytes, 0, quantityBytes, 0, 4);
-//		System.arraycopy(supBytes, 4, priceBytes, 0, 8);
-//		
-//		int quantity = ByteConverter.toInt(quantityBytes);
-//		double price = ByteConverter.toDouble(priceBytes);
-//		
-//		return new Supply(quantity, price);
-//	}
-
 //	public static void main(String[] args) {
 //		// TEST.
 //		System.out.println("Sende: Menge: 10; Preis: 152.42");
