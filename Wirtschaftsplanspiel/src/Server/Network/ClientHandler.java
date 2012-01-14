@@ -68,7 +68,7 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		        		receivedBytes = stream.read(messageContent, 0, messageLength);
 		        		checkint = stream.readInt();
 		        		if (receivedBytes != messageLength || checkint != NetMessage.MESSAGE_END) {
-		        			System.err.println("Unvollstaendige Nachricht erhalten von Client " + this.id + ".");
+		        			if (!parent.isClosed) System.err.println("Unvollstaendige Nachricht erhalten von Client " + this.id + ".");
 		        			stream.skip(stream.available());
 		        			break;
 		        		}
@@ -82,7 +82,7 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		        }		        
 			} catch (IOException e) {
 				// Verbindung zum Client verloren. TODO darauf reagieren.
-				System.err.println("Verbindung zu Client "+ this.id + " verloren.");
+				if (!parent.isClosed) System.err.println("Verbindung zu Client "+ this.id + " verloren.");
 				parent.RemoveClient(this);
 				this.close();
 			}

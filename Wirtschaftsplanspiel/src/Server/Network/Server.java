@@ -38,7 +38,7 @@ public class Server {
 	Map<Integer, ClientHandler> clients;
 	//List<ClientHandler> clients;
 	
-	private boolean isClosed;
+	boolean isClosed;
 	
 	public Server(int port) {
 		instance = this;
@@ -140,7 +140,7 @@ public class Server {
 				}
 				
 			} catch (IOException e) {
-				if (this.isClosed) System.err.println("Client konnte nicht aktzeptiert werden.");
+				if (!this.isClosed) System.err.println("Client konnte nicht aktzeptiert werden.");
 			}
 		}
 	}
@@ -251,12 +251,15 @@ public class Server {
 
 	public void close() {
 		lock_clients.acquireUninterruptibly();
-		for (ClientHandler handler : clients.values()) {
-			handler.close();
+		try {
+			for (ClientHandler handler : clients.values()) {
+				handler.close();
+			}
+			clients.clear();
+		} catch (Exception e) {
+		} finally {
+			lock_clients.release();
 		}
-		clients.clear();
-		lock_clients.release();
-		
 		stopListener = true;
 		try {
 			if (!listener.isClosed()) {

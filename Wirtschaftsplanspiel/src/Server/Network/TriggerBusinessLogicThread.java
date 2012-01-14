@@ -1,8 +1,10 @@
 package Server.Network;
 
 import Server.Application.ServerController;
+import NetworkCommunication.ChatMessageToServer;
 import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
+import NetworkCommunication.SendSupplyMessage;
 
 public class TriggerBusinessLogicThread extends Thread {
 	public TriggerBusinessLogicThread(ClientHandler Sender, NetMessage Message) {
@@ -16,12 +18,12 @@ public class TriggerBusinessLogicThread extends Thread {
 	
 	public void run() {
 		switch (message.get_MessageType()) {
-			case MessageType.CHATMESSAGE_TOCLIENT: {
-				ServerController.redirectChatMessage(sender, message);
+			case MessageType.CHATMASSAGE_TOSERVER: {
+				ServerController.redirectChatMessage(sender, new ChatMessageToServer(message.get_Content()));
 				break;
 			}
 			case MessageType.SEND_SUPPLY : {
-				ServerController.receiveSupply(sender, message);
+				ServerController.receiveSupply(sender, new SendSupplyMessage(message.get_Content()));
 			}
 		}
 	}
