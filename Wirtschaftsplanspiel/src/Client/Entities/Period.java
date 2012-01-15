@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Period {
+	private double productPrice;
+	
 	private double earnedMoney;
 	private double paidMoney;
 	private int finishedProductDelta;
@@ -21,6 +23,15 @@ public class Period {
 	private Credit takenCredit;
 	private Credit paidCredit;
 	private double interestPayment;
+	
+	public void setProductPrice(double price) {
+		productPrice = price;
+	}
+	
+	public double getProductPrice() {
+		return productPrice;
+	}
+	
 	
 	public double getEarnedMoney() {
 		return earnedMoney;

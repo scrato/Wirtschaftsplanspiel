@@ -10,6 +10,7 @@ import Client.Entities.Company;
 import Client.Entities.Credit;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
+import Client.Entities.Period;
 import Client.Entities.Production;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
@@ -119,8 +120,8 @@ public abstract class CompanyController {
 	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
 	    */
 	   public static boolean canProduce(int units){
-		   Company comp = Company.getInstance();
-		   Production prod = comp.getProduction();
+		   //Company comp = Company.getInstance();
+		   //Production prod = comp.getProduction();
 		   boolean canProduce = true;
 		   
 		   //Ressourcen prüfen
@@ -195,7 +196,7 @@ public abstract class CompanyController {
 			if(!(canProduce(units)))
 				throw new CannotProduceException();
 			Company comp = Company.getInstance();
-			Production prod = comp.getProduction();
+			//Production prod = comp.getProduction();
 			for(RessourceType t: Ressource.RessourceType.values()) {
 				comp.getRessource(t).decStoredUnits(units*Ressource.getNeed(t));
 			}
@@ -236,9 +237,14 @@ public abstract class CompanyController {
 	
 	public static void dismissSb(Employee oldEmployee) throws UserCanNotPayException { 
 		Company comp = Company.getInstance();
-		payItem(oldEmployee.getDismisscost());
+		payItem(Employee.getDismisscost());
 		comp.removeEmployee(oldEmployee);
-		
+	}
+	
+	public static void payEmployeesSallery() throws UserCanNotPayException {
+		Company comp = Company.getInstance();
+		double wages = comp.getWages();
+		payItem(wages);
 	}
 	
 	//End of Employee-Abschnitt
@@ -275,4 +281,39 @@ public abstract class CompanyController {
 	public static void payEmployersSalery() throws UserCanNotPayException {
 		payItem(Company.getInstance().EMPLOYERSSALLERY);
 	}
+	
+	//end of fixtkostenabschnitt
+	//------------------------------------------------------
+	
+	//Verkaufserlöse	
+	public static void receiveSalesRevenue(double Revenue, int SoldProducts) {
+		Company comp = Company.getInstance();
+		comp.incMoney(Revenue);
+		comp.decFinishedProducts(SoldProducts);
+		
+		Period period = comp.getActualPeriod();
+		period.incEarnedMoney(Revenue);
+		
+		//TODO EarnedMoney ?? meinst du revenue @ michael?
+		//TODO Bestandsveränderung bei Fertigprodukten
+		//TODO Lageraufwand für Fertigprodukte.
+		
+		
+		//period.inc
+	}
+	
+	//Lagekosten
+	public static void payWarehouseCosts() throws UserCanNotPayException {
+		Company comp = Company.getInstance();
+		int stockfisch = comp.getRessource(RessourceType.Stockfisch).getStoredUnits();
+		int verpackung = comp.getRessource(RessourceType.Verpackungsmaterial).getStoredUnits();
+		int finishedProducts = comp.getFinishedProducts();
+		
+		double warehouseCosts = stockfisch * comp.WAREHOUSECOST_PER_STOCKFISCH 
+							  + verpackung * comp.WAREHOUSECOST_PER_VERPACKUNG  
+							  + finishedProducts * comp.WAREHOUSECOST_PER_PRODUCT;
+		payItem(warehouseCosts);
+	}
+	
+	
 }

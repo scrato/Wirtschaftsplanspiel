@@ -101,7 +101,7 @@ public  class PeriodInfo {
 	   
 	   
 	   //Gehaltszahlungen
-	   for(Iterator<Employee> it = comp.getEmployee().iterator(); it.hasNext();){
+	   for(Iterator<Employee> it = comp.getEmployees().iterator(); it.hasNext();){
 		   Employee next = it.next();
 		   g.wages += next.getWage();
 	   }
