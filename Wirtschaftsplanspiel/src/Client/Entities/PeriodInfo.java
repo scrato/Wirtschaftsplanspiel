@@ -26,6 +26,8 @@ public  class PeriodInfo {
    }
 
    public void nextPeriod(){
+	   getActualPeriod().makeBalance();
+	   getActualPeriod().makeGuV();
 	   incNumberOfActPeriod();
 	   periods.add(new Period());
    }
@@ -47,146 +49,6 @@ public  class PeriodInfo {
    }
 
    
-   public Balance getBalance(){
-	   Period p = periods.get(actPeriod);
-	   Balance b = new Balance();
-	   
-	   b.totallypaid = p.getPaidMoney();
-	   b.totallyearned = p.getEarnedMoney();
-	   
-	   Company comp = Company.getInstance();
-	   
-	   for(Iterator<Machine> i = comp.getMachines().iterator(); i.hasNext();){
-		   Machine next = i.next();
-		   b.machineValue += next.getValue();
-	   }
 
-	   
-	   for(Iterator<Ressource> i = comp.getAllRessources().values().iterator(); i.hasNext();){
-		   Ressource next = i.next();
-		   b.ressourceValue += next.getStoredUnits() * next.getPricePerUnit();
-	   }
-	   
-	   
-	   b.credit = comp.getCredit().getCreditLeft();
-	   
-	   b.bank = comp.getMoney();
-	   
-	   b.calculateEquity();
-	   
-	   return b;
-   }
-   /**
-    * Gibt die GuV am Ende der Periode zurück. 
-    * (Wenn diese Methode vor Ende der Periode ausgeführt wird, gibt es keine Abschreibung und keine verkauften Fertigprodukte)
-    * @return
-    */
-   public GuV getGuV(){
-	   Period p = periods.get(actPeriod);
-	   GuV g = new GuV();
-	   
-	   Company comp = Company.getInstance();
-
-	   
-	   //AfA an SA 
-		g.deprecation += p.getDeprecation();
-
-
-		//Aufwendungen für Ressourcen
-	   for(Iterator<Entry<Ressource, Integer>> it = p.getBoughtRessources().entrySet().iterator(); it.hasNext();){
-		   Entry<Ressource, Integer> next = it.next();
-		   g.ressourceCost += next.getValue() * next.getKey().getPricePerUnit();
-		   g.ressourceCost += Ressource.getFixedCosts(next.getKey().getType());
-	   }
-	   
-	   
-	   //Gehaltszahlungen
-	   for(Iterator<Employee> it = comp.getEmployees().iterator(); it.hasNext();){
-		   Employee next = it.next();
-		   g.wages += next.getWage();
-	   }
-	   
-	   
-	   //Sonstige tarifliche oder vertragliche Aufwendungen für Lohnempfäner
-		   g.employeeDismissalCosts = p.getFiredEmployees().size() * Employee.getDismisscost();
-	   
-	   
-	   //Aufwendungen für Personaleinstellungen
-		   //TODO: DISSMISSCOST bei einstellung seltsam ^^
-		  g.employeeHiringCosts = Employee.EMPLOYCOST * p.getHiredEmployees().size();
-	   
-	   
-	   //Zinszahlungen
-	   if(comp.creditExist()){
-		   g.interest = p.getInterestPayment();
-	   }
-	   
-	   //Aufwendungen aus Abgang von Anlagevermögen
-	   for(Iterator<Machine> i = p.getSoldMachines().iterator(); i.hasNext();){
-		   Machine next = i.next();
-		   //TODO: Verkaufsaufwand für Maschinen berechnen
-		   //g.machineSellingCharge += (next.getValue() - next.g)
-	   }
-
-	   //TODO: Fertigprodukte verkaufen
-	   //g.sold
-	   
-	   //Miete
-	   g.rental = comp.FACILITIESRENT;
-	   //Unternehmerlohn
-	   g.employerSallery = comp.EMPLOYERSSALLERY;
-	   
-	   //Bestandsveränderungen Endprodukte
-	   double productionPrice = 0;
-	   for(RessourceType t: RessourceType.values()){
-		   productionPrice += Ressource.getNeed(t) * comp.getRessource(t).getPricePerUnit();
-	   }
-	   g.changeInStockFinishedProducts = p.getFinishedProductCountDelta() * productionPrice;
-	   
-	   //Bestandsveränderungen Ressourcen
-	   g.changeInStockRessources = p.getRessourcePriceDelta();
-	   
-	   return g;
-   }
-   
-   public class GuV {
-
-		public double employerSallery;
-
-		public double rental;
-
-		public double changeInStockRessources;
-
-		public double changeInStockFinishedProducts;
-
-		public double employeeHiringCosts;
-
-		public double wages;
-
-		public double employeeDismissalCosts;
-
-		public double deprecation;
-
-		public double ressourceCost;
-		public double interest;
-
-	}
-   
-   public class Balance {
-
-		public double machineValue;
-		public double ressourceValue;
-		public double credit;
-		public double bank;
-		public double equity;
-		public double totallypaid;
-		public double totallyearned;
-		
-		public void calculateEquity() {
-			equity = machineValue + ressourceValue + bank - credit;
-			
-		}
-
-	}
 }
 

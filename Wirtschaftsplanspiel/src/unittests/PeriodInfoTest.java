@@ -19,8 +19,8 @@ import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
-import Client.Entities.PeriodInfo.Balance;
-import Client.Entities.PeriodInfo.GuV;
+import Client.Entities.Period.Balance;
+import Client.Entities.Period.GuV;
 import Client.Entities.Ressource.RessourceType;
 
 /**
@@ -60,9 +60,8 @@ public class PeriodInfoTest extends TestCase  {
 		CompanyController.payRent();
 		CompanyController.produce();
 		CompanyController.depcrecateMachines();
-		g1 = comp.getPeriodInfo().getGuV();
 		comp.getPeriodInfo().nextPeriod();
-		
+		g1 = comp.getPeriodInfo().getPeriod(comp.getPeriodInfo().getNumberOfActPeriod() - 1).getGuV();
 		
 	}
 	
@@ -81,7 +80,8 @@ public class PeriodInfoTest extends TestCase  {
 		 System.out.println("Ressourcenaufwand: " + g1.ressourceCost);
 		 System.out.println("Löhne und Gehälter: " + g1.wages);
 
-		 b = comp.getPeriodInfo().getBalance();
+		 b = comp.getPeriodInfo().getPeriod(comp.getPeriodInfo().getNumberOfActPeriod() - 1).getBalance();
+		 
 		 System.out.println("Bank: " + b.bank);
 		 System.out.println("Verbindlichkeiten: " + b.credit);
 		 System.out.println("Eigenkapital: " + b.equity);

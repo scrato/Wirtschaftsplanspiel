@@ -1,7 +1,7 @@
 package NetworkCommunication;
 
 public class NetMessage {
-
+//TODO: also ne klasse die von netmessage erbt, braucht nen konstruktor wo du ne liste von erfolg entity reingibts und bytes daraus erzeugst und einen wo du aus nem byte array diese liste wieder erzeugst :D [:D] 
 	protected int messageType;
 	protected byte[] content;
 	public static final int MESSAGE_END = 1337;
