@@ -36,6 +36,9 @@ public class Company {
 	private int finishedproducts;
 	public final double EMPLOYERSSALLERY = 45000d;
 	public final double FACILITIESRENT = 30000d;
+	public final double WAREHOUSECOST_PER_STOCKFISCH = 0.1d;
+	public final double WAREHOUSECOST_PER_VERPACKUNG = 0.05d;
+	public final double WAREHOUSECOST_PER_PRODUCT = 0.2d;
 	
 	//Hier liegen die Maschinen.
 	private List<Machine> machines = new LinkedList<Machine>();
@@ -132,11 +135,7 @@ public class Company {
 		return ressources;
 	}
 	
-	//Mitarbeiter
-	public List<Employee> getEmployee() {
-		return employee;
-	}
-	
+	//Mitarbeiter	
 	public void addEmployee(Employee newEmployee) {
 		employee.add(newEmployee);
 		//Logging
