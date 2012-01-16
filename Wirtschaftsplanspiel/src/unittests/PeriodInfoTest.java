@@ -31,7 +31,6 @@ import Client.Entities.Ressource.RessourceType;
 public class PeriodInfoTest extends TestCase  {
 	private Company comp;
 	private GuV g1;
-	private GuV g2;
 	private Balance b;
 	/**
 	 * @throws java.lang.Exception
@@ -55,7 +54,7 @@ public class PeriodInfoTest extends TestCase  {
 		
 		
 		
-		CompanyController.payCreditAmortisation();
+		CompanyController.payInterestAndRepayment();
 		CompanyController.payEmployersSalery();
 		
 		CompanyController.payRent();
@@ -115,7 +114,7 @@ public class PeriodInfoTest extends TestCase  {
 		
 		
 		
-		CompanyController.payCreditAmortisation();
+		CompanyController.payInterestAndRepayment();
 		CompanyController.payEmployersSalery();
 		
 		CompanyController.payRent();

@@ -261,12 +261,12 @@ public abstract class CompanyController {
 		comp.incMoney(height);
 	}
 	
-	public static void payCreditAmortisation() throws UserCanNotPayException{
+	public static void payInterestAndRepayment() throws UserCanNotPayException{
 		Company comp = Company.getInstance();
 		Credit cred = comp.getCredit();
 		payItem(cred.getAnuity());
 		//Wenn Credit abbezahlt
-		if(cred.payAmortisation())
+		if(cred.payInterestAndRepayment())
 			comp.removeCredit();
 		
 	}
@@ -293,7 +293,7 @@ public abstract class CompanyController {
 		comp.decFinishedProducts(SoldProducts);
 		
 		Period period = PeriodInfo.getActualPeriod();
-		period.incEarnedMoney(Revenue);
+		period.setRevenue(Revenue);
 		
 		//TODO EarnedMoney ?? meinst du revenue @ michael?
 		//TODO Bestandsveränderung bei Fertigprodukten
@@ -306,14 +306,7 @@ public abstract class CompanyController {
 	//Lagekosten
 	public static void payWarehouseCosts() throws UserCanNotPayException {
 		Company comp = Company.getInstance();
-		int stockfisch = comp.getRessource(RessourceType.Stockfisch).getStoredUnits();
-		int verpackung = comp.getRessource(RessourceType.Verpackungsmaterial).getStoredUnits();
-		int finishedProducts = comp.getFinishedProducts();
-		
-		double warehouseCosts = stockfisch * comp.WAREHOUSECOST_PER_STOCKFISCH 
-							  + verpackung * comp.WAREHOUSECOST_PER_VERPACKUNG  
-							  + finishedProducts * comp.WAREHOUSECOST_PER_PRODUCT;
-		payItem(warehouseCosts);
+		payItem(comp.getWarehouseCosts());
 	}
 	
 	

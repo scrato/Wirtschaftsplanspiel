@@ -1,8 +1,6 @@
 package networkTest;
 
 import Client.Application.CompanyController;
-import Client.Application.UnableToTakeCreditException;
-import Client.Application.UserCanNotPayException;
 import Client.Entities.Company;
 
 public class CreditTest {
@@ -10,12 +8,12 @@ public class CreditTest {
 	 Company comp = Company.getInstance();
 	 comp.incMoney(500000);
 		CompanyController.takeCredit(50000, 6);
-		CompanyController.payCreditAmortisation();
-		CompanyController.payCreditAmortisation();
-		CompanyController.payCreditAmortisation();
-		CompanyController.payCreditAmortisation();
-		CompanyController.payCreditAmortisation();
-		CompanyController.payCreditAmortisation();
+		CompanyController.payInterestAndRepayment();
+		CompanyController.payInterestAndRepayment();
+		CompanyController.payInterestAndRepayment();
+		CompanyController.payInterestAndRepayment();
+		CompanyController.payInterestAndRepayment();
+		CompanyController.payInterestAndRepayment();
 		
 		
 		

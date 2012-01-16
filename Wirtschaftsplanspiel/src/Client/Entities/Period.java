@@ -295,6 +295,8 @@ public class Period {
 		   //Bestandsveränderungen Ressourcen
 		   guv.changeInStockRessources = p.getRessourcePriceDelta();
 		   
+		   guv.warehouseCosts = comp.getWarehouseCosts();
+		   
 		   //Umsatzerlöse
 		   guv.sales = p.getRevenue();
 		   return guv;
@@ -308,6 +310,8 @@ public class Period {
 	   
 	   
 	   public class GuV {
+
+			public double warehouseCosts;
 
 			public double sales;
 

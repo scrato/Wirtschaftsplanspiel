@@ -5,42 +5,37 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
+import common.entities.CompanyResultList;
 
 
-import common.entities.CompanyResult;
-import common.entities.CompanyResults;
-
-
-public class SendCompanyResultMessage extends NetMessage {
-	CompanyResults companyResult;
+public class RecieveCompanyResultMessage extends NetMessage {
+	CompanyResultList companyResult;
 	
-	public SendCompanyResultMessage(byte[] Content) {		
-		super(MessageType.SEND_COMPANYRESULTS, Content);
+	public RecieveCompanyResultMessage(byte[] Content) {		
+		super(MessageType.RECIEVE_COMPANYRESULT, Content);
 		companyResult = convertBytesToCompanyResult(Content);
 		
 	}
-	public SendCompanyResultMessage(CompanyResults Content){
-		super(MessageType.SEND_COMPANYRESULTS, convertCompanyResulttoBytes(Content));
+	public RecieveCompanyResultMessage(CompanyResultList Content){
+		super(MessageType.RECIEVE_COMPANYRESULT, convertCompanyResulttoBytes(Content));
 		companyResult = Content;
 	}
 	
 	
-	private CompanyResults convertBytesToCompanyResult(byte[] content) {
+	private CompanyResultList convertBytesToCompanyResult(byte[] content) {
 		ByteArrayInputStream b = new ByteArrayInputStream(content);
 		try {
 			ObjectInputStream o = new ObjectInputStream(b);
-			return (CompanyResults) o.readObject();
+			return (CompanyResultList) o.readObject();
 		} catch (Exception e) {
-			throw new RuntimeException("Conversion to CompanyResult failed");
+			throw new RuntimeException("Conversion to CompanyResultList failed");
 		}
 	}
 
-	public CompanyResults getCompanyResults(){
+	public CompanyResultList getCompanyResults(){
 		return companyResult;
 	}
-	private static byte[] convertCompanyResulttoBytes(CompanyResults content) {
+	private static byte[] convertCompanyResulttoBytes(CompanyResultList content) {
 		byte[] result;
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		try {

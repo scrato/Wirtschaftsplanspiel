@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CompanyResults implements Serializable {
+public class CompanyResultList implements Serializable {
 
 	/**
 	 * 

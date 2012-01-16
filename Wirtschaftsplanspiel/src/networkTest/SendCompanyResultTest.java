@@ -1,20 +1,20 @@
 package networkTest;
 
-import NetworkCommunication.SendCompanyResultMessage;
+import NetworkCommunication.RecieveCompanyResultMessage;
 import common.entities.CompanyResult;
-import common.entities.CompanyResults;
+import common.entities.CompanyResultList;
 
 public class SendCompanyResultTest {
 	public static void main(String[] args){
-		CompanyResults cr = new CompanyResults();
+		CompanyResultList cr = new CompanyResultList();
 		cr.result.add(new CompanyResult(123, 1));
 		cr.result.add(new CompanyResult(123, 2));
 		
 		
-		SendCompanyResultMessage scr = new SendCompanyResultMessage(cr);
+		RecieveCompanyResultMessage scr = new RecieveCompanyResultMessage(cr);
 		
-		SendCompanyResultMessage scr2 = new SendCompanyResultMessage(scr.get_Content());
+		RecieveCompanyResultMessage scr2 = new RecieveCompanyResultMessage(scr.get_Content());
 		
-		CompanyResults cr2 = scr2.getCompanyResults();
+		CompanyResultList cr2 = scr2.getCompanyResults();
 	}
 }

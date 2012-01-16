@@ -199,5 +199,17 @@ public class Company {
 		actCredit = null;
 		
 	}
+	
+	//Lagerkosten
+	public double getWarehouseCosts(){
+
+		int stockfisch = getRessource(RessourceType.Stockfisch).getStoredUnits();
+		int verpackung = getRessource(RessourceType.Verpackungsmaterial).getStoredUnits();
+		int finishedProducts = getFinishedProducts();
+		
+		return                  stockfisch * WAREHOUSECOST_PER_STOCKFISCH 
+							  + verpackung * WAREHOUSECOST_PER_VERPACKUNG  
+							  + finishedProducts * WAREHOUSECOST_PER_PRODUCT;
+	}
 
 }
