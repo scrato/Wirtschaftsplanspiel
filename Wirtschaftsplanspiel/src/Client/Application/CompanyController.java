@@ -11,6 +11,7 @@ import Client.Entities.Credit;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
 import Client.Entities.Period;
+import Client.Entities.PeriodInfo;
 import Client.Entities.Production;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
@@ -108,7 +109,7 @@ public abstract class CompanyController {
 		}
 		
 		//Logging
-		comp.getActualPeriod().setDeprecation(deprecation);
+		PeriodInfo.getActualPeriod().setDeprecation(deprecation);
 		return deprecation;
 	}
 	
@@ -291,7 +292,7 @@ public abstract class CompanyController {
 		comp.incMoney(Revenue);
 		comp.decFinishedProducts(SoldProducts);
 		
-		Period period = comp.getActualPeriod();
+		Period period = PeriodInfo.getActualPeriod();
 		period.incEarnedMoney(Revenue);
 		
 		//TODO EarnedMoney ?? meinst du revenue @ michael?

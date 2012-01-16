@@ -4,6 +4,7 @@ import common.entities.Supply;
 
 import Client.Entities.Company;
 import Client.Entities.Period;
+import Client.Entities.PeriodInfo;
 import Client.Network.Client;
 import NetworkCommunication.SendAssignedDemandMessage;
 import NetworkCommunication.SendSupplyMessage;
@@ -11,7 +12,7 @@ import NetworkCommunication.SendSupplyMessage;
 public abstract class PeriodController {
 
 	public static void SendSupply(Supply supply) {
-		Period period = Company.getInstance().getActualPeriod();
+		Period period = PeriodInfo.getActualPeriod();
 		period.setProductPrice(supply.price);
 		
 		Client client = Client.getInstance();
@@ -21,7 +22,7 @@ public abstract class PeriodController {
 	public static void RecieveAssignedDemand(SendAssignedDemandMessage sendAssignedDemandMessage) {
 		//TODO Erfolgsermittlung und übertrageung des erfolgs zum Server. Dannach ErgebnisScreen (Bilanz, GuV) aufbauen und anzeigen.
 		int quantity = sendAssignedDemandMessage.getQuantity();
-		double price = Company.getInstance().getActualPeriod().getProductPrice();
+		double price = PeriodInfo.getActualPeriod().getProductPrice();
 		
 		double revenue = quantity * price;		
 		CompanyController.receiveSalesRevenue(revenue, quantity);

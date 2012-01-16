@@ -31,6 +31,8 @@ public class Period {
 	private Balance balance;
 
 	private double revenue;
+
+	
 	
 	public void setProductPrice(double price) {
 		productPrice = price;
@@ -184,7 +186,7 @@ public class Period {
 	/**
 	 * Erstellt die Bilianz der Periode
 	 */
-	   public void makeBalance(){
+	   public Balance makeBalance(){
 		   Period p = this;
 		   balance = new Balance();
 		   
@@ -210,6 +212,7 @@ public class Period {
 		   balance.bank = comp.getMoney();
 		   
 		   balance.calculateEquity();
+		   return balance;
 	   }
 	   
 	   public Balance getBalance(){
@@ -230,7 +233,7 @@ public class Period {
 	    * (Wenn diese Methode vor Ende der Periode ausgeführt wird, gibt es keine Abschreibung und keine verkauften Fertigprodukte)
 	    * @return
 	    */
-	   public void makeGuV(){
+	   public GuV makeGuV(){
 		   Period p = this;
 		   guv = new GuV();
 		   
@@ -294,7 +297,7 @@ public class Period {
 		   
 		   //Umsatzerlöse
 		   guv.sales = p.getRevenue();
-	
+		   return guv;
 	   }
 	 
 
@@ -327,7 +330,7 @@ public class Period {
 			public double ressourceCost;
 			public double interest;
 			
-			public double result;
+			public double profit;
 			
 			public void calculateResult(){
 				double  expenditures = employerSallery + rental + employeeHiringCosts + wages + employeeDismissalCosts + deprecation + interest;
@@ -345,7 +348,7 @@ public class Period {
 				
 				
 				
-				this.result = earnings - expenditures;
+				this.profit = earnings - expenditures;
 			}
 
 		}

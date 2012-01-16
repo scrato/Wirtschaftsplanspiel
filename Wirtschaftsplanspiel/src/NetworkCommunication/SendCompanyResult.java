@@ -18,10 +18,20 @@ public class SendCompanyResult extends NetMessage {
 	
 	public SendCompanyResult(byte[] Content) {		
 		super(MessageType.SEND_COMPANYRESULTS, Content);
-		
+		s = getCompanyResult(Content);
 		
 	}
 	
+	private CompanyResults getCompanyResult(byte[] content) {
+		ByteArrayInputStream b = new ByteArrayInputStream(content);
+		try {
+			ObjectInputStream o = new ObjectInputStream(b);
+			return (CompanyResults) o.readObject();
+		} catch (Exception e) {
+			throw new RuntimeException("Something happened");
+		}
+	}
+
 	public SendCompanyResult(CompanyResults Content){
 		super(MessageType.SEND_COMPANYRESULTS, getCompanyResultBytes(Content));
 		s = Content;
