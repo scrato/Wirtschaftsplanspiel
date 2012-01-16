@@ -29,6 +29,10 @@ public class Period {
 	private double interestPayment;
 	private GuV guv;
 	private Balance balance;
+
+	private double revenue;
+
+	
 	
 	public void setProductPrice(double price) {
 		productPrice = price;
@@ -182,7 +186,7 @@ public class Period {
 	/**
 	 * Erstellt die Bilianz der Periode
 	 */
-	   public void makeBalance(){
+	   public Balance makeBalance(){
 		   Period p = this;
 		   balance = new Balance();
 		   
@@ -208,18 +212,28 @@ public class Period {
 		   balance.bank = comp.getMoney();
 		   
 		   balance.calculateEquity();
+		   return balance;
 	   }
 	   
 	   public Balance getBalance(){
 		   return balance;
 	   }
 
+	   public double getRevenue() {
+			
+			return revenue;
+		}
+	   
+	   public void setRevenue(double revenue){
+		   this.revenue = revenue;
+	   }
+	   
 	   /**
 	    * Erstellt die GuV am Ende der Periode. 
 	    * (Wenn diese Methode vor Ende der Periode ausgeführt wird, gibt es keine Abschreibung und keine verkauften Fertigprodukte)
 	    * @return
 	    */
-	   public void makeGuV(){
+	   public GuV makeGuV(){
 		   Period p = this;
 		   guv = new GuV();
 		   
@@ -263,12 +277,9 @@ public class Period {
 		   for(Iterator<Machine> i = p.getSoldMachines().iterator(); i.hasNext();){
 			   Machine next = i.next();
 			   //TODO: Verkaufsaufwand für Maschinen berechnen
-			   //g.machineSellingCharge += (next.getValue() - next.g)
+			   //g.machineSellingCharge += g.getSellingValue();
 		   }
 
-		   //TODO: Fertigprodukte verkaufen
-		   //g.sold
-		   
 		   //Miete
 		   guv.rental = comp.FACILITIESRENT;
 		   //Unternehmerlohn
@@ -284,12 +295,13 @@ public class Period {
 		   //Bestandsveränderungen Ressourcen
 		   guv.changeInStockRessources = p.getRessourcePriceDelta();
 		   
-		   //TODO: Umsatzerlöse
-		   guv.sales = 0.00;
-	
+		   //Umsatzerlöse
+		   guv.sales = p.getRevenue();
+		   return guv;
 	   }
-	   
-	   public GuV getGuV(){
+	 
+
+	public GuV getGuV(){
 		   return guv;
 	   }
 	   
@@ -318,7 +330,7 @@ public class Period {
 			public double ressourceCost;
 			public double interest;
 			
-			public double result;
+			public double profit;
 			
 			public void calculateResult(){
 				double  expenditures = employerSallery + rental + employeeHiringCosts + wages + employeeDismissalCosts + deprecation + interest;
@@ -336,7 +348,7 @@ public class Period {
 				
 				
 				
-				this.result = earnings - expenditures;
+				this.profit = earnings - expenditures;
 			}
 
 		}
