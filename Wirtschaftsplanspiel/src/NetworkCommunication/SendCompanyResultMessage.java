@@ -13,30 +13,34 @@ import common.entities.CompanyResult;
 import common.entities.CompanyResults;
 
 
-public class SendCompanyResult extends NetMessage {
-	CompanyResults s;
+public class SendCompanyResultMessage extends NetMessage {
+	CompanyResults companyResult;
 	
-	public SendCompanyResult(byte[] Content) {		
+	public SendCompanyResultMessage(byte[] Content) {		
 		super(MessageType.SEND_COMPANYRESULTS, Content);
-		s = getCompanyResult(Content);
+		companyResult = convertBytesToCompanyResult(Content);
 		
 	}
+	public SendCompanyResultMessage(CompanyResults Content){
+		super(MessageType.SEND_COMPANYRESULTS, convertCompanyResulttoBytes(Content));
+		companyResult = Content;
+	}
 	
-	private CompanyResults getCompanyResult(byte[] content) {
+	
+	private CompanyResults convertBytesToCompanyResult(byte[] content) {
 		ByteArrayInputStream b = new ByteArrayInputStream(content);
 		try {
 			ObjectInputStream o = new ObjectInputStream(b);
 			return (CompanyResults) o.readObject();
 		} catch (Exception e) {
-			throw new RuntimeException("Something happened");
+			throw new RuntimeException("Conversion to CompanyResult failed");
 		}
 	}
 
-	public SendCompanyResult(CompanyResults Content){
-		super(MessageType.SEND_COMPANYRESULTS, getCompanyResultBytes(Content));
-		s = Content;
+	public CompanyResults getCompanyResults(){
+		return companyResult;
 	}
-	private static byte[] getCompanyResultBytes(CompanyResults content) {
+	private static byte[] convertCompanyResulttoBytes(CompanyResults content) {
 		byte[] result;
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		try {
@@ -45,7 +49,7 @@ public class SendCompanyResult extends NetMessage {
 			result = b.toByteArray();
 			return result;
 		} catch (IOException e) {
-			throw new RuntimeException("Something happened");
+			throw new RuntimeException("Conversion to ByteArray failed");
 		}
 		
 		

@@ -10,7 +10,7 @@ public class CompanyResults implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -4880656292795668796L;
-	public static List<CompanyResult> result = new LinkedList<CompanyResult>();
+	public List<CompanyResult> result = new LinkedList<CompanyResult>();
 	
 
 	

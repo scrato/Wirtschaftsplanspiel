@@ -98,8 +98,8 @@ public class ServerController {
 	
 	/**
 	 * determines contingents of total demand for all clients.
-	 * @param Supplies: Map of Supplies for all Client(ID)s.
-	 * @return Contingents: Map of Contingents for all Client(ID)s.
+	 * @param Supplies: Map of Supplies for all Client(ID)companyResult.
+	 * @return Contingents: Map of Contingents for all Client(ID)companyResult.
 	 */
 	public static Map<Integer, Integer> demandFunction(Map<Integer, Supply> Supplies) {
 		
