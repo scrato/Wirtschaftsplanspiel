@@ -15,16 +15,16 @@ public class DemandFunctionTest {
 		
 		Map<Integer, Supply> supplies = new TreeMap<Integer, Supply>();
 		
-		Supply A = new Supply(51000, 2.0d);//0.621d);
+		Supply A = new Supply(11000, 3.532d);//0.621d);
 		supplies.put(1, A);
 		
-		Supply B = new Supply(50000, 0.514d);
+		Supply B = new Supply(10000, 3.514d);
 		supplies.put(2, B);
 		
-		Supply C = new Supply(60000, 0.488d);
+		Supply C = new Supply(10000, 3.488d);
 		supplies.put(3, C);
 		
-		Supply D = new Supply(75000, 0.391d);
+		Supply D = new Supply(15000, 3.391d);
 		supplies.put(4, D);
 		
 		AppContext.standardDemand = supplies.size() * AppContext.STANDARD_DEMAND_PER_PLAYER;
