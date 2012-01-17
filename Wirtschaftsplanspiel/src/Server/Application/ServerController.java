@@ -84,7 +84,6 @@ public class ServerController {
 			int quantity;
 			Disposal disposal;
 			for (ClientHandler client : clients) {
-				// TODO assigned Demand an Client übergeben.
 				try {
 					disposal = disposals.get(client.get_ID());
 					quantity = disposal.quantity;
