@@ -56,9 +56,10 @@ public abstract class PeriodController {
 		}
 	}
 
+	
 	public static void RecieveCompanyResult(
-		BroadcastCompanyResultMessage sendCompanyResultMessage) {
-		CompanyResultList crl = sendCompanyResultMessage.getCompanyResults();
+		BroadcastCompanyResultMessage Message) {
+		CompanyResultList crl = Message.getCompanyResults();
 		
 		for(Iterator<CompanyResult> it = crl.profitList.values().iterator(); it.hasNext();){
 			CompanyResult result = it.next();
