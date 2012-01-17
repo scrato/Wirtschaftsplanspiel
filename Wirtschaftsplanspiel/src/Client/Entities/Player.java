@@ -8,6 +8,7 @@ public class Player {
 
 	private int id;
 	private String name;
+	private List<Double> resultList = new LinkedList<Double>();
 	
 	public Player(int ID, String Name) {
 		id = ID;
@@ -40,6 +41,14 @@ public class Player {
 	
 	public static void removePlayer(Integer ID) {
 		playerDict.remove(ID);
+	}
+
+	public Double getCompanyResult(int period) {
+		return resultList.get(period);
+	}
+
+	public void addCompanyResult(Double result) {
+		this.resultList.add(result);
 	}
 	
 }

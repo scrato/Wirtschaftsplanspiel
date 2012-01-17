@@ -107,7 +107,7 @@ public void incStoredUnits(int amount){
 	
 	
 	//Logging
-	Period p = Company.getInstance().getActualPeriod();
+	Period p = PeriodInfo.getActualPeriod();
 	
 
 	
@@ -135,7 +135,7 @@ public void decStoredUnits(int amount){
 	
 	//Logging
 	
-	Period p = Company.getInstance().getActualPeriod();
+	Period p = PeriodInfo.getActualPeriod();
 	
 
 	//Bestandsveränderung

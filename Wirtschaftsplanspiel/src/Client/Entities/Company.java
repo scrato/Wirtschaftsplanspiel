@@ -28,7 +28,7 @@ public class Company {
 		}
 		
 		//TODO: Dynamische Lösung finden
-		periodInfo.setMaxPeriods(15);
+		PeriodInfo.setMaxPeriods(15);
 	}
 	
 	//Hier werden Variablen verwaltet
@@ -43,21 +43,20 @@ public class Company {
 	//Hier liegen die Maschinen.
 	private List<Machine> machines = new LinkedList<Machine>();
 	private Map<RessourceType, Ressource> ressources;
-	private List<Employee> employee = new LinkedList<Employee>();	
-	private PeriodInfo periodInfo = new PeriodInfo();
+	private List<Employee> employee = new LinkedList<Employee>();	;
 	private Credit actCredit;
 	
 
 	public void incFinishedProducts(int prod){
 	finishedproducts += prod;
 	//Logging
-	periodInfo.getActualPeriod().incFinishedProductCountDelta(prod);
+	PeriodInfo.getActualPeriod().incFinishedProductCountDelta(prod);
 	}
 	
 	public void decFinishedProducts(int prod){
 		finishedproducts -= prod;
 		//Logging
-		periodInfo.getActualPeriod().decFinishedProductCountDelta(prod);
+		PeriodInfo.getActualPeriod().decFinishedProductCountDelta(prod);
 	}
 	
 	public int getFinishedProducts(){
@@ -71,12 +70,12 @@ public class Company {
 	public void incMoney(double amount){
 		money += amount;
 		//Logging
-		periodInfo.getActualPeriod().incEarnedMoney(amount);
+		PeriodInfo.getActualPeriod().incEarnedMoney(amount);
 	}
 	public void decMoney(double amount){
 		money -= amount;
 		//Logging
-		periodInfo.getActualPeriod().incPaidMoney(amount);
+		PeriodInfo.getActualPeriod().incPaidMoney(amount);
 	}
 	
 	public boolean isLiquid(double amount) {
@@ -117,13 +116,13 @@ public class Company {
 	public void addMachine(Machine machine) {
 		machines.add(machine);
 		//Logging
-		periodInfo.getActualPeriod().addBoughtMachine(machine);
+		PeriodInfo.getActualPeriod().addBoughtMachine(machine);
 	}
 	
 	public void removeMachine(Machine machine) {
 		machines.remove(machine);
 		//Logging
-		periodInfo.getActualPeriod().addSoldMachine(machine);
+		PeriodInfo.getActualPeriod().addSoldMachine(machine);
 	}
    
 	//Ressourcen	
@@ -139,13 +138,13 @@ public class Company {
 	public void addEmployee(Employee newEmployee) {
 		employee.add(newEmployee);
 		//Logging
-		periodInfo.getActualPeriod().addHiredEmployee(newEmployee);
+		PeriodInfo.getActualPeriod().addHiredEmployee(newEmployee);
 	}
 	
 	public void removeEmployee(Employee oldEmployee) {
 		employee.remove(oldEmployee);
 		//Logging
-		periodInfo.getActualPeriod().addFiredEmployee(oldEmployee);
+		PeriodInfo.getActualPeriod().addFiredEmployee(oldEmployee);
 	}
 	
 	public double getWages(){
@@ -171,14 +170,6 @@ public class Company {
 		return capacity;
 	}
 
-	//Periodeninfo
-	public Period getActualPeriod(){
-		return periodInfo.getActualPeriod();
-	}
-	
-	public PeriodInfo getPeriodInfo(){
-		return periodInfo;
-	}
 	
 	//Credit
 	/**
@@ -196,17 +187,29 @@ public class Company {
 	public void setCredit(Credit cred){
 		actCredit = cred;
 		//Logging
-		periodInfo.getActualPeriod().addTakenCredit(cred);
+		PeriodInfo.getActualPeriod().addTakenCredit(cred);
 	}
 	
 
 	public void removeCredit() {
 		//Logging
-		Company.getInstance().getActualPeriod().addPaidCredit(actCredit);
+		PeriodInfo.getActualPeriod().addPaidCredit(actCredit);
 		
 		
 		actCredit = null;
 		
+	}
+	
+	//Lagerkosten
+	public double getWarehouseCosts(){
+
+		int stockfisch = getRessource(RessourceType.Stockfisch).getStoredUnits();
+		int verpackung = getRessource(RessourceType.Verpackungsmaterial).getStoredUnits();
+		int finishedProducts = getFinishedProducts();
+		
+		return                  stockfisch * WAREHOUSECOST_PER_STOCKFISCH 
+							  + verpackung * WAREHOUSECOST_PER_VERPACKUNG  
+							  + finishedProducts * WAREHOUSECOST_PER_PRODUCT;
 	}
 
 }

@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CompanyResults implements Serializable {
+public class CompanyResultList implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4880656292795668796L;
-	public static List<CompanyResult> result = new LinkedList<CompanyResult>();
+	public List<CompanyResult> result = new LinkedList<CompanyResult>();
 	
 
 	

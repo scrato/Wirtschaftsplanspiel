@@ -1,6 +1,12 @@
 package common.entities;
 
-public class CompanyResult {
+import java.io.Serializable;
+
+public class CompanyResult implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 878728121867704823L;
 	public double result;
 	public int clientid;
 	

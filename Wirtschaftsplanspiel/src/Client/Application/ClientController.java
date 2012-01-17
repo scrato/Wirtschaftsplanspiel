@@ -50,7 +50,7 @@ public abstract class ClientController {
 		//TODO Weitergabe UI.
 	}
 	
-	public static void GameStartet() {
+	public static void GameStarted() {
 		MainWindow wind = MainWindow.getInstance();
 		wind.startGame();
 	}

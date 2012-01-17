@@ -7,6 +7,7 @@ import NetworkCommunication.ChatMessageToClient;
 import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
 import NetworkCommunication.SendAssignedDemandMessage;
+import NetworkCommunication.RecieveCompanyResultMessage;
 
 public class TriggerBusinessLogicThread extends Thread {
 	public TriggerBusinessLogicThread(NetMessage Message) {
@@ -31,11 +32,14 @@ public class TriggerBusinessLogicThread extends Thread {
 				break;
 			}
 			case MessageType.GAME_STARTED: {
-				ClientController.GameStartet();
+				ClientController.GameStarted();
 				break;
 			}
 			case MessageType.SEND_ASSIGNED_DEMAND: {
 				PeriodController.RecieveAssignedDemand(new SendAssignedDemandMessage(message.get_Content()));
+			}
+			case MessageType.RECIEVE_COMPANYRESULT: {
+				PeriodController.RecieveCompanyResult(new RecieveCompanyResultMessage(message.get_Content()));
 			}
 		}
 	}

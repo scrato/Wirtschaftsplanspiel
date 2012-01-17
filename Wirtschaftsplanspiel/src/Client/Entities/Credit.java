@@ -45,11 +45,9 @@ public class Credit {
 	
 	private void CanTakeCredit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException {
 		//TODO: Sind Kreditvorraussetzungen so ok?
-		Company comp = Company.getInstance();
-		PeriodInfo perInf = comp.getPeriodInfo();
 		if (creditHeight > 900000)
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.CreditTooHigh);
-		if (contractPeriod > (perInf.getMaxPeriods()- perInf.getNumberOfActPeriod()))
+		if (contractPeriod > (PeriodInfo.getMaxPeriods()- PeriodInfo.getNumberOfActPeriod()))
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.PeriodLongerThanPlaytime);
 		if (contractPeriod > 10)
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.PeriodTooLong);
@@ -60,18 +58,18 @@ public class Credit {
 	 * Senkt den genommenen Kredit um die errechnete Tilgung und gibt zurück ob die Gesamtsumme getilgt wurde
 	 * @return true => Kredit wurde vollständig zurückbezahlt
 	 */
-	public boolean payAmortisation(){
+	public boolean payInterestAndRepayment(){
 		double interestPayment = (creditLeft * interestPercentage);
 		//Logging
-		Company.getInstance().getActualPeriod().setInterestPayment(interestPayment);
+		PeriodInfo.getActualPeriod().setInterestPayment(interestPayment);
 		
-		double amortisation = (anuity - interestPayment);
-		if((int) amortisation >=  (int) creditLeft - 1){
+		double repayment = (anuity - interestPayment);
+		if((int) repayment >=  (int) creditLeft - 1){
 			creditLeft = 0;
 			return true;
 		}
 		
-		creditLeft -= amortisation;
+		creditLeft -= repayment;
 		return false;
 	}
 	
