@@ -140,7 +140,7 @@ public class ServerController {
 		
 		for (Supply sup : supplies.values()) {
 			double perc = sup.price / AppContext.STANDARD_PRICE_PER_UNIT;
-			int diff = (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * ( 1 - perc));
+			int diff = (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * ( 1 - ( 1 / perc ) ));
 			leftDemand -= diff;
 			//leftDemand -= (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * (1 - (sup.price * sup.quantity / sup.quantity)));
 		}
