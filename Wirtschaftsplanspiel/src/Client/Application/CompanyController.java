@@ -11,6 +11,7 @@ import Client.Entities.Credit;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
 import Client.Entities.Period;
+import Client.Entities.PeriodInfo;
 import Client.Entities.Production;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
@@ -108,7 +109,7 @@ public abstract class CompanyController {
 		}
 		
 		//Logging
-		comp.getActualPeriod().setDeprecation(deprecation);
+		PeriodInfo.getActualPeriod().setDeprecation(deprecation);
 		return deprecation;
 	}
 	
@@ -260,12 +261,12 @@ public abstract class CompanyController {
 		comp.incMoney(height);
 	}
 	
-	public static void payCreditAmortisation() throws UserCanNotPayException{
+	public static void payInterestAndRepayment() throws UserCanNotPayException{
 		Company comp = Company.getInstance();
 		Credit cred = comp.getCredit();
 		payItem(cred.getAnuity());
 		//Wenn Credit abbezahlt
-		if(cred.payAmortisation())
+		if(cred.payInterestAndRepayment())
 			comp.removeCredit();
 		
 	}
@@ -291,8 +292,8 @@ public abstract class CompanyController {
 		comp.incMoney(Revenue);
 		comp.decFinishedProducts(SoldProducts);
 		
-		Period period = comp.getActualPeriod();
-		period.incEarnedMoney(Revenue);
+		Period period = PeriodInfo.getActualPeriod();
+		period.setRevenue(Revenue);
 		
 		//TODO EarnedMoney ?? meinst du revenue @ michael?
 		//TODO Bestandsveränderung bei Fertigprodukten
@@ -305,14 +306,7 @@ public abstract class CompanyController {
 	//Lagekosten
 	public static void payWarehouseCosts() throws UserCanNotPayException {
 		Company comp = Company.getInstance();
-		int stockfisch = comp.getRessource(RessourceType.Stockfisch).getStoredUnits();
-		int verpackung = comp.getRessource(RessourceType.Verpackungsmaterial).getStoredUnits();
-		int finishedProducts = comp.getFinishedProducts();
-		
-		double warehouseCosts = stockfisch * comp.WAREHOUSECOST_PER_STOCKFISCH 
-							  + verpackung * comp.WAREHOUSECOST_PER_VERPACKUNG  
-							  + finishedProducts * comp.WAREHOUSECOST_PER_PRODUCT;
-		payItem(warehouseCosts);
+		payItem(comp.getWarehouseCosts());
 	}
 	
 	

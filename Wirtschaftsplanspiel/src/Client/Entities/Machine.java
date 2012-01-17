@@ -58,4 +58,8 @@ public class Machine {
 		return lifetime - age;
 	}
 	
+	public double getSellingValue() {
+		return value / 2;
+	}
+	
 }
