@@ -4,11 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+import common.entities.CompanyResult;
+
 public class Player {
 
 	private int id;
 	private String name;
-	private List<Double> resultList = new LinkedList<Double>();
+	private List<CompanyResult> resultList = new LinkedList<CompanyResult>();
 	
 	public Player(int ID, String Name) {
 		id = ID;
@@ -43,11 +45,11 @@ public class Player {
 		playerDict.remove(ID);
 	}
 
-	public Double getCompanyResult(int period) {
+	public CompanyResult getCompanyResult(int period) {
 		return resultList.get(period);
 	}
 
-	public void addCompanyResult(Double result) {
+	public void addCompanyResult(CompanyResult result) {
 		this.resultList.add(result);
 	}
 	

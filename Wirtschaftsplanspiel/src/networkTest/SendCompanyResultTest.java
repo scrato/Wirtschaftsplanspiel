@@ -7,8 +7,8 @@ import common.entities.CompanyResultList;
 public class SendCompanyResultTest {
 	public static void main(String[] args){
 		CompanyResultList cr = new CompanyResultList();
-		cr.result.add(new CompanyResult(123, 1));
-		cr.result.add(new CompanyResult(123, 2));
+		cr.profitList.put(1,new CompanyResult(123, 1));
+		cr.profitList.put(2,new CompanyResult(123, 2));
 		
 		
 		BroadcastCompanyResultMessage scr = new BroadcastCompanyResultMessage(cr);

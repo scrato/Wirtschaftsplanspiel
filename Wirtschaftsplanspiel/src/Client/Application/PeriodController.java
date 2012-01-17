@@ -60,9 +60,9 @@ public abstract class PeriodController {
 		BroadcastCompanyResultMessage sendCompanyResultMessage) {
 		CompanyResultList crl = sendCompanyResultMessage.getCompanyResults();
 		
-		for(Iterator<CompanyResult> it = crl.result.iterator(); it.hasNext();){
+		for(Iterator<CompanyResult> it = crl.profitList.values().iterator(); it.hasNext();){
 			CompanyResult result = it.next();
-			Player.getPlayer(result.clientid).addCompanyResult(result.profit);
+			Player.getPlayer(result.clientid).addCompanyResult(result);
 		}
 		
 		//TODO: Im UI die Ergebnisliste anzeigen

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 
+import NetworkCommunication.BroadcastCompanyResultMessage;
 import NetworkCommunication.ChatMessageToClient;
 import NetworkCommunication.ChatMessageToServer;
 import NetworkCommunication.SendAssignedDisposalMessage;
@@ -219,8 +220,8 @@ public class ServerController {
 				CompanyResult result = new CompanyResult(singleResult, sender.get_ID());
 				Disposal singleDisposal = PeriodBuffer.Disposals.get(sender.get_ID());
 				result.sales = singleDisposal.price * singleDisposal.quantity;
-				//result.marketShare = 
-				profits.result.add(result);
+				result.marketShare = singleDisposal.quantity / PeriodBuffer.getTotalDisposal();
+				profits.profitList.put(sender.get_ID(),result);
 			}
 			finally
 			{
@@ -235,25 +236,19 @@ public class ServerController {
 		if (clients.isEmpty()) return;
 		
 		Map<Integer, Disposal> disposals = null;
-		lockSupplies.acquireUninterruptibly();
+		profitlocker.acquireUninterruptibly();
 		try {
 			for (ClientHandler client : clients) {
-				if (!supplies.containsKey(client.get_ID())) {
-					lockSupplies.release();
+				if (!profits.profitList.containsKey(client.get_ID())) {
+					profitlocker.release();
 					return;
 				}
 			}
-			// alle Angebote wurden abgebgeben. Führe demandFunction aus.
-			disposals = demandFunction(supplies);
-		
-			int quantity;
-			Disposal disposal;
+			
+			//Dieser Code wird hoffentlich nur erreicht, wenn alle Clients abgegeben haben
 			for (ClientHandler client : clients) {
 				try {
-					disposal = disposals.get(client.get_ID());
-					quantity = disposal.quantity;
-					PeriodBuffer.Disposals.put(client.get_ID(), disposal);
-					client.SendMessage(new SendAssignedDisposalMessage(quantity));
+					client.SendMessage(new BroadcastCompanyResultMessage(profits));
 				} catch (Exception e) { }
 			}
 			// Absätze wurden an Clients verschickt, Angebote werden zurückgesetzt.
@@ -261,7 +256,7 @@ public class ServerController {
 			
 		} catch (Exception e) {
 		} finally {
-			lockSupplies.release();
+			profitlocker.release();
 		}
 	}
 	
