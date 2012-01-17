@@ -231,11 +231,10 @@ public class ServerController {
 		checkResultsCollected();
 	}
 
-	private static void checkResultsCollected() {
+	public static void checkResultsCollected() {
 		List<ClientHandler> clients = Server.getInstance().getClients();		
 		if (clients.isEmpty()) return;
 		
-		Map<Integer, Disposal> disposals = null;
 		profitlocker.acquireUninterruptibly();
 		try {
 			for (ClientHandler client : clients) {
