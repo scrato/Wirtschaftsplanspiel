@@ -9,14 +9,18 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 
+import NetworkCommunication.BroadcastCompanyResultMessage;
 import NetworkCommunication.ChatMessageToClient;
 import NetworkCommunication.ChatMessageToServer;
 import NetworkCommunication.SendAssignedDisposalMessage;
+import NetworkCommunication.SendCompanyResultMessage;
 import NetworkCommunication.SendSupplyMessage;
 import Server.Entities.Disposal;
 import Server.Entities.PeriodBuffer;
 import Server.Network.Server;
 import Server.Network.ClientHandler;
+import common.entities.CompanyResult;
+import common.entities.CompanyResultList;
 import common.entities.Supply;
 
 
@@ -204,6 +208,56 @@ public class ServerController {
 		}
 		
 		return disposals;
+	}
+
+	private static Semaphore profitlocker = new Semaphore(1);
+	private static CompanyResultList profits = new CompanyResultList();
+	public static void collectResults(ClientHandler sender,
+			SendCompanyResultMessage Message) {
+		double singleResult = Message.getProfit();
+		profitlocker.acquireUninterruptibly();
+			try{
+				CompanyResult result = new CompanyResult(singleResult, sender.get_ID());
+				Disposal singleDisposal = PeriodBuffer.Disposals.get(sender.get_ID());
+				result.sales = singleDisposal.price * singleDisposal.quantity;
+				result.marketShare = singleDisposal.quantity / PeriodBuffer.getTotalDisposal();
+				profits.profitList.put(sender.get_ID(),result);
+			}
+			finally
+			{
+				profitlocker.release();
+			}
+			
+		checkResultsCollected();
+	}
+
+	private static void checkResultsCollected() {
+		List<ClientHandler> clients = Server.getInstance().getClients();		
+		if (clients.isEmpty()) return;
+		
+		Map<Integer, Disposal> disposals = null;
+		profitlocker.acquireUninterruptibly();
+		try {
+			for (ClientHandler client : clients) {
+				if (!profits.profitList.containsKey(client.get_ID())) {
+					profitlocker.release();
+					return;
+				}
+			}
+			
+			//Dieser Code wird hoffentlich nur erreicht, wenn alle Clients abgegeben haben
+			for (ClientHandler client : clients) {
+				try {
+					client.SendMessage(new BroadcastCompanyResultMessage(profits));
+				} catch (Exception e) { }
+			}
+			// Absätze wurden an Clients verschickt, Angebote werden zurückgesetzt.
+			supplies.clear();
+			
+		} catch (Exception e) {
+		} finally {
+			profitlocker.release();
+		}
 	}
 	
 	// END OF Pediodenabschluss.
