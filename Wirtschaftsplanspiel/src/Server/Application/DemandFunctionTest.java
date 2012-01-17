@@ -15,7 +15,7 @@ public class DemandFunctionTest {
 		
 		Map<Integer, Supply> supplies = new TreeMap<Integer, Supply>();
 		
-		Supply A = new Supply(51000, 1.0d);//0.621d);
+		Supply A = new Supply(51000, 2.0d);//0.621d);
 		supplies.put(1, A);
 		
 		Supply B = new Supply(50000, 0.514d);
