@@ -3,7 +3,6 @@ package Server.Network;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -12,7 +11,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 
-import common.entities.Supply;
 
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.MessageType;
@@ -64,7 +62,6 @@ public class Server {
 		DataInputStream inputStream;
 		DataOutputStream outputStream;
 		
-		int nameByteLength;
 		byte[] nameBytes = new byte[20];
 		
 		String name;
@@ -78,10 +75,6 @@ public class Server {
 				newSocket = listener.accept();
 		
 				inputStream = new DataInputStream( newSocket.getInputStream());
-				//nameByteLength = inputStream.readInt();
-				//nameBytes = new byte[nameByteLength];
-				//inputStream.read(nameBytes, 0, nameByteLength);
-				//name = new String(nameBytes);
 				inputStream.read(nameBytes, 0, 20);
 
 				name = new String(nameBytes, "UTF-16LE");
@@ -153,62 +146,6 @@ public class Server {
 		}
 		return i;
 	}
-
-	
-//	void receiveMessage(NetMessage message, ClientHandler sender) {
-//		switch (message.get_MessageType()) {
-//			case MessageType.CHATMASSAGE_TOSERVER: {
-//				
-//				System.out.println("Chatnachricht gesendet von Client " + sender.get_ID());
-//				
-//				byte[] contentLength = ByteConverter.toBytes(message.get_Content().length);
-//				byte[] nameBytes = null;
-//				try {
-//					nameBytes = sender.get_Name().getBytes("UTF-16LE");
-//				} catch (UnsupportedEncodingException e) {
-//					//should never reach this point.
-//				}
-//				byte[] nameLength = ByteConverter.toBytes(nameBytes.length);
-//				byte[] sendBytes = new byte[message.get_Content().length + 8 + nameBytes.length];
-//				
-//				System.arraycopy(contentLength, 0, sendBytes, 0, 4);
-//				System.arraycopy(message.get_Content(), 0, sendBytes, 4, message.get_Content().length);
-//				System.arraycopy(nameLength, 0, sendBytes, 4 + message.get_Content().length, 4);
-//				System.arraycopy(nameBytes, 0, sendBytes, 8 + message.get_Content().length, nameBytes.length);				
-//				
-//				NetMessage sendMessage = new NetMessage(MessageType.CHATMESSAGE_TOCLIENT, sendBytes);
-//				
-//				lock_clients.acquireUninterruptibly();
-//				try {
-//					for (ClientHandler client : clients.values()) {
-//						try {
-//							client.SendMessage(sendMessage);
-//						} catch (Exception e) { }
-//					}
-//				} catch (Exception e) {
-//				} finally {
-//					lock_clients.release();
-//				}
-//				break;
-//			}
-//			case MessageType.SEND_SUPPLY: {
-//				
-//				byte[] supBytes = message.get_Content();
-//				
-//				byte[] quantityBytes = new byte[4];
-//				byte[] priceBytes = new byte[8];
-//				
-//				System.arraycopy(supBytes, 0, quantityBytes, 0, 4);
-//				System.arraycopy(supBytes, 4, priceBytes, 0, 8);
-//				
-//				int quantity = ByteConverter.toInt(quantityBytes);
-//				double price = ByteConverter.toDouble(priceBytes);
-//				
-//				ServerController.receiveSupply(sender.get_ID(), new Supply(quantity, price));
-//			}
-//		}
-//	}
-	
 	
 	public void StartAcceptClients() {
 		if (!listenerThread.isAlive()) {

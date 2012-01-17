@@ -23,6 +23,14 @@ import common.entities.Supply;
 
 public class ServerController {
 	
+	// Spiel Starten.
+	public static void StartGame() {
+		Server server = Server.getInstance();
+		int countPlayer = server.getClients().size();
+		AppContext.standardDemand = countPlayer * AppContext.STANDARD_DEMAND_PER_PLAYER;
+		server.startGame();
+	}
+	
 	// BEGIN OF Chatnachricht weiterleiten.
 	
 	public static void redirectChatMessage(ClientHandler sender, ChatMessageToServer message) {
@@ -111,7 +119,27 @@ public class ServerController {
 		Map<Integer, Supply> supplies = new TreeMap<Integer, Supply>();
 		supplies.putAll(Supplies);
 		
-		int leftDemand = AppContext.totalDemand;
+		int leftDemand = AppContext.standardDemand;
+		
+		// TODO: gesamtNachfrage in abhängigkeit vom Angebot vergrößern/schmälern.
+		
+		// funktioniert so nicht: andere leiden darunter, wenn nur einer viel zu teuer wird.
+//		double averagePricePerUnit = 0;
+//		int countQuantity = 0;
+//		for (Supply sup : supplies.values()) {
+//			averagePricePerUnit += sup.price * sup.quantity;
+//			countQuantity += sup.quantity;
+//		}
+//		averagePricePerUnit /= countQuantity;
+//		
+//		leftDemand *= (AppContext.STANDARD_PRICE_PER_UNIT / averagePricePerUnit);
+		
+		for (Supply sup : supplies.values()) {
+			double perc = sup.price * sup.quantity / sup.quantity;
+			//int diff = AppContext.STANDARD_DEMAND_PER_PLAYER * (1 - perc);
+			
+			//leftDemand -= (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * (1 - (sup.price * sup.quantity / sup.quantity)));
+		}
 		
 		// initialize assignedDemand
 		Map<Integer, Disposal> disposals  = new TreeMap<Integer, Disposal>();
@@ -139,7 +167,8 @@ public class ServerController {
 			// calculate contingents by factors.
 			Map<Integer, Integer> contingents = new TreeMap<Integer, Integer>();
 			for (Entry<Integer, Double> factor : factors.entrySet()) {
-				Integer contingent = (int) Math.round( leftDemand * factor.getValue() / factorsSum );
+				//Integer contingent = (int) Math.round( leftDemand * factor.getValue() / factorsSum );
+				Integer contingent = (int) Math.ceil( leftDemand * factor.getValue() / factorsSum );
 				contingents.put(factor.getKey(), contingent);
 			}
 			

@@ -3,6 +3,7 @@ package Server;
 import java.util.Scanner;
 
 import Server.Network.Server;
+import Server.Application.ServerController;
 
 public class program {
 
@@ -21,7 +22,7 @@ public class program {
 			if (input.equals("-1")) break;
 			if (input.equals("-help")) System.out.println("-help für Hilfe. -1 zum Beenden, 0 zum Spielstart.");
 			if (input.equals("1"))  {
-				server.startGame();
+				ServerController.StartGame();
 			}
 		} 
 

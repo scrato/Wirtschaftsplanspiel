@@ -15,19 +15,21 @@ public class DemandFunctionTest {
 		
 		Map<Integer, Supply> supplies = new TreeMap<Integer, Supply>();
 		
-		Supply A = new Supply(510, 6.21d);
+		Supply A = new Supply(51000, 1.0d);//0.621d);
 		supplies.put(1, A);
 		
-		Supply B = new Supply(500, 5.14d);
+		Supply B = new Supply(50000, 0.514d);
 		supplies.put(2, B);
 		
-		Supply C = new Supply(600, 4.88d);
+		Supply C = new Supply(60000, 0.488d);
 		supplies.put(3, C);
 		
-		Supply D = new Supply(750, 3.91d);
+		Supply D = new Supply(75000, 0.391d);
 		supplies.put(4, D);
 		
-		System.out.println("Nachfrage: " + AppContext.totalDemand);
+		AppContext.standardDemand = supplies.size() * AppContext.STANDARD_DEMAND_PER_PLAYER;
+		
+		System.out.println("Standardnachfrage (zu 0,5 pro Einheit): " + AppContext.standardDemand);
 		
 		System.out.println("Angebot:");
 		//for (Supply sup : supplies.values()) {
@@ -36,6 +38,12 @@ public class DemandFunctionTest {
 		}
 		System.out.println("Kalkuliere Absätze");
 		Map<Integer, Disposal> disposals = ServerController.demandFunction(supplies);
+		
+		int totalDisposalQuantity = 0;
+		for (Disposal disposal : disposals.values()) {
+			totalDisposalQuantity += disposal.quantity;
+		}
+		System.out.println("Erzielter Gesamtabsatz: " + totalDisposalQuantity);
 		
 		System.out.println("Absätze:");
 		for (Disposal disposal : disposals.values()) {
