@@ -12,11 +12,14 @@ import java.util.concurrent.Semaphore;
 import NetworkCommunication.ChatMessageToClient;
 import NetworkCommunication.ChatMessageToServer;
 import NetworkCommunication.SendAssignedDisposalMessage;
+import NetworkCommunication.SendCompanyResultMessage;
 import NetworkCommunication.SendSupplyMessage;
 import Server.Entities.Disposal;
 import Server.Entities.PeriodBuffer;
 import Server.Network.Server;
 import Server.Network.ClientHandler;
+import common.entities.CompanyResult;
+import common.entities.CompanyResultList;
 import common.entities.Supply;
 
 
@@ -204,6 +207,62 @@ public class ServerController {
 		}
 		
 		return disposals;
+	}
+
+	private static Semaphore profitlocker = new Semaphore(1);
+	private static CompanyResultList profits = new CompanyResultList();
+	public static void collectResults(ClientHandler sender,
+			SendCompanyResultMessage Message) {
+		double singleResult = Message.getProfit();
+		profitlocker.acquireUninterruptibly();
+			try{
+				CompanyResult result = new CompanyResult(singleResult, sender.get_ID());
+				Disposal singleDisposal = PeriodBuffer.Disposals.get(sender.get_ID());
+				result.sales = singleDisposal.price * singleDisposal.quantity;
+				//result.marketShare = 
+				profits.result.add(result);
+			}
+			finally
+			{
+				profitlocker.release();
+			}
+			
+		checkResultsCollected();
+	}
+
+	private static void checkResultsCollected() {
+		List<ClientHandler> clients = Server.getInstance().getClients();		
+		if (clients.isEmpty()) return;
+		
+		Map<Integer, Disposal> disposals = null;
+		lockSupplies.acquireUninterruptibly();
+		try {
+			for (ClientHandler client : clients) {
+				if (!supplies.containsKey(client.get_ID())) {
+					lockSupplies.release();
+					return;
+				}
+			}
+			// alle Angebote wurden abgebgeben. Führe demandFunction aus.
+			disposals = demandFunction(supplies);
+		
+			int quantity;
+			Disposal disposal;
+			for (ClientHandler client : clients) {
+				try {
+					disposal = disposals.get(client.get_ID());
+					quantity = disposal.quantity;
+					PeriodBuffer.Disposals.put(client.get_ID(), disposal);
+					client.SendMessage(new SendAssignedDisposalMessage(quantity));
+				} catch (Exception e) { }
+			}
+			// Absätze wurden an Clients verschickt, Angebote werden zurückgesetzt.
+			supplies.clear();
+			
+		} catch (Exception e) {
+		} finally {
+			lockSupplies.release();
+		}
 	}
 	
 	// END OF Pediodenabschluss.

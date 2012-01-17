@@ -62,7 +62,7 @@ public abstract class PeriodController {
 		
 		for(Iterator<CompanyResult> it = crl.result.iterator(); it.hasNext();){
 			CompanyResult result = it.next();
-			Player.getPlayer(result.clientid).addCompanyResult(result.result);
+			Player.getPlayer(result.clientid).addCompanyResult(result.profit);
 		}
 		
 		//TODO: Im UI die Ergebnisliste anzeigen

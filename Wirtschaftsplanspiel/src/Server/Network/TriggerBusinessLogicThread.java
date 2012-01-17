@@ -4,6 +4,7 @@ import Server.Application.ServerController;
 import NetworkCommunication.ChatMessageToServer;
 import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
+import NetworkCommunication.SendCompanyResultMessage;
 import NetworkCommunication.SendSupplyMessage;
 
 public class TriggerBusinessLogicThread extends Thread {
@@ -24,6 +25,9 @@ public class TriggerBusinessLogicThread extends Thread {
 			}
 			case MessageType.SEND_SUPPLY : {
 				ServerController.receiveSupply(sender, new SendSupplyMessage(message.get_Content()));
+			}
+			case MessageType.SEND_COMPANYRESULT:{
+				ServerController.collectResults(sender, new SendCompanyResultMessage(message.get_Content()));
 			}
 		}
 	}

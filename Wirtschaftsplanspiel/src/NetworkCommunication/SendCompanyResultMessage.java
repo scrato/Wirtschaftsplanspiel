@@ -1,20 +1,20 @@
 package NetworkCommunication;
 
 public class SendCompanyResultMessage extends NetMessage {
-	public SendCompanyResultMessage (double Profit) {
-		super(MessageType.SEND_COMPANYRESULTS, ByteConverter.toBytes(Profit));
-		profit = Profit;
-	}
-	
+	private double profit;
+
 	public SendCompanyResultMessage(byte[] Content) {
-		super(MessageType.SEND_COMPANYRESULTS, Content);
+		super(MessageType.SEND_COMPANYRESULT, Content);
 		profit = ByteConverter.toDouble(Content);
 	}
-	
-	private double profit;
-	
+
+	public SendCompanyResultMessage (double Profit) {
+		super(MessageType.SEND_COMPANYRESULT, ByteConverter.toBytes(Profit));
+		profit = Profit;
+	}
+
 	public double getProfit() {
 		return profit;
 	}
-	
+
 }
