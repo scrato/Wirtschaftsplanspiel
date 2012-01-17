@@ -45,6 +45,8 @@ public class Credit {
 	
 	private void CanTakeCredit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException {
 		//TODO: Sind Kreditvorraussetzungen so ok?
+		//comment(lars): über nen maximalwert müsste man sich nochmal gedanken machen.
+		//comment(lars): ich würde sagen man kann auch 2 runden vor schluss nen kredit über 10 runden aufnehmen, sonst muss man ja in der 2. periode die hälfte zurückzahlen wenn man ne maschine für 5 jahre finanzieren will.
 		if (creditHeight > 900000)
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.CreditTooHigh);
 		if (contractPeriod > (PeriodInfo.getMaxPeriods()- PeriodInfo.getNumberOfActPeriod()))

@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import common.entities.Supply;
 
 import Server.Application.ServerController;
+import Server.Entities.Disposal;
 
 public class DemandFunctionTest {
 
@@ -34,11 +35,11 @@ public class DemandFunctionTest {
 			System.out.println("   " + sup.getKey() + ": Menge: " + sup.getValue().quantity + "; Preis: " + sup.getValue().price);
 		}
 		System.out.println("Kalkuliere Absätze");
-		Map<Integer, Integer> Sales = ServerController.demandFunction(supplies);
+		Map<Integer, Disposal> disposals = ServerController.demandFunction(supplies);
 		
 		System.out.println("Absätze:");
-		for (Entry<Integer, Supply> sup : supplies.entrySet()) {
-			System.out.println("   " + sup.getKey() + ": Absatz: " + Sales.get(sup.getKey()) + "; Wert: " + Sales.get(sup.getKey()) * sup.getValue().price);
+		for (Disposal disposal : disposals.values()) {
+			System.out.println("   " + disposal.clientID + ": Absatz: " + disposal.quantity + "; Wert: " + disposal.quantity * disposal.price);
 			
 		}
 		

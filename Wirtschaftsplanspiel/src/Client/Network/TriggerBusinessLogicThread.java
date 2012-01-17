@@ -3,11 +3,11 @@ package Client.Network;
 import Client.Application.ChatController;
 import Client.Application.ClientController;
 import Client.Application.PeriodController;
+import NetworkCommunication.BroadcastCompanyResultMessage;
 import NetworkCommunication.ChatMessageToClient;
 import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
-import NetworkCommunication.SendAssignedDemandMessage;
-import NetworkCommunication.RecieveCompanyResultMessage;
+import NetworkCommunication.SendAssignedDisposalMessage;
 
 public class TriggerBusinessLogicThread extends Thread {
 	public TriggerBusinessLogicThread(NetMessage Message) {
@@ -36,10 +36,10 @@ public class TriggerBusinessLogicThread extends Thread {
 				break;
 			}
 			case MessageType.SEND_ASSIGNED_DEMAND: {
-				PeriodController.RecieveAssignedDemand(new SendAssignedDemandMessage(message.get_Content()));
+				PeriodController.RecieveAssignedDemand(new SendAssignedDisposalMessage(message.get_Content()));
 			}
-			case MessageType.RECIEVE_COMPANYRESULT: {
-				PeriodController.RecieveCompanyResult(new RecieveCompanyResultMessage(message.get_Content()));
+			case MessageType.BROADCAST_COMPANYRESULT: {
+				PeriodController.RecieveCompanyResult(new BroadcastCompanyResultMessage(message.get_Content()));
 			}
 		}
 	}

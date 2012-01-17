@@ -8,16 +8,16 @@ import java.io.ObjectOutputStream;
 import common.entities.CompanyResultList;
 
 
-public class RecieveCompanyResultMessage extends NetMessage {
+public class BroadcastCompanyResultMessage extends NetMessage {
 	CompanyResultList companyResult;
 	
-	public RecieveCompanyResultMessage(byte[] Content) {		
-		super(MessageType.RECIEVE_COMPANYRESULT, Content);
+	public BroadcastCompanyResultMessage(byte[] Content) {		
+		super(MessageType.BROADCAST_COMPANYRESULT, Content);
 		companyResult = convertBytesToCompanyResult(Content);
 		
 	}
-	public RecieveCompanyResultMessage(CompanyResultList Content){
-		super(MessageType.RECIEVE_COMPANYRESULT, convertCompanyResulttoBytes(Content));
+	public BroadcastCompanyResultMessage(CompanyResultList Content){
+		super(MessageType.BROADCAST_COMPANYRESULT, convertCompanyResulttoBytes(Content));
 		companyResult = Content;
 	}
 	

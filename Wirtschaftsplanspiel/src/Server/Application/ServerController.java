@@ -11,8 +11,10 @@ import java.util.concurrent.Semaphore;
 
 import NetworkCommunication.ChatMessageToClient;
 import NetworkCommunication.ChatMessageToServer;
-import NetworkCommunication.SendAssignedDemandMessage;
+import NetworkCommunication.SendAssignedDisposalMessage;
 import NetworkCommunication.SendSupplyMessage;
+import Server.Entities.Disposal;
+import Server.Entities.PeriodBuffer;
 import Server.Network.Server;
 import Server.Network.ClientHandler;
 import common.entities.Supply;
@@ -67,7 +69,7 @@ public class ServerController {
 		List<ClientHandler> clients = Server.getInstance().getClients();		
 		if (clients.isEmpty()) return;
 		
-		Map<Integer, Integer> assignedDemands = null;
+		Map<Integer, Disposal> disposals = null;
 		lockSupplies.acquireUninterruptibly();
 		try {
 			for (ClientHandler client : clients) {
@@ -77,17 +79,20 @@ public class ServerController {
 				}
 			}
 			// alle Angebote wurden abgebgeben. Führe demandFunction aus.
-			assignedDemands = demandFunction(supplies);
+			disposals = demandFunction(supplies);
 		
 			int quantity;
+			Disposal disposal;
 			for (ClientHandler client : clients) {
 				// TODO assigned Demand an Client übergeben.
 				try {
-					quantity = assignedDemands.get(client.get_ID());
-					client.SendMessage(new SendAssignedDemandMessage(quantity));
+					disposal = disposals.get(client.get_ID());
+					quantity = disposal.quantity;
+					PeriodBuffer.Disposals.put(client.get_ID(), disposal);
+					client.SendMessage(new SendAssignedDisposalMessage(quantity));
 				} catch (Exception e) { }
 			}
-			// Nachfrageanteile wurden an Clients verschickt, Angebote werden zurückgesetzt.
+			// Absätze wurden an Clients verschickt, Angebote werden zurückgesetzt.
 			supplies.clear();
 			
 		} catch (Exception e) {
@@ -101,7 +106,7 @@ public class ServerController {
 	 * @param Supplies: Map of Supplies for all Client(ID)companyResult.
 	 * @return Contingents: Map of Contingents for all Client(ID)companyResult.
 	 */
-	public static Map<Integer, Integer> demandFunction(Map<Integer, Supply> Supplies) {
+	public static Map<Integer, Disposal> demandFunction(Map<Integer, Supply> Supplies) {
 		
 		// create a new map to keep input list unchanged -> faked call-by-value.
 		Map<Integer, Supply> supplies = new TreeMap<Integer, Supply>();
@@ -110,9 +115,9 @@ public class ServerController {
 		int leftDemand = AppContext.totalDemand;
 		
 		// initialize assignedDemand
-		Map<Integer, Integer> assignedDemand = new TreeMap<Integer, Integer>();
+		Map<Integer, Disposal> disposals  = new TreeMap<Integer, Disposal>();
 		for (Entry<Integer, Supply> sup : supplies.entrySet()) {
-			assignedDemand.put(sup.getKey(), 0); 
+			disposals.put(sup.getKey(), new Disposal(sup.getKey(), 0, sup.getValue().price)); 
 		}
 		
 		while (leftDemand > 0 && supplies.size() > 0) {
@@ -146,18 +151,16 @@ public class ServerController {
 				Integer availableDemand = contingents.get(key);
 				if (supplies.get(key).quantity <= availableDemand) {
 					// player wants to sell less-equal than he is able to.
-					Integer demand = (Integer)assignedDemand.get(key);
-					demand += supplies.get(key).quantity;
-					assignedDemand.put(key, demand);
+					Disposal disposal = (Disposal)disposals.get(key);					
+					disposal.quantity += supplies.get(key).quantity;
 					
 					removedKeys.add(key);
 					
 					leftDemand -= supplies.get(key).quantity;
 				} else {
 					// player wants to sell more than he is able to.
-					Integer demand = (Integer)assignedDemand.get(key);
-					demand += availableDemand;
-					assignedDemand.put(key, demand);
+					Disposal disposal = (Disposal)disposals.get(key);	
+					disposal.quantity += availableDemand;
 					
 					Supply sup = supplies.get(key);
 					sup.quantity -= availableDemand;
@@ -172,7 +175,7 @@ public class ServerController {
 		
 		}
 		
-		return assignedDemand;
+		return disposals;
 	}
 	
 	// END OF Pediodenabschluss.

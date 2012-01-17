@@ -1,6 +1,6 @@
 package networkTest;
 
-import NetworkCommunication.RecieveCompanyResultMessage;
+import NetworkCommunication.BroadcastCompanyResultMessage;
 import common.entities.CompanyResult;
 import common.entities.CompanyResultList;
 
@@ -11,9 +11,9 @@ public class SendCompanyResultTest {
 		cr.result.add(new CompanyResult(123, 2));
 		
 		
-		RecieveCompanyResultMessage scr = new RecieveCompanyResultMessage(cr);
+		BroadcastCompanyResultMessage scr = new BroadcastCompanyResultMessage(cr);
 		
-		RecieveCompanyResultMessage scr2 = new RecieveCompanyResultMessage(scr.get_Content());
+		BroadcastCompanyResultMessage scr2 = new BroadcastCompanyResultMessage(scr.get_Content());
 		
 		CompanyResultList cr2 = scr2.getCompanyResults();
 	}
