@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -30,8 +31,11 @@ import NetworkCommunication.*;
 import java.util.List;
 
 public class MainWindow extends JFrame{
+	
 	private static final long serialVersionUID = 1L;
 
+	JFrame mainWindow = this;
+	
 	// Standardpanel
 	JPanel north = new JPanel();
 	JPanel east = new JPanel();
@@ -59,11 +63,12 @@ public class MainWindow extends JFrame{
 		
 	JTextArea chatOutput = new JTextArea(19,25);
 	
+	Company company;
+	
 	// MachineScreen
 	String[] machineColumnNames = {"Typ", "Kapazität", "Anschaffungswert", "Restlaufzeit", "Restwert"};
 	DefaultTableModel machineTabModel = new DefaultTableModel();
-	JTable machineTable = null;
-	Company company;
+	JTable machineTable = new JTable();
 	Object[][] machineData = null;
 	JScrollPane machineScrollPane;
 	
@@ -161,7 +166,10 @@ public class MainWindow extends JFrame{
 		// Maschinen
 		Company company = Company.getInstance();
 		company.addMachine(new Machine(MachineType.Filitiermaschine, 100, 2000.0));
-		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 240, 1000.0));
+		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 240, 3000.0));
+		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 270, 8000.0));
+		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 340, 2000.0));
+		
 		
 		JButton verkaufen = new JButton("verkaufen");
 		
@@ -311,6 +319,7 @@ public class MainWindow extends JFrame{
 			
 		Iterator<Machine> machineItr = company.getMachines().iterator();
 		Machine machine;
+
 		int i = 0;
 		while(machineItr.hasNext()){
 			 machine = machineItr.next();
@@ -323,12 +332,28 @@ public class MainWindow extends JFrame{
 			 System.out.println(i + "Maschinen");
 		}
 		
+		
 		machineTabModel = new DefaultTableModel(machineData, machineColumnNames);
+
 		machineTable = new JTable(machineTabModel);
+		machineTable.setModel(machineTabModel);
+		
+		machineTabModel.fireTableDataChanged();
+		machineTabModel.fireTableStructureChanged();
 		machineScrollPane = new JScrollPane(machineTable);
 		
-		machineTable.validate();
-		machineTable.repaint();
+
+		
+		//machineTable.tableChanged(new TableModelEvent(machineTable.getModel()));
+		
+
+		machineScrollPane.invalidate();
+		machineScrollPane.validate();
+		machineScrollPane.repaint();
+
+		mainWindow.invalidate();
+		mainWindow.validate();
+		mainWindow.repaint();
 
 	}
 	
@@ -506,8 +531,7 @@ public class MainWindow extends JFrame{
 				//tabModel.removeRow(table.getSelectedRow());
 				machine = company.getMachines().get(machineTable.getSelectedRow());
 				company.removeMachine(machine);
-				refreshMachineTable();
-				machineTable.repaint();
+				
 				System.out.println("Maschine verkauft");
 				System.out.println(machine.toString());
 				System.out.println("Zeile" + machineTable.getSelectedRow() + " gelöscht");
