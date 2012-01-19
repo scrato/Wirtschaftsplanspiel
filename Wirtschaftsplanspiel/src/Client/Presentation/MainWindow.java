@@ -42,7 +42,7 @@ public class MainWindow extends JFrame{
 	JPanel Pmaschinen = new JPanel();
 	JPanel Ppersonal = new JPanel();
 	JPanel Pdarlehen = new JPanel();
-	JPanel Pbericht = new JPanel();
+	JPanel Pbericht = new ReportingPanel();
 	JPanel Ppreiskal = new JPanel();
 	
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
@@ -193,7 +193,7 @@ public class MainWindow extends JFrame{
 		Pdarlehen.add(new JLabel("Darlehen aufnehmen und tilgen."));
 		
 		// Bericht
-		Pbericht.add(new JLabel("Berich einsehen."));
+		//Pbericht.add(new JLabel("Berich einsehen."));
 		
 		// Preiskalkulation
 		Ppreiskal.add(new JLabel("Verkaufspreis für Produkte bestimmen."));
