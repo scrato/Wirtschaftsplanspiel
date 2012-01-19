@@ -167,6 +167,7 @@ public class Server {
 			}
 			System.out.println(client.get_Name() + " hat das Spiel verlassen.");
 			ServerController.checkSupplies(); // Prüft, ob alle übrigen Spieler Angebote abgegeben haben.
+			ServerController.checkResultsCollected();
 		} catch (Exception exc) { 			
 		} finally {
 			lock_clients.release();
