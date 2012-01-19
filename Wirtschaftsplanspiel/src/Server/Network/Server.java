@@ -17,6 +17,7 @@ import NetworkCommunication.MessageType;
 import NetworkCommunication.NetMessage;
 import NetworkCommunication.StringOperation;
 import Server.Application.ServerController;
+import Server.Entities.PeriodInfo;
 
 
 public class Server {
@@ -37,9 +38,11 @@ public class Server {
 	//List<ClientHandler> clients;
 	
 	boolean isClosed;
+	boolean gameStartet;
 	
-	public Server(int port) {
+	public Server(int port, int maxPeriods) {
 		instance = this;
+		PeriodInfo.maxPeriods = maxPeriods;
 		try {
 			listener = new ServerSocket(port);
 			listenerThread = new Thread() {
@@ -73,8 +76,31 @@ public class Server {
 		while (!stopListener) {
 			try {
 				newSocket = listener.accept();
+				newSocket.setSoTimeout(5000);
 		
 				inputStream = new DataInputStream( newSocket.getInputStream());
+				outputStream = new DataOutputStream( newSocket.getOutputStream());
+				
+				//outputStream.writeInt(gameStartet ? 0 : 1); // blocks Client if game already has started
+				outputStream.writeBoolean(!gameStartet); // blocks Client if game already has started
+				if (gameStartet) {
+					try {
+						if (!newSocket.isInputShutdown()) {
+							newSocket.getInputStream().close();
+						}
+						if (!newSocket.isOutputShutdown()) {
+							newSocket.getOutputStream().close();
+						}
+						if (!newSocket.isClosed()) {
+							newSocket.close();
+						}
+					} catch (IOException e) {
+						// should never reach this point!
+					}
+					continue;
+				}
+				
+				outputStream.writeInt(PeriodInfo.maxPeriods);
 				inputStream.read(nameBytes, 0, 20);
 
 				name = new String(nameBytes, "UTF-16LE");
@@ -83,7 +109,6 @@ public class Server {
 				try {
 					newID = getNextFreePlayerID();
 					
-					outputStream = new DataOutputStream( newSocket.getOutputStream());
 					outputStream.writeInt(newID);
 					
 					newClient = new ClientHandler(newID, name, newSocket, this);
@@ -166,15 +191,16 @@ public class Server {
 				otherClient.SendMessage(new NetMessage(MessageType.PLAYER_LEFT, ByteConverter.toBytes(client.get_ID())));
 			}
 			System.out.println(client.get_Name() + " hat das Spiel verlassen.");
-			ServerController.checkSupplies(); // Prüft, ob alle übrigen Spieler Angebote abgegeben haben.
-			ServerController.checkResultsCollected();
 		} catch (Exception exc) { 			
 		} finally {
 			lock_clients.release();
 		}
+		ServerController.checkSupplies(); // Prüft, ob alle übrigen Spieler Angebote abgegeben haben.
+		ServerController.checkResultsCollected();
 	}
 	
-	public void startGame() {
+	public void startGame() { 
+		gameStartet = true;
 		lock_clients.acquireUninterruptibly();
 		try {
 			for (ClientHandler client : clients.values()) {

@@ -8,7 +8,7 @@ import Server.Network.Server;
 public class NetworkTestServer {
 
 	public static void main(String[] args) {
-		Server server = new Server(51515);
+		Server server = new Server(51515, 10);
 		
 		System.out.println("-1 zum Beenden.");
 		Scanner scanner = new Scanner(System.in);		

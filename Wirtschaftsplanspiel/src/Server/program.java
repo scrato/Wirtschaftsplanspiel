@@ -11,7 +11,7 @@ public class program {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Server server = new Server(51515);
+		Server server = new Server(51515, 10);
 		
 		System.out.println("-help für Hilfe./n -1 zum Beenden,/n 0 zum Spielstart.");
 		Scanner scanner = new Scanner(System.in);		

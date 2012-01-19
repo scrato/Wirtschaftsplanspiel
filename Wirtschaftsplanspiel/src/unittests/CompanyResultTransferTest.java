@@ -25,7 +25,7 @@ public class CompanyResultTransferTest extends TestCase {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		s = new Server(PORT);
+		s = new Server(PORT, 10);
 		InetAddress local = InetAddress.getByName("127.0.0.1");
 		
 		c1 = new Client("Scrato",local,PORT);

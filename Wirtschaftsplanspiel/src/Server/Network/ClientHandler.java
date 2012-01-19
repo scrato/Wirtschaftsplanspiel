@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.Semaphore;
 
 import Server.Network.TriggerBusinessLogicThread;
@@ -29,6 +30,12 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		name = Name;
 		socket = Socket;
 		parent = Parent;
+		
+		try {
+			socket.setSoTimeout(0);
+		} catch (SocketException e) {
+			// should never reach this point.
+		}
 		
 		listenerThread = new Thread() {
 			public void run() {
@@ -122,7 +129,7 @@ public class ClientHandler implements Comparable<ClientHandler> {
 			if (!socket.isOutputShutdown()) {
 				socket.getOutputStream().close();
 			}
-			if (socket.isClosed()) {
+			if (!socket.isClosed()) {
 				socket.close();
 			}
 		} catch (IOException e) {

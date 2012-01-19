@@ -7,7 +7,7 @@ public abstract class PeriodInfo {
    //private  List<Period> periods = new LinkedList<Period>();
    private static int maxPeriods;
    private static int actPeriod = 0;
- private static List<Period> periods;
+   private static List<Period> periods;
    
    
     static {
