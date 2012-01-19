@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -48,6 +50,9 @@ public class MainWindow extends JFrame{
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
 	
+	
+	boolean isServer = Player.isHost();
+	
 	// Playerliste
 	DefaultListModel listModel = new DefaultListModel();
 	JList ListPlayers = new JList(listModel);
@@ -69,6 +74,7 @@ public class MainWindow extends JFrame{
 		super("Business Basics");
 		instance = this;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.addWindowListener(new specialWindowListener());
 		initBasis();
 		buildScreens();
 		buildNorth();
@@ -538,6 +544,56 @@ public class MainWindow extends JFrame{
 			
 		}
 		
+	}
+	
+	private class specialWindowListener implements WindowListener{
+
+		
+		@Override
+		public void windowActivated(WindowEvent e) {
+			// TODO Auto-generated method stub			
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+			
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+			Client.getInstance().close();
+			if(isServer){
+				Server.Network.Server.getInstance().close();
+			}
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+			
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+		}
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 }

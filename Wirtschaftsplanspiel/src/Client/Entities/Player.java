@@ -53,4 +53,13 @@ public class Player {
 		this.resultList.add(result);
 	}
 	
+	private static boolean isHost;
+	
+	public static void setHost(boolean value){
+		isHost = value;
+	}
+	
+	public static boolean isHost(){
+		return isHost;
+	}
 }
