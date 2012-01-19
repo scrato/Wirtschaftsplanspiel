@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -29,6 +31,8 @@ public class ConnectionView extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(400,200);
 		setLayout(new GridLayout(4,2));
+		addWindowListener(new specialWindowListener());
+		
 		
 		
 		// UI Elemente
@@ -164,4 +168,57 @@ public class ConnectionView extends JFrame{
 		}
 		
 	}
+	
+	private class specialWindowListener implements WindowListener{
+
+		
+		@Override
+		public void windowActivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+			
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+			
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+			// NOT
+			
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+			Client.getInstance().close();
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+			
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+		}
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
 }
