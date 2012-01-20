@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import Client.Entities.Ressource.RessourceType;
+import Client.Entities.RessourceType;
 
 
 
@@ -34,11 +34,12 @@ public class Company {
 	//Hier werden Variablen verwaltet
 	private double money;
 	private int finishedproducts;
+	private double warehouseCostPerProduct;
+	
 	public final double EMPLOYERSSALLERY = 45000d;
 	public final double FACILITIESRENT = 30000d;
 	public final double WAREHOUSECOST_PER_STOCKFISCH = 0.1d;
 	public final double WAREHOUSECOST_PER_VERPACKUNG = 0.05d;
-	public final double WAREHOUSECOST_PER_PRODUCT = 0.2d;
 	
 	//Hier liegen die Maschinen.
 	private List<Machine> machines = new LinkedList<Machine>();
@@ -201,6 +202,10 @@ public class Company {
 	}
 	
 	//Lagerkosten
+	public void setWarehouseCostPerProduct(double value) {
+		warehouseCostPerProduct = value;
+	}
+	
 	public double getWarehouseCosts(){
 
 		int stockfisch = getRessource(RessourceType.Stockfisch).getStoredUnits();
@@ -209,7 +214,7 @@ public class Company {
 		
 		return                  stockfisch * WAREHOUSECOST_PER_STOCKFISCH 
 							  + verpackung * WAREHOUSECOST_PER_VERPACKUNG  
-							  + finishedProducts * WAREHOUSECOST_PER_PRODUCT;
+							  + finishedProducts * warehouseCostPerProduct;
 	}
 
 }

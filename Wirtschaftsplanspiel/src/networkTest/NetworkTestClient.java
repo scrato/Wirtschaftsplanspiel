@@ -3,6 +3,7 @@ package networkTest;
 import java.net.InetAddress;
 import java.util.Scanner;
 
+import Client.Application.ClientController;
 import Client.Network.Client;
 import NetworkCommunication.*;
 
@@ -30,7 +31,9 @@ public class NetworkTestClient {
 		
 		System.out.println("Verbinde zum Server " + ipAddressString + ":51515");
 		try {
-			client = new Client("test", ipAddress, 51515);
+			//client = new Client("test", ipAddress, 51515);
+			client = ClientController.ConnectToServer("test", ipAddress, 51515);
+			
 			if (client != null) {
 				System.out.println("Verbindung hergestellt.");
 				System.out.println("Sende Nachricht 'Hallo Welt' 2 mal.");

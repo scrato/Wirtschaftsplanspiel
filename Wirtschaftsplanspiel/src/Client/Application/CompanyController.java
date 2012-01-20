@@ -17,7 +17,7 @@ import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
 import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
-import Client.Entities.Ressource.RessourceType;
+import Client.Entities.RessourceType;
 
 public abstract class CompanyController {
 	
@@ -44,7 +44,7 @@ public abstract class CompanyController {
 	 * @param availableUnits Die Anzahl der verfügbaren Ressorucen
 	 * @param pricePerUnit Den preis pro Kilo
 	 */
-	public static void initRessource(Ressource.RessourceType type, int availableUnits, double pricePerUnit){
+	public static void initRessource(RessourceType type, int availableUnits, double pricePerUnit){
 		Company comp = Company.getInstance();
 		comp.getRessource(type).setBuyableUnits(availableUnits);
 		comp.getRessource(type).setPricePerUnit(pricePerUnit);
@@ -58,7 +58,7 @@ public abstract class CompanyController {
 	 * @throws UserCanNotPayException
 	 * @throws NotEnoughRessourcesException 
 	 */
-	public static void buyRessources(Ressource.RessourceType type, int amount) throws UserCanNotPayException, NotEnoughRessourcesException{
+	public static void buyRessources(RessourceType type, int amount) throws UserCanNotPayException, NotEnoughRessourcesException{
 		Company comp = Company.getInstance();
 		Ressource res = comp.getRessource(type); 
 		//Sind nicht genug Rohstoffe da, hol einfach den Rest
@@ -198,7 +198,7 @@ public abstract class CompanyController {
 				throw new CannotProduceException();
 			Company comp = Company.getInstance();
 			//Production prod = comp.getProduction();
-			for(RessourceType t: Ressource.RessourceType.values()) {
+			for(RessourceType t: RessourceType.values()) {
 				comp.getRessource(t).decStoredUnits(units*Ressource.getNeed(t));
 			}
 			comp.incFinishedProducts(units);
@@ -242,10 +242,11 @@ public abstract class CompanyController {
 		comp.removeEmployee(oldEmployee);
 	}
 	
-	public static void payEmployeesSallery() throws UserCanNotPayException {
+	public static double payEmployeesSallery() throws UserCanNotPayException {
 		Company comp = Company.getInstance();
 		double wages = comp.getWages();
 		payItem(wages);
+		return wages;
 	}
 	
 	//End of Employee-Abschnitt

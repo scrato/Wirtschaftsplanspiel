@@ -1,13 +1,23 @@
 package Client.Application;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 
 import Client.Entities.Player;
+import Client.Network.Client;
 import Client.Presentation.MainWindow;
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.NetMessage;
 
 public abstract class ClientController {
+	
+	public static Client ConnectToServer(String Name, InetAddress Address, int Port) {
+		return Client.connect(Name, Address, Port);
+	}
+	
+	public static void Disconnected() {
+		//TODO zur GUI weiterleiten.
+	}
 	
 	public static void PlayerListReceived() {
 		MainWindow wind = MainWindow.getInstance();

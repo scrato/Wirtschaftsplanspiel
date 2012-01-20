@@ -2,13 +2,14 @@ package networkTest;
 
 import java.util.Scanner;
 
+import Server.Application.ServerController;
 import Server.Network.Server;
 
 
 public class NetworkTestServer {
 
 	public static void main(String[] args) {
-		Server server = new Server(51515);
+		Server server = ServerController.StartServer(51515, 10);//new Server(51515, 10);
 		
 		System.out.println("-1 zum Beenden.");
 		Scanner scanner = new Scanner(System.in);		

@@ -9,6 +9,7 @@ import java.util.concurrent.Semaphore;
 
 import Client.Application.ClientController;
 import Client.Entities.Player;
+import Client.Entities.PeriodInfo;
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.NetMessage;
 import NetworkCommunication.StringOperation;
@@ -16,10 +17,11 @@ import NetworkCommunication.StringOperation;
 
 public class Client {
 	
-	private static Client client;
+	private static Client instance;
 	
 	public static Client getInstance() {
-		 return client;
+		 if (instance == null) throw new RuntimeException("Nicht verbunden");
+		 return instance;
 	}
 
 	
@@ -32,9 +34,18 @@ public class Client {
 	
 	private Semaphore lock_send = new Semaphore(1);
 	
-
+	private boolean isClosed;
 	
-	public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
+	public static Client connect(String Name, InetAddress Address, int Port) {
+		if (instance != null) throw new RuntimeException("Bereits verbunden");
+		Client client = new Client(Name, Address, Port);
+		instance = client;
+		return client;
+	}
+	
+	//public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
+	private Client(String Name, InetAddress Address, int Port) throws RuntimeException {
+		instance = this; // static member for GetInstance
 		try {
 			if (Name.length() > 10) {
 				throw new RuntimeException("Name ist zu lang.");
@@ -47,29 +58,38 @@ public class Client {
 				}
 			};			
 			name = Name;
-//			char[] nameChars = name.toCharArray();
-//			char[] sendChars = new char[16];
-//			System.arraycopy(nameChars, 0, sendChars, 0, nameChars.length);
-//			
-//			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
-//			outputStream.writeChars(name);
 			
-			//byte[] nameBytes = Name.getBytes();
-			//byte[] nameBytesLength = ByteConverter.toBytes(nameBytes.length);
+			socket.setSoTimeout(5000);
 			
-			//byte[] nameMessage = new byte[nameBytes.length + 4];
-			//System.arraycopy(nameBytesLength, 0, nameMessage, 0, 4);
-			//System.arraycopy(nameBytes, 0, nameMessage, 4, nameBytes.length);
+			DataInputStream inputStream = new DataInputStream( socket.getInputStream());
+			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
+			
+			if (inputStream.readBoolean() == false) {
+				try {
+					if (!socket.isInputShutdown()) {
+						socket.getInputStream().close();
+					}
+					if (!socket.isOutputShutdown()) {
+						socket.getOutputStream().close();
+					}
+					if (!socket.isClosed()) {
+						socket.close();
+					}
+				} catch (IOException e) {
+					// should never reach this point!
+				}
+				throw new RuntimeException("Spiel wurde bereits gestartet.");
+			}
+			
+			PeriodInfo.setMaxPeriods(inputStream.readInt());
 			
 			String sendName = StringOperation.padRight(name, 10);
 			byte[] sendNameBytes = sendName.getBytes("UTF-16LE");
 			
 			name = name.trim();
-			
-			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
+					
 			outputStream.write(sendNameBytes);
-			
-			DataInputStream inputStream = new DataInputStream( socket.getInputStream());
+
 			id = inputStream.readInt();
 			
 			int playersCount = inputStream.readInt();
@@ -88,9 +108,9 @@ public class Client {
 			
 			ClientController.PlayerListReceived();
 			
-			StartReceivingMessages();
+			socket.setSoTimeout(0);
 			
-			client = this; // static member for GetInstance
+			StartReceivingMessages();
 		} catch (IOException e) {
 			throw new RuntimeException("Verbindung konnte nicht hergestellt werden.");
 		}		
@@ -132,23 +152,17 @@ public class Client {
 		        			break;
 		        		}
 		        		NetMessage message = new NetMessage(messageType, messageContent);
-//		        		// for test purpose:
-//		        		switch (messageType) {
-//			        		case MessageType.CHATMESSAGE_TOCLIENT: {
-//			        			String Message = new String(message.get_Content());
-//			        			System.out.println("Nachricht erhalten: " + Message);			        			
-//			        		}			        		
-//		        		}
-//		        		// end test
 		        		 
 		        		TriggerBusinessLogicThread triggerBusLogic = new TriggerBusinessLogicThread(message);		        				
 		        		triggerBusLogic.start();
 		        	}      
 		        }		        
 			} catch (IOException e) {
-				System.err.println("Inputstream zum Server konnte nicht aufgebaut werden.");
-				// Verbindung zum Server verloren. TODO Darauf reagieren.
-				this.close();
+				if (!isClosed) { 
+					System.err.println("Verbindung zum Server verloren.");
+					this.close();
+					ClientController.Disconnected();
+				}
 			}
 		}
 	}
@@ -176,6 +190,8 @@ public class Client {
 	
 	public void close()
 	{
+		instance = null;
+		isClosed = true;
 		stopListener = true;
 		try {
 			if (!socket.isInputShutdown()) {
@@ -184,7 +200,7 @@ public class Client {
 			if (!socket.isOutputShutdown()) {
 				socket.getOutputStream().close();
 			}
-			if (socket.isClosed()) {
+			if (!socket.isClosed()) {
 				socket.close();
 			}
 		} catch (IOException e) {

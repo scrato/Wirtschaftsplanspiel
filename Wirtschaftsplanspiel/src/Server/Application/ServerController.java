@@ -27,6 +27,11 @@ import common.entities.Supply;
 
 public class ServerController {
 	
+	
+	public static Server StartServer(int port, int maxPeriods) {
+		return Server.StartServer(port, maxPeriods);
+	}
+	
 	// Spiel Starten.
 	public static void StartGame() {
 		Server server = Server.getInstance();
@@ -125,25 +130,11 @@ public class ServerController {
 		
 		int leftDemand = AppContext.standardDemand;
 		
-		// TODO: gesamtNachfrage in abhängigkeit vom Angebot vergrößern/schmälern.
-		
-		// funktioniert so nicht: andere leiden darunter, wenn nur einer viel zu teuer wird.
-//		double averagePricePerUnit = 0;
-//		int countQuantity = 0;
-//		for (Supply sup : supplies.values()) {
-//			averagePricePerUnit += sup.price * sup.quantity;
-//			countQuantity += sup.quantity;
-//		}
-//		averagePricePerUnit /= countQuantity;
-//		
-//		leftDemand *= (AppContext.STANDARD_PRICE_PER_UNIT / averagePricePerUnit);
-		
 		for (Supply sup : supplies.values()) {
 			double perc = sup.price / AppContext.STANDARD_PRICE_PER_UNIT;
 			int diff = (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * ( 1 - ( 1 / perc ) ));
 			leftDemand -= diff;
-			//leftDemand -= (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * (1 - (sup.price * sup.quantity / sup.quantity)));
-		}
+			}
 		
 		// initialize assignedDemand
 		Map<Integer, Disposal> disposals  = new TreeMap<Integer, Disposal>();

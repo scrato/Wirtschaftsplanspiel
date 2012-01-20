@@ -7,10 +7,14 @@ import common.entities.CompanyResultList;
 import common.entities.Supply;
 
 import Client.Entities.Company;
+import Client.Entities.EmployeeType;
+import Client.Entities.MachineType;
 import Client.Entities.Period;
-import Client.Entities.Period.GuV;
+import Client.Entities.GuV;
 import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
+import Client.Entities.Ressource;
+import Client.Entities.RessourceType;
 import Client.Network.Client;
 import NetworkCommunication.BroadcastCompanyResultMessage;
 import NetworkCommunication.SendAssignedDisposalMessage;
@@ -38,12 +42,20 @@ public abstract class PeriodController {
 		CompanyController.receiveSalesRevenue(revenue, quantity);
 		
 		try {
-			CompanyController.payEmployeesSallery();
-			CompanyController.depcrecateMachines();
-			CompanyController.payWarehouseCosts();
+			double wages = CompanyController.payEmployeesSallery();
+			double deprecation = CompanyController.depcrecateMachines();
 			CompanyController.payInterestAndRepayment();
 			CompanyController.payEmployersSalery();
 			CompanyController.payRent();
+			
+			Company comp = Company.getInstance();
+			double produceCostPerProdukt = wages / Math.min(comp.getEmployeeCapacity(EmployeeType.Produktion), comp.getEmployeeCapacity(EmployeeType.Verwaltung)) 
+										 + deprecation /  Math.min(comp.getMachineCapacity(MachineType.Filitiermaschine), comp.getMachineCapacity(MachineType.Verpackungsmaschine)) 
+										 + Ressource.getNeed(RessourceType.Stockfisch) * Ressource.getFixedCosts(RessourceType.Stockfisch) 
+										 + Ressource.getNeed(RessourceType.Verpackungsmaterial) * Ressource.getFixedCosts(RessourceType.Verpackungsmaterial);		
+			//PeriodInfo.getActualPeriod().setFinishedProductsValue(produceCostForLeftFinishedProducts);
+			comp.setWarehouseCostPerProduct(produceCostPerProdukt);
+			CompanyController.payWarehouseCosts();
 			
 			GuV guv = actPeriod.makeGuV();			
 			SendCompanyResultMessage message = new SendCompanyResultMessage(guv.profit);

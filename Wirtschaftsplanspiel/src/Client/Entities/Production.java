@@ -1,6 +1,6 @@
 package Client.Entities;
 
-import Client.Entities.Ressource.RessourceType;
+import Client.Entities.RessourceType;
 
 public class Production {
 	
