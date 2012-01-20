@@ -1,10 +1,8 @@
 package Client.Presentation;
 
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
-import Client.Entities.RessourceType;
-
-public class TypeTextbox<T> extends JTextArea {
+public class TypeTextbox<T> extends JTextField {
 	/**
 	 * 
 	 */
