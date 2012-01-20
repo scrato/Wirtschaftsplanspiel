@@ -21,12 +21,15 @@ import javax.swing.table.TableColumn;
 
 import Client.Application.ChatController;
 import Client.Application.ClientController;
+import Client.Application.CompanyController;
 import Client.Entities.Balance;
 import Client.Entities.Company;
 import Client.Entities.ProfitAndLoss;
 import Client.Entities.Machine;
 import Client.Entities.Player;
 import Client.Entities.MachineType;
+import Client.Entities.Ressource;
+import Client.Entities.RessourceType;
 import Client.Network.Client;
 import NetworkCommunication.*;
 
@@ -34,6 +37,28 @@ import java.util.List;
 
 public class MainWindow extends JFrame{
 	
+	private class ressourceKeyListener implements KeyListener {
+
+		@Override
+		public void keyPressed(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			if (arg0.getKeyCode() == KeyEvent.VK_ENTER)
+				refreshRessources();
+		}
+
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	JFrame mainWindow = this;
@@ -92,6 +117,31 @@ public class MainWindow extends JFrame{
 	}
 	
 	
+	public void refreshRessources() {
+		for(Component t : Pwerkstoffe.getComponents()){
+			if(t.getClass().equals(TypeLabel.class)){
+				TypeLabel<RessourceType, LabelTypes> label = (TypeLabel<RessourceType, LabelTypes>) t;
+				Ressource res = Company.getInstance().getRessource(label.getType());
+				switch (label.getSense()){
+					case goodPrice:
+						label.setText(String.valueOf(res.getPricePerUnit()));
+						break;
+					case goodsInStock:
+						label.setText(String.valueOf(res.getStoredUnits()));
+						break;
+					case goodsNeeded:
+						label.setText(String.valueOf(CompanyController.missingRessources(100).get(res.getType())));
+						break;
+				}
+					
+						
+			}
+				
+		}
+		
+	}
+
+
 	public static MainWindow getInstance(){
 		if(instance != null){
 			return instance;
@@ -162,8 +212,56 @@ public class MainWindow extends JFrame{
 		GridBagConstraints c = new GridBagConstraints();
 		
 		// Werkstoffe
-		Pwerkstoffe.add(new JLabel("Werkstoffe einkaufen"));
-		Pwerkstoffe.add(new JButton("Werkstoffe einkaufen"));
+		Pwerkstoffe.setLayout(new GridBagLayout());
+		c.gridx = 0;
+		c.gridy = 0;
+		Pwerkstoffe.add(new JLabel("Rohstoffe einkaufen"),c);
+		int rowy = 1;
+		
+		for(RessourceType t: RessourceType.values()){
+			c.gridx = 0;
+			c.gridy = rowy;
+			rowy++;
+			Pwerkstoffe.add(new JLabel(t.name()),c);
+			c.gridy = rowy;
+			Pwerkstoffe.add(new JLabel("Rohstoffe auf Lager: "),c);
+			c.gridx++;
+			TypeLabel<RessourceType, LabelTypes> tStored = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodsInStock );
+			Pwerkstoffe.add(tStored,c);
+			rowy++;
+			
+			//Nextline
+			c.gridx = 0;
+			c.gridy = rowy;
+			Pwerkstoffe.add(new JLabel("Für Produktion benötigt: "),c);
+			c.gridx++;
+			TypeLabel<RessourceType, LabelTypes> tNeed = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodsNeeded);
+			Pwerkstoffe.add(tNeed,c);
+			rowy++;
+			
+			//Nextline
+			c.gridx = 0;
+			c.gridy = rowy;
+			Pwerkstoffe.add(new JLabel("Geplanter Kauf: "),c);
+			c.gridx++;
+			TypeTextbox<RessourceType> tBuy = new TypeTextbox<RessourceType>(t);
+			tBuy.setVisible(true);
+			tBuy.addKeyListener(new ressourceKeyListener());
+			Pwerkstoffe.add(tBuy,c);
+			Pwerkstoffe.add(new JLabel("  " + Ressource.getUnit(t)),c);
+			rowy++;
+			
+			//Nextline
+			c.gridx = 0;
+			c.gridy = rowy;
+			Pwerkstoffe.add(new JLabel("Preis pro Stück: "),c);
+			c.gridx++;
+			TypeLabel<RessourceType, LabelTypes> tPrice = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodPrice);
+			Pwerkstoffe.add(tPrice,c);
+			rowy++;
+		}
+		refreshRessources();
+		//Pwerkstoffe.add(new JButton("Werkstoffe einkaufen"));
 		
 		// Maschinen
 		Company company = Company.getInstance();
@@ -632,6 +730,8 @@ public class MainWindow extends JFrame{
 		
 		System.exit(3);
 	}
+	
+	private enum LabelTypes{ goodsInStock, goodsNeeded, goodPrice } 
 
 }
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package unittests;
+package tests;
 
 
 import junit.framework.Assert;
