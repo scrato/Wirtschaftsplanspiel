@@ -7,73 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import Client.Entities.Ressource.RessourceType;
+import Client.Entities.RessourceType;
 
 public class Period {
-	public class Balance {
-
-		public double bank;
-		public double credit;
-		public double equity;
-		public double machineValue;
-		public double ressourceValue;
-		public double totallyearned;
-		public double totallypaid;
-
-		public void calculateEquity() {
-			equity = machineValue + ressourceValue + bank - credit;
-
-		}
-
-	}
-
-	public class GuV {
-
-		public double changeInStockFinishedProducts;
-
-		public double changeInStockRessources;
-
-		public double deprecation;
-
-		public double employeeDismissalCosts;
-
-		public double employeeHiringCosts;
-
-		public double employerSallery;
-
-		public double interest;
-
-		public double profit;
-
-		public double rental;
-
-		public double ressourceCost;
-
-		public double sales;
-		public double wages;
-
-		public double warehouseCosts;
-
-		public void calculateResult() {
-			double expenditures = employerSallery + rental
-					+ employeeHiringCosts + wages + employeeDismissalCosts
-					+ deprecation + interest;
-			double earnings = sales;
-
-			if (changeInStockRessources > 0)
-				earnings += changeInStockRessources;
-			else
-				expenditures = Math.abs(changeInStockRessources);
-
-			if (changeInStockFinishedProducts > 0)
-				earnings += changeInStockFinishedProducts;
-			else
-				expenditures = Math.abs(changeInStockFinishedProducts);
-
-			this.profit = earnings - expenditures;
-		}
-
-	}
 
 	private Balance balance;
 	private List<Machine> boughtMachines = new LinkedList<Machine>();
@@ -81,8 +17,10 @@ public class Period {
 	private double changeInStockRessources;
 	private double deprecationValue;
 	private double earnedMoney;
+	private double finishedProductsValue;
 	private int finishedProductDelta;
 	private List<Employee> firedEmployees = new LinkedList<Employee>();
+	
 	private GuV guv;
 	private List<Employee> hiredEmployees = new LinkedList<Employee>();
 	private double interestPayment;
@@ -97,6 +35,10 @@ public class Period {
 	private Credit takenCredit;
 
 	private Map<Ressource, Integer> usedRessources = new HashMap<Ressource, Integer>();
+	
+	public void setFinishedProductsValue(Double Value) {
+		finishedProductsValue = Value;
+	}
 
 	public void addBoughtMachine(Machine mach) {
 		this.boughtMachines.add(mach);
@@ -177,6 +119,8 @@ public class Period {
 	public List<Employee> getFiredEmployees() {
 		return firedEmployees;
 	}
+	
+	
 
 	public GuV getGuV() {
 		return guv;
@@ -266,6 +210,8 @@ public class Period {
 			balance.ressourceValue += next.getStoredUnits()
 					* next.getPricePerUnit();
 		}
+		
+		balance.finishedProductsValue = p.finishedProductsValue;
 
 		balance.credit = comp.getCredit().getCreditLeft();
 
@@ -374,5 +320,8 @@ public class Period {
 	public void setRevenue(double revenue) {
 		this.revenue = revenue;
 	}
-
+	
 }
+
+
+

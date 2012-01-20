@@ -19,10 +19,10 @@ import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
-import Client.Entities.Period.Balance;
-import Client.Entities.Period.GuV;
+import Client.Entities.Balance;
+import Client.Entities.GuV;
 import Client.Entities.PeriodInfo;
-import Client.Entities.Ressource.RessourceType;
+import Client.Entities.RessourceType;
 
 /**
  * @author MicSch

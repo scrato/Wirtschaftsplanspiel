@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import Client.Entities.Ressource.RessourceType;
+import Client.Entities.RessourceType;
 
 
 

@@ -2,11 +2,15 @@ package Client.Presentation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -15,21 +19,88 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import NetworkCommunication.StringOperation;
+import Client.Entities.GuV;
+import Client.Entities.Balance;
 
 public class ReportingPanel extends JPanel {
 	
-	public class TAccountEntry {
-		public static final boolean AKTIVA = true;
-		public static final boolean PASSIVA = false;
+	public class TAccountEntry {	
+	
+		public String entryName;
+		public String entryValue;
 		
-		public String name;
-		public String value;
-		public boolean side;
+		public TAccountEntry(String Name, String Value)  {
+			//super(new GridLayout(1, 2));
+			entryName = Name;
+			entryValue = Value;
+		}
 		
-		public TAccountEntry(String Name, String Value, boolean Side) {
-			name = Name;
-			value = Value;
-			side = Side;
+		public TAccountEntry(String Name, double Value) {			
+			this(Name, getValueString(Value));
+		}
+	}
+	
+	private static DecimalFormat format = new DecimalFormat("###,###,##0.00");
+	private static String getValueString(double Value) {
+		return format.format(Math.round(Value*100.0)/100.0);
+	}
+	
+	public enum TAccountSides {
+		left,
+		right
+	}
+	
+	public class TAccountSide extends JPanel {
+		private static final long serialVersionUID = 1L;
+		
+		int itemCounter = 0;
+		
+		public TAccountSide() {
+			this.setLayout(new GridLayout(0, 2));
+		}
+		
+//		@Override
+//		public Component add(Component comp) {
+//			if (comp instanceof TAccountEntry) {
+//				TAccountEntry entry = (TAccountEntry)comp;
+//
+//				JLabel nameLabel = new JLabel(" " + entry.entryName);
+//				JLabel valueLabel = new JLabel(" " + entry.entryValue);
+//				
+//				this.add(nameLabel);
+//				this.add(valueLabel);
+//				
+//				itemCounter ++;
+//				
+//				return comp;
+//			} else {
+//				return super.add(comp); 
+//			}
+//		}
+		
+		public void addEntry(TAccountEntry entry) {
+			JLabel nameLabel = new JLabel(" " + entry.entryName, JLabel.LEFT);
+			JLabel valueLabel = new JLabel(entry.entryValue + " ", JLabel.RIGHT);
+			//nameLabel.setHorizontalTextPosition();
+			this.add(nameLabel);
+			this.add(valueLabel);
+			
+			itemCounter ++;
+		}
+//		
+		public int getItemCounter() {
+			return itemCounter;
+		}
+		
+		@Override
+		public void paint(Graphics g) {
+			super.paint(g);
+			
+			//Buchhalternasen
+			
+			//Unterstrich
+			
+			//Unterstrich unter Summe.
 		}
 	}
 	
@@ -42,8 +113,8 @@ public class ReportingPanel extends JPanel {
 		private JPanel headerPanel;
 		private JPanel bodyPanel;
 		
-		private JPanel aktivaPanel;
-		private JPanel passivaPanel;
+		private TAccountSide leftSide;
+		private TAccountSide rightSide;
 		
 		public TAccount(String Name) {
 			super(new BorderLayout());
@@ -59,37 +130,21 @@ public class ReportingPanel extends JPanel {
 			
 			//aktivaPanel = new JPanel(new BorderLayout());
 			//passivaPanel = new JPanel(new BorderLayout());
-			aktivaPanel = new JPanel(new GridLayout(0, 2));
-			passivaPanel = new JPanel(new GridLayout(0, 2));
+			leftSide = new TAccountSide();//JPanel(new GridLayout(0, 2));
+			rightSide = new TAccountSide(); //JPanel(new GridLayout(0, 2));
 			
-			bodyPanel.add(aktivaPanel);
-			bodyPanel.add(passivaPanel);
+			bodyPanel.add(leftSide);
+			bodyPanel.add(rightSide);
 		}
 		
-		public void addEntry(TAccountEntry entry) {
+		public void addEntry(TAccountEntry entry, TAccountSides side) {
 			//entries.add(entry);
-			JLabel nameLabel = new JLabel(StringOperation.padRight(" " + entry.name, 20));
-			JLabel valueLabel = new JLabel(StringOperation.padRight(" " + entry.value, 20));
 			
-//			JPanel namePanel = new JPanel(new BorderLayout());
-//			namePanel.add(nameLabel, BorderLayout.CENTER);
-//			
-//			JPanel valuePanel = new JPanel(new BorderLayout());
-//			valuePanel.add(valueLabel, BorderLayout.CENTER);
-//			
-//			JPanel entryPanel = new JPanel(new BorderLayout());
-//			entryPanel.add(namePanel, BorderLayout.WEST);
-//			entryPanel.add(valuePanel, BorderLayout.EAST);
-//			
-			if (entry.side == TAccountEntry.AKTIVA) {
-				//aktivaPanel.add(entryPanel);
-				aktivaPanel.add(nameLabel);
-				aktivaPanel.add(valueLabel);
+			if (side == TAccountSides.left) {
+				leftSide.addEntry(entry);
 			}
-			if (entry.side == TAccountEntry.PASSIVA) {
-				//passivaPanel.add(entryPanel);
-				passivaPanel.add(nameLabel);
-				passivaPanel.add(valueLabel);
+			if (side == TAccountSides.right) {
+				rightSide.addEntry(entry);
 			}
 			
 		}
@@ -98,7 +153,7 @@ public class ReportingPanel extends JPanel {
 		public void paint(Graphics g) {
 			super.paint(g);
 			
-			//linien zeichnen
+			//T zeichnen
 			int x1, x2, y1, y2 = 0; // coordinates for drawing lines.
 			
 			x1 = headerPanel.getX();
@@ -106,12 +161,39 @@ public class ReportingPanel extends JPanel {
 			y1 = y2 = headerPanel.getY() + headerPanel.getHeight();
 			g.setColor(Color.BLACK);
 			g.drawLine(x1, y1, x2, y2);
-			x1 = x2 = bodyPanel.getX() + aktivaPanel.getWidth();
+			x1 = x2 = bodyPanel.getX() + leftSide.getWidth();
 			y1 = bodyPanel.getY();
-			y2 = bodyPanel.getY() + aktivaPanel.getHeight();
+			y2 = bodyPanel.getY() + leftSide.getHeight();
 			
 			g.drawLine(x1, y1, x2, y2);
 			
+//			int countAktiva = aktivaPanel.getComponentCount();
+//			int countPassiva = passivaPanel.getComponentCount();
+//			
+//			Component lastAktivaPanel = aktivaPanel.getComponents()[countAktiva-1];
+//			Component lastPassivaPanel = aktivaPanel.getComponents()[countPassiva-1];
+//			
+//			Component lastPanel;
+//			Component leastPanel;
+//			if (countAktiva >= countPassiva) {
+//				lastPanel = lastAktivaPanel;
+//				leastPanel = lastPassivaPanel;
+//			} else {
+//				lastPanel = lastPassivaPanel;
+//				leastPanel = lastAktivaPanel;
+//			}
+//			//Buchhalternase zeichnen
+//			
+//			
+//			//Unterstrich zeichnen			
+//			x1 = bodyPanel.getX();
+//			x2 = bodyPanel.getX()+bodyPanel.getWidth();
+//			
+//			y1 = y2 = lastPanel.getY() + lastPanel.getHeight();
+//			
+//			g.drawLine(x1, y1, x2, y2);
+//			
+//			//Unterstrich unter Summen
 		}
 		
 
@@ -119,73 +201,74 @@ public class ReportingPanel extends JPanel {
 	}
 
 	private static final long serialVersionUID = 1L;
-	private TAccount GuV;
-	private TAccount Bilanz;
+	private TAccount balancePanel;
+	private TAccount guVPanel;
 	
-	public ReportingPanel() {
-		super(new GridLayout(1,2));
+	public ReportingPanel(Balance balance, GuV guv) {
+		super(new GridLayout(2,1));
 		//this.setLayout(new BorderLayout());
 		//this.setLayout(new GridLayout(1, 2));
 		
-		Bilanz = new TAccount("Bilanz");
-		GuV = new TAccount("Gewinn und Verlust");
+		balancePanel = new TAccount("Bilanz");
+		guVPanel = new TAccount("Gewinn und Verlust");
 		
 //		this.add(Bilanz, BorderLayout.WEST);
 //		this.add(GuV, BorderLayout.EAST);
-		this.add(Bilanz);
-		this.add(GuV);
+		this.add(guVPanel);
+		this.add(balancePanel);
 		
-		this.addGuvEntry("tesasdasdasdasdadt", "100", TAccountEntry.AKTIVA);
-		this.addGuvEntry("test2", "200", TAccountEntry.AKTIVA);
-		this.addGuvEntry("test", "100", TAccountEntry.AKTIVA);
-		this.addGuvEntry("test2", "200", TAccountEntry.AKTIVA);
-		this.addGuvEntry("test", "100", TAccountEntry.AKTIVA);
-		this.addGuvEntry("test2", "200", TAccountEntry.AKTIVA);
-		this.addGuvEntry("test", "100", TAccountEntry.AKTIVA);
-		this.addGuvEntry("test2", "200", TAccountEntry.AKTIVA);
+		//DecimalFormat format = new DecimalFormat("###,###,###.##");
+		//NumberFormat format = DecimalFormat.getInstance(Locale.GERMAN);
+		balancePanel.addEntry(new TAccountEntry("Maschinen", balance.machineValue), TAccountSides.left);
+		balancePanel.addEntry(new TAccountEntry("Rohstoffe", balance.ressourceValue), TAccountSides.left);
+		balancePanel.addEntry(new TAccountEntry("Produkte", balance.finishedProductsValue), TAccountSides.left);
+		balancePanel.addEntry(new TAccountEntry("Bank", balance.bank), TAccountSides.left);
 		
-		this.addGuvEntry("test3", "300", TAccountEntry.PASSIVA);
-		this.addGuvEntry("test4", "400", TAccountEntry.PASSIVA);
-		this.addGuvEntry("test3", "300", TAccountEntry.PASSIVA);
-		this.addGuvEntry("test4", "400", TAccountEntry.PASSIVA);
-		this.addGuvEntry("test3", "300", TAccountEntry.PASSIVA);
-		this.addGuvEntry("test4", "400", TAccountEntry.PASSIVA);
-		this.addGuvEntry("test3", "300", TAccountEntry.PASSIVA);
-		this.addGuvEntry("test4", "400", TAccountEntry.PASSIVA);
+		balancePanel.addEntry(new TAccountEntry("Eigenkapital", balance.equity), TAccountSides.right);
+		balancePanel.addEntry(new TAccountEntry("Kredit", balance.credit), TAccountSides.right);
 		
-		this.addBilanzEntry("test", "100", TAccountEntry.AKTIVA);
-		this.addBilanzEntry("test2", "200", TAccountEntry.AKTIVA);
-		this.addBilanzEntry("test", "100", TAccountEntry.AKTIVA);
-		this.addBilanzEntry("test2", "200", TAccountEntry.AKTIVA);
-		this.addBilanzEntry("test", "100", TAccountEntry.AKTIVA);
-		this.addBilanzEntry("test2", "200", TAccountEntry.AKTIVA);
-		this.addBilanzEntry("test", "100", TAccountEntry.AKTIVA);
-		this.addBilanzEntry("test2", "200", TAccountEntry.AKTIVA);
-		
-		this.addBilanzEntry("test3", "300", TAccountEntry.PASSIVA);
-		this.addBilanzEntry("test4", "400", TAccountEntry.PASSIVA);
-		this.addBilanzEntry("test3", "300", TAccountEntry.PASSIVA);
-		this.addBilanzEntry("test4", "400", TAccountEntry.PASSIVA);
-		this.addBilanzEntry("test3", "300", TAccountEntry.PASSIVA);
-		this.addBilanzEntry("test4", "400", TAccountEntry.PASSIVA);
-		this.addBilanzEntry("test3", "300", TAccountEntry.PASSIVA);
-		this.addBilanzEntry("test4", "400", TAccountEntry.PASSIVA);
-		
+		guVPanel.addEntry(new TAccountEntry("Rohstoffaufwand", guv.ressourceCost), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Löhne/Gehälter", guv.wages), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Afa auf SA", guv.deprecation), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Miete", guv.rental), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Zinsaufwand", guv.interest), TAccountSides.left);
 
+		guVPanel.addEntry(new TAccountEntry("Umsatzerlöse", guv.sales), TAccountSides.right);
+		
+		guVPanel.addEntry(new TAccountEntry("Gewinn", guv.profit), TAccountSides.right);
 	}
 	
-	public void addBilanzEntry(String name, String value, boolean side) {
-		Bilanz.addEntry(new TAccountEntry(name, value, side));
-	}
-	
-	public void addGuvEntry(String name, String value, boolean side) {
-		GuV.addEntry(new TAccountEntry(name, value, side));
-	}
+//	public void addBilanzEntry(String name, String value, boolean side) {
+//		Bilanz.addEntry(new TAccountEntry(name, value, side));
+//	}
+//	
+//	public void addGuvEntry(String name, String value, boolean side) {
+//		GuV.addEntry(new TAccountEntry(name, value, side));
+//	}
 	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		
-		ReportingPanel repPanel = new ReportingPanel();
+		Balance balance = new Balance();
+		balance.machineValue = 		  254312131.779d;
+		balance.ressourceValue =		 153512.252d;
+		balance.finishedProductsValue =  263242.362d;
+		balance.bank = 				     475152.268d;
+		
+		balance.credit = 			   151324252.27d;
+		balance.calculateEquity();
+		
+		GuV guv = new GuV();
+		guv.ressourceCost = 		   52463524.252d;
+		guv.wages = 				   96342315.643d;
+		guv.deprecation = 			   36235123.433d; 
+		guv.rental = 				      50000.000d;
+		guv.interest = 					 743513.256d;
+		guv.sales = 				  325648144.787d;
+		
+		guv.calculateResult();
+		
+		ReportingPanel repPanel = new ReportingPanel(balance, guv);
 //		repPanel.addGuvEntry("tesasdasdasdasdadt", "100", TAccountEntry.AKTIVA);
 //		repPanel.addGuvEntry("test2", "200", TAccountEntry.AKTIVA);
 //		repPanel.addGuvEntry("test", "100", TAccountEntry.AKTIVA);

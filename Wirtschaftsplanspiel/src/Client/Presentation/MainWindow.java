@@ -18,7 +18,9 @@ import javax.swing.table.TableColumn;
 
 import Client.Application.ChatController;
 import Client.Application.ClientController;
+import Client.Entities.Balance;
 import Client.Entities.Company;
+import Client.Entities.GuV;
 import Client.Entities.Machine;
 import Client.Entities.Player;
 import Client.Entities.MachineType;
@@ -42,7 +44,7 @@ public class MainWindow extends JFrame{
 	JPanel Pmaschinen = new JPanel();
 	JPanel Ppersonal = new JPanel();
 	JPanel Pdarlehen = new JPanel();
-	JPanel Pbericht = new ReportingPanel();
+	JPanel Pbericht = new ReportingPanel(new Balance(), new GuV()); //TODO balance, guv 
 	JPanel Ppreiskal = new JPanel();
 	
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.

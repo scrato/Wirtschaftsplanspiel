@@ -11,10 +11,7 @@ public class Ressource {
 	 * @author Scrato
 	 *
 	 */
-	public enum RessourceType {
-		Stockfisch,
-		Verpackungsmaterial
-	}
+
 	
 	public static String getUnit(RessourceType type){
 		//TODO: Units aktuell halten
