@@ -21,7 +21,7 @@ public class Period {
 	private int finishedProductDelta;
 	private List<Employee> firedEmployees = new LinkedList<Employee>();
 	
-	private GuV guv;
+	private ProfitAndLoss guv;
 	private List<Employee> hiredEmployees = new LinkedList<Employee>();
 	private double interestPayment;
 	private Credit paidCredit;
@@ -122,7 +122,7 @@ public class Period {
 	
 	
 
-	public GuV getGuV() {
+	public ProfitAndLoss getGuV() {
 		return guv;
 	}
 
@@ -222,15 +222,15 @@ public class Period {
 	}
 
 	/**
-	 * Erstellt die GuV am Ende der Periode. (Wenn diese Methode vor Ende der
+	 * Erstellt die ProfitAndLoss am Ende der Periode. (Wenn diese Methode vor Ende der
 	 * Periode ausgeführt wird, gibt es keine Abschreibung und keine verkauften
 	 * Fertigprodukte)
 	 * 
 	 * @return
 	 */
-	public GuV makeGuV() {
+	public ProfitAndLoss makeGuV() {
 		Period p = this;
-		guv = new GuV();
+		guv = new ProfitAndLoss();
 
 		Company comp = Company.getInstance();
 

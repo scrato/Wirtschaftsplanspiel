@@ -1,6 +1,6 @@
 package Client.Entities;
 
-public class GuV {
+public class ProfitAndLoss {
 
 	public double changeInStockFinishedProducts;
 
