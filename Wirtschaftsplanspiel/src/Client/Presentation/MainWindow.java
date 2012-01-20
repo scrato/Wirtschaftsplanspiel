@@ -591,9 +591,14 @@ public class MainWindow extends JFrame{
 		public void windowClosing(WindowEvent e) {
 			// TODO Auto-generated method stub
 			//System.out.println("AnmeldeScreen geschlossen!");
-			Client.getInstance().close();
-			if(isServer){
-				Server.Network.Server.getInstance().close();
+			try {
+				Client.getInstance().close();
+			} catch (Exception exc) { }
+			
+ 			if(isServer){
+ 				try {
+ 					Server.Network.Server.getInstance().close();
+ 				} catch(Exception exc) { }
 			}
 		}
 

@@ -17,10 +17,11 @@ import NetworkCommunication.StringOperation;
 
 public class Client {
 	
-	private static Client client;
+	private static Client instance;
 	
 	public static Client getInstance() {
-		 return client;
+		 if (instance == null) throw new RuntimeException("Nicht verbunden");
+		 return instance;
 	}
 
 	
@@ -35,7 +36,16 @@ public class Client {
 	
 	private boolean isClosed;
 	
-	public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
+	public static Client connect(String Name, InetAddress Address, int Port) {
+		if (instance != null) throw new RuntimeException("Bereits verbunden");
+		Client client = new Client(Name, Address, Port);
+		instance = client;
+		return client;
+	}
+	
+	//public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
+	private Client(String Name, InetAddress Address, int Port) throws RuntimeException {
+		instance = this; // static member for GetInstance
 		try {
 			if (Name.length() > 10) {
 				throw new RuntimeException("Name ist zu lang.");
@@ -54,7 +64,6 @@ public class Client {
 			DataInputStream inputStream = new DataInputStream( socket.getInputStream());
 			DataOutputStream outputStream = new DataOutputStream( socket.getOutputStream());
 			
-			//if (inputStream.readInt() != 1) {
 			if (inputStream.readBoolean() == false) {
 				try {
 					if (!socket.isInputShutdown()) {
@@ -102,8 +111,6 @@ public class Client {
 			socket.setSoTimeout(0);
 			
 			StartReceivingMessages();
-			
-			client = this; // static member for GetInstance
 		} catch (IOException e) {
 			throw new RuntimeException("Verbindung konnte nicht hergestellt werden.");
 		}		
@@ -145,23 +152,17 @@ public class Client {
 		        			break;
 		        		}
 		        		NetMessage message = new NetMessage(messageType, messageContent);
-//		        		// for test purpose:
-//		        		switch (messageType) {
-//			        		case MessageType.CHATMESSAGE_TOCLIENT: {
-//			        			String Message = new String(message.get_Content());
-//			        			System.out.println("Nachricht erhalten: " + Message);			        			
-//			        		}			        		
-//		        		}
-//		        		// end test
 		        		 
 		        		TriggerBusinessLogicThread triggerBusLogic = new TriggerBusinessLogicThread(message);		        				
 		        		triggerBusLogic.start();
 		        	}      
 		        }		        
 			} catch (IOException e) {
-				if (!isClosed) System.err.println("Inputstream zum Server konnte nicht aufgebaut werden.");
-				// Verbindung zum Server verloren. TODO Darauf reagieren.
-				this.close();
+				if (!isClosed) { 
+					System.err.println("Verbindung zum Server verloren.");
+					this.close();
+					ClientController.Disconnected();
+				}
 			}
 		}
 	}
@@ -189,6 +190,7 @@ public class Client {
 	
 	public void close()
 	{
+		instance = null;
 		isClosed = true;
 		stopListener = true;
 		try {

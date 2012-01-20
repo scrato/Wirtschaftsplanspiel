@@ -25,6 +25,7 @@ public class Server {
 	private static Server instance;
 	
 	public static Server getInstance() {
+		if (instance == null) throw new RuntimeException("Kein Server aktiv");
 		return instance;
 	}
 
@@ -40,7 +41,14 @@ public class Server {
 	boolean isClosed;
 	boolean gameStartet;
 	
-	public Server(int port, int maxPeriods) {
+	public static Server StartServer(int port, int maxPeriods) {
+		if (instance != null) throw new RuntimeException("Bereits verbunden");
+		Server server = new Server(port, maxPeriods);
+		instance = server;
+		return server;
+	}
+	
+	private Server(int port, int maxPeriods) {
 		instance = this;
 		PeriodInfo.maxPeriods = maxPeriods;
 		try {
@@ -214,6 +222,9 @@ public class Server {
 	}
 
 	public void close() {
+		instance = null;
+		this.isClosed = true;
+		
 		lock_clients.acquireUninterruptibly();
 		try {
 			for (ClientHandler handler : clients.values()) {
@@ -232,7 +243,6 @@ public class Server {
 		} catch (IOException e) {
 			// should never reach this point!
 		} 
-		this.isClosed = true;
 		System.out.println("Server wurde geschlossen.");
 	}
 	

@@ -17,9 +17,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
+import Server.Application.ServerController;
+
 import Client.Network.Client;
 import Client.Presentation.*;
 import Client.Entities.Player;
+import Client.Application.ClientController;
 
 public class ConnectionView extends JFrame{
 
@@ -146,7 +149,8 @@ public class ConnectionView extends JFrame{
 			try{
 				inetAddress = InetAddress.getByName(ip.getText());
 				try{
-					Client c1 = new Client(this.username.getText(), inetAddress, 51515);
+					//Client c1 = new Client(this.username.getText(), inetAddress, 51515);
+					ClientController.ConnectToServer(this.username.getText(), inetAddress, 51515);
 				}catch(RuntimeException ex){
 					System.err.println("Server nicht ereichbar!");
 					JOptionPane.showMessageDialog(new JFrame(),"Server nicht gefunden.");
@@ -205,7 +209,8 @@ public class ConnectionView extends JFrame{
 						System.err.println("Fehler beim Verbindugsaufbau! Adresse überprüfen!");
 					}
 					
-					new Server.Network.Server(51515, 12);
+					//new Server.Network.Server(51515, 12);
+					ServerController.StartServer(51515, 12); //TODO anzahl runden aus textbox ziehen fehlt??
 					
 					try {
 						Thread.sleep(200);
@@ -214,8 +219,8 @@ public class ConnectionView extends JFrame{
 						e.printStackTrace();
 					}
 					
-					Client c1 = new Client(this.username.getText(), address, 51515);
-					
+					//Client c1 = new Client(this.username.getText(), address, 51515);
+					ClientController.ConnectToServer(this.username.getText(), address, 51515);	
 					
 					connectionView.setVisible(false);
 					MainWindow.getInstance().setVisible(true);

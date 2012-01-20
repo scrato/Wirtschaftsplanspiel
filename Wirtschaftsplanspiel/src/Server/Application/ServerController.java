@@ -27,6 +27,11 @@ import common.entities.Supply;
 
 public class ServerController {
 	
+	
+	public static Server StartServer(int port, int maxPeriods) {
+		return Server.StartServer(port, maxPeriods);
+	}
+	
 	// Spiel Starten.
 	public static void StartGame() {
 		Server server = Server.getInstance();

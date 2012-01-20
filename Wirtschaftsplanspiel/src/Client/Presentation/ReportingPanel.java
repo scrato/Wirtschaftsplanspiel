@@ -214,8 +214,8 @@ public class ReportingPanel extends JPanel {
 		
 //		this.add(Bilanz, BorderLayout.WEST);
 //		this.add(GuV, BorderLayout.EAST);
-		this.add(guVPanel);
 		this.add(balancePanel);
+		this.add(guVPanel);
 		
 		//DecimalFormat format = new DecimalFormat("###,###,###.##");
 		//NumberFormat format = DecimalFormat.getInstance(Locale.GERMAN);
