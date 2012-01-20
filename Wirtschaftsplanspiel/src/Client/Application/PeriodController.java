@@ -10,7 +10,7 @@ import Client.Entities.Company;
 import Client.Entities.EmployeeType;
 import Client.Entities.MachineType;
 import Client.Entities.Period;
-import Client.Entities.GuV;
+import Client.Entities.ProfitAndLoss;
 import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
 import Client.Entities.Ressource;
@@ -32,7 +32,7 @@ public abstract class PeriodController {
 	}
 
 	public static void RecieveAssignedDemand(SendAssignedDisposalMessage sendAssignedDemandMessage) {
-		//TODO Erfolgsermittlung und übertrageung des erfolgs zum Server. Dannach ErgebnisScreen (Bilanz, GuV) aufbauen und anzeigen.
+		//TODO Erfolgsermittlung und übertrageung des erfolgs zum Server. Dannach ErgebnisScreen (Bilanz, ProfitAndLoss) aufbauen und anzeigen.
 		int quantity = sendAssignedDemandMessage.getQuantity();
 		
 		Period actPeriod = PeriodInfo.getActualPeriod();
@@ -57,7 +57,7 @@ public abstract class PeriodController {
 			comp.setWarehouseCostPerProduct(produceCostPerProdukt);
 			CompanyController.payWarehouseCosts();
 			
-			GuV guv = actPeriod.makeGuV();			
+			ProfitAndLoss guv = actPeriod.makeGuV();			
 			SendCompanyResultMessage message = new SendCompanyResultMessage(guv.profit);
 			Client.getInstance().SendMessage(message);
 			//TODO Gewinn an Server senden.

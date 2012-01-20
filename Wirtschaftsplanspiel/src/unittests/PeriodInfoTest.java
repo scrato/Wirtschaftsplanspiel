@@ -20,7 +20,7 @@ import Client.Entities.EmployeeType;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
 import Client.Entities.Balance;
-import Client.Entities.GuV;
+import Client.Entities.ProfitAndLoss;
 import Client.Entities.PeriodInfo;
 import Client.Entities.RessourceType;
 
@@ -30,7 +30,7 @@ import Client.Entities.RessourceType;
  */
 public class PeriodInfoTest extends TestCase  {
 	private Company comp;
-	private GuV g1;
+	private ProfitAndLoss g1;
 	private Balance b;
 	/**
 	 * @throws java.lang.Exception

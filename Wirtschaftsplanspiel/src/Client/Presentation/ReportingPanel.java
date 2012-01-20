@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import NetworkCommunication.StringOperation;
-import Client.Entities.GuV;
+import Client.Entities.ProfitAndLoss;
 import Client.Entities.Balance;
 
 public class ReportingPanel extends JPanel {
@@ -204,7 +204,7 @@ public class ReportingPanel extends JPanel {
 	private TAccount balancePanel;
 	private TAccount guVPanel;
 	
-	public ReportingPanel(Balance balance, GuV guv) {
+	public ReportingPanel(Balance balance, ProfitAndLoss guv) {
 		super(new GridLayout(2,1));
 		//this.setLayout(new BorderLayout());
 		//this.setLayout(new GridLayout(1, 2));
@@ -213,7 +213,7 @@ public class ReportingPanel extends JPanel {
 		guVPanel = new TAccount("Gewinn und Verlust");
 		
 //		this.add(Bilanz, BorderLayout.WEST);
-//		this.add(GuV, BorderLayout.EAST);
+//		this.add(ProfitAndLoss, BorderLayout.EAST);
 		this.add(balancePanel);
 		this.add(guVPanel);
 		
@@ -243,7 +243,7 @@ public class ReportingPanel extends JPanel {
 //	}
 //	
 //	public void addGuvEntry(String name, String value, boolean side) {
-//		GuV.addEntry(new TAccountEntry(name, value, side));
+//		ProfitAndLoss.addEntry(new TAccountEntry(name, value, side));
 //	}
 	
 	public static void main(String[] args) {
@@ -258,7 +258,7 @@ public class ReportingPanel extends JPanel {
 		balance.credit = 			   151324252.27d;
 		balance.calculateEquity();
 		
-		GuV guv = new GuV();
+		ProfitAndLoss guv = new ProfitAndLoss();
 		guv.ressourceCost = 		   52463524.252d;
 		guv.wages = 				   96342315.643d;
 		guv.deprecation = 			   36235123.433d; 
