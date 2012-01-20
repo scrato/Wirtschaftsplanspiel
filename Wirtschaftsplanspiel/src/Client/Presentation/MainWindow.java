@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -30,8 +33,11 @@ import NetworkCommunication.*;
 import java.util.List;
 
 public class MainWindow extends JFrame{
+	
 	private static final long serialVersionUID = 1L;
 
+	JFrame mainWindow = this;
+	
 	// Standardpanel
 	JPanel north = new JPanel();
 	JPanel east = new JPanel();
@@ -50,17 +56,21 @@ public class MainWindow extends JFrame{
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
 	
+	
+	boolean isServer = Player.isHost();
+	
 	// Playerliste
 	DefaultListModel listModel = new DefaultListModel();
 	JList ListPlayers = new JList(listModel);
 		
 	JTextArea chatOutput = new JTextArea(19,25);
 	
+	Company company;
+	
 	// MachineScreen
 	String[] machineColumnNames = {"Typ", "Kapazität", "Anschaffungswert", "Restlaufzeit", "Restwert"};
 	DefaultTableModel machineTabModel = new DefaultTableModel();
-	JTable machineTable = null;
-	Company company;
+	JTable machineTable = new JTable();
 	Object[][] machineData = null;
 	JScrollPane machineScrollPane;
 	
@@ -71,6 +81,7 @@ public class MainWindow extends JFrame{
 		super("Business Basics");
 		instance = this;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.addWindowListener(new specialWindowListener());
 		initBasis();
 		buildScreens();
 		buildNorth();
@@ -157,7 +168,10 @@ public class MainWindow extends JFrame{
 		// Maschinen
 		Company company = Company.getInstance();
 		company.addMachine(new Machine(MachineType.Filitiermaschine, 100, 2000.0));
-		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 240, 1000.0));
+		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 240, 3000.0));
+		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 270, 8000.0));
+		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 340, 2000.0));
+		
 		
 		JButton verkaufen = new JButton("verkaufen");
 		
@@ -307,6 +321,7 @@ public class MainWindow extends JFrame{
 			
 		Iterator<Machine> machineItr = company.getMachines().iterator();
 		Machine machine;
+
 		int i = 0;
 		while(machineItr.hasNext()){
 			 machine = machineItr.next();
@@ -319,12 +334,28 @@ public class MainWindow extends JFrame{
 			 System.out.println(i + "Maschinen");
 		}
 		
+		
 		machineTabModel = new DefaultTableModel(machineData, machineColumnNames);
+
 		machineTable = new JTable(machineTabModel);
+		machineTable.setModel(machineTabModel);
+		
+		machineTabModel.fireTableDataChanged();
+		machineTabModel.fireTableStructureChanged();
 		machineScrollPane = new JScrollPane(machineTable);
 		
-		machineTable.validate();
-		machineTable.repaint();
+
+		
+		//machineTable.tableChanged(new TableModelEvent(machineTable.getModel()));
+		
+
+		machineScrollPane.invalidate();
+		machineScrollPane.validate();
+		machineScrollPane.repaint();
+
+		mainWindow.invalidate();
+		mainWindow.validate();
+		mainWindow.repaint();
 
 	}
 	
@@ -502,8 +533,7 @@ public class MainWindow extends JFrame{
 				//tabModel.removeRow(table.getSelectedRow());
 				machine = company.getMachines().get(machineTable.getSelectedRow());
 				company.removeMachine(machine);
-				refreshMachineTable();
-				machineTable.repaint();
+				
 				System.out.println("Maschine verkauft");
 				System.out.println(machine.toString());
 				System.out.println("Zeile" + machineTable.getSelectedRow() + " gelöscht");
@@ -540,6 +570,56 @@ public class MainWindow extends JFrame{
 			
 		}
 		
+	}
+	
+	private class specialWindowListener implements WindowListener{
+
+		
+		@Override
+		public void windowActivated(WindowEvent e) {
+			// TODO Auto-generated method stub			
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+			
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+			Client.getInstance().close();
+			if(isServer){
+				Server.Network.Server.getInstance().close();
+			}
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+			
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			//System.out.println("AnmeldeScreen geschlossen!");
+		}
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 }
