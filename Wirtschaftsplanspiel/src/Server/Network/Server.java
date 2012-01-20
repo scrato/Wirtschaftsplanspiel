@@ -48,7 +48,7 @@ public class Server {
 		return server;
 	}
 	
-	private Server(int port, int maxPeriods) {
+	private Server(int port, int maxPeriods) throws RuntimeException {
 		instance = this;
 		PeriodInfo.maxPeriods = maxPeriods;
 		try {
@@ -62,6 +62,7 @@ public class Server {
 			StartAcceptClients();
 		} catch (IOException e) {
 			System.err.println("Server konnte nicht initialisiert werden.");
+			throw new RuntimeException("Server konnte nicht initialisiert werden.");
 		}
 		
 	}

@@ -16,7 +16,8 @@ public abstract class ClientController {
 	}
 	
 	public static void Disconnected() {
-		//TODO zur GUI weiterleiten.
+		MainWindow wind = MainWindow.getInstance();
+		wind.notifyDisconnect();
 	}
 	
 	public static void PlayerListReceived() {

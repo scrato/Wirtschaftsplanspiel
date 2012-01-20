@@ -210,7 +210,12 @@ public class ConnectionView extends JFrame{
 					}
 					
 					//new Server.Network.Server(51515, 12);
-					ServerController.StartServer(51515, 12); //TODO anzahl runden aus textbox ziehen fehlt??
+					try {
+						ServerController.StartServer(51515, 12); //TODO anzahl runden aus textbox ziehen fehlt??
+					} catch (RuntimeException exc) {
+						JOptionPane.showMessageDialog(null, "Fehler bei Start des Servers.", "Der Server konnte nicht gestartet werden.", JOptionPane.OK_OPTION);
+						return;
+					}
 					
 					try {
 						Thread.sleep(200);

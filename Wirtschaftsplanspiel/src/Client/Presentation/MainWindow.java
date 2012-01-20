@@ -626,6 +626,11 @@ public class MainWindow extends JFrame{
 			
 		}
 	}
+	
+	public void notifyDisconnect() {
+		JOptionPane.showMessageDialog(null, "Die Verbindung zum Server wurde unterbrochen.", "Verbindung getrennt", JOptionPane.CLOSED_OPTION);
+		this.dispose();
+	}
 
 }
 
