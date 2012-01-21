@@ -118,18 +118,32 @@ public class MainWindow extends JFrame{
 	
 	
 	public void refreshRessources() {
+		// Schau dir die Entitäten von Pwerkstoffe an
 		for(Component t : Pwerkstoffe.getComponents()){
+			
+			//Die Klassen, die vom Typ "Type-Label" sind...
 			if(t.getClass().equals(TypeLabel.class)){
+				@SuppressWarnings("unchecked")
+				//Merke dir die Ressource, für die dieses Label steht
 				TypeLabel<RessourceType, LabelTypes> label = (TypeLabel<RessourceType, LabelTypes>) t;
 				Ressource res = Company.getInstance().getRessource(label.getType());
+				
+				//Was für einen Sinn stellt dieses Label dar
 				switch (label.getSense()){
+				
+					//Label der den Güterpreis darstellt
 					case goodPrice:
 						label.setText(String.valueOf(res.getPricePerUnit()));
 						break;
+						
+					//Label der Ressourcen auf Lager
 					case goodsInStock:
 						label.setText(String.valueOf(res.getStoredUnits()));
 						break;
+						
+					//Label der benötigten Ressourcen
 					case goodsNeeded:
+						//TODO: Production-Units
 						label.setText(String.valueOf(CompanyController.missingRessources(100).get(res.getType())));
 						break;
 				}
@@ -215,7 +229,10 @@ public class MainWindow extends JFrame{
 		Pwerkstoffe.setLayout(new GridBagLayout());
 		c.gridx = 0;
 		c.gridy = 0;
+		c.gridwidth = 3;
 		Pwerkstoffe.add(new JLabel("Rohstoffe einkaufen"),c);
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.WEST;
 		int rowy = 1;
 		
 		for(RessourceType t: RessourceType.values()){
@@ -258,8 +275,10 @@ public class MainWindow extends JFrame{
 			c.gridx++;
 			TypeLabel<RessourceType, LabelTypes> tPrice = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodPrice);
 			Pwerkstoffe.add(tPrice,c);
-			rowy++;
+			rowy ++;
+			
 		}
+		
 		refreshRessources();
 		//Pwerkstoffe.add(new JButton("Werkstoffe einkaufen"));
 		
