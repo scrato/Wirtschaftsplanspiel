@@ -45,5 +45,9 @@ public class ProfitAndLoss {
 
 		this.profit = earnings - expenditures;
 	}
+	
+	public double getTAccountSum() {
+		return Math.max(ressourceCost + wages + deprecation + rental + interest + warehouseCosts, sales);
+	}
 
 }

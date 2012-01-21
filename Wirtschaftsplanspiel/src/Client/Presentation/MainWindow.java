@@ -50,7 +50,7 @@ public class MainWindow extends JFrame{
 	JPanel Pmaschinen = new JPanel();
 	JPanel Ppersonal = new JPanel();
 	JPanel Pdarlehen = new JPanel();
-	JPanel Pbericht = new ReportingPanel(new Balance(), new ProfitAndLoss()); //TODO balance, guv 
+	JPanel Pbericht = new ReportingPanel(); //new Balance(), new ProfitAndLoss()); //TODO balance, guv 
 	JPanel Ppreiskal = new JPanel();
 	
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.

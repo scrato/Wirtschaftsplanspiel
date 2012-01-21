@@ -19,6 +19,10 @@ public abstract class PeriodInfo {
 	   return periods.get(actPeriod);
    }
    
+   public static int getActualPeriodNumber(){
+	   return actPeriod;
+   }
+   
    public static Period getPeriod(int period){
 	   return periods.get(period);
    }
