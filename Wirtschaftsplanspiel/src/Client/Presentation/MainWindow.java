@@ -10,8 +10,6 @@ import java.awt.event.WindowListener;
 import java.util.Iterator;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import Client.Application.ChatController;
 import Client.Application.CompanyController;
@@ -39,14 +37,6 @@ public class MainWindow extends JFrame{
 				JLabel tcosts) {
 			this.tBuy = tBuy;
 			this.tcosts = tcosts;
-		}
-
-
-
-
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-
 		}
 
 
@@ -79,8 +69,14 @@ public class MainWindow extends JFrame{
 
 
 		@Override
-		public void keyTyped(KeyEvent arg0) {
+		public void keyPressed(KeyEvent e) {
+			
+		}
 
+
+
+		@Override
+		public void keyTyped(KeyEvent e) {
 		}
 
 	}
@@ -222,18 +218,17 @@ public class MainWindow extends JFrame{
 					//Label der benötigten Ressourcen
 					case goodsNeeded:
 						//TODO: Production-Units
-						label.setText(String.valueOf(CompanyController.missingRessources(100).get(type)) + unitname);
+						int units = Company.getInstance().getProduction().getUnitsToProduce();
+						label.setText(String.valueOf(CompanyController.missingRessources(units).get(type)) + unitname);
 						break;
 						
 					//Label der Ressourcen auf dem Markt
 					case goodsBuyable:
-						//TODO: Production-Units
 						label.setText(String.valueOf(res.getBuyableUnits()) + unitname);
 						break;
 						
 					//Label der Fixkosten für den Ressourcentyp
 					case fixedPrice:
-						//TODO: Production-Units
 						label.setText(String.valueOf(Ressource.getFixedCosts(type)) + "€");
 						break;
 				}
@@ -346,7 +341,7 @@ public class MainWindow extends JFrame{
 			//Nextline
 			c.gridx = 0;
 			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Rohstoffe zu Erwerben: "),c);
+			Pwerkstoffe.add(new JLabel("Rohstoffe auf dem Markt: "),c);
 			c.gridx++;
 			TypeLabel<RessourceType, LabelTypes> tbuyable = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodsBuyable);
 			Pwerkstoffe.add(tbuyable,c);

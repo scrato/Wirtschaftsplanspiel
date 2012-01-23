@@ -1,6 +1,6 @@
 package Client.Entities;
 
 public enum RessourceType {
-	Stockfisch,
+	Rohfisch,
 	Verpackungsmaterial
 }

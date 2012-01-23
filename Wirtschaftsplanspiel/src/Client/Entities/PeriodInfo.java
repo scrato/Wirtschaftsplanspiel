@@ -17,7 +17,7 @@ public abstract class PeriodInfo {
 	   periods.add(new Period());
 	   
 		//TODO: Besseren Platz für Startwerte finden
-		CompanyController.initRessource(RessourceType.Stockfisch, 400, 6.00);
+		CompanyController.initRessource(RessourceType.Rohfisch, 400, 6.00);
 		CompanyController.initRessource(RessourceType.Verpackungsmaterial, 75, 25.00);
 		Company.getInstance().incMoney(50000.00);
    }

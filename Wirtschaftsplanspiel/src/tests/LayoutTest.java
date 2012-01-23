@@ -8,10 +8,11 @@ import Client.Presentation.MainWindow;
 
 public class LayoutTest {
 	public static void main(String[] args){
-		CompanyController.initRessource(RessourceType.Stockfisch, 50, 1.50);
-		CompanyController.initRessource(RessourceType.Verpackungsmaterial, 100, 2.50);
-		Company.getInstance().incMoney(9000);
-		Ressource sf = Company.getInstance().getRessource(RessourceType.Stockfisch);
+		CompanyController.initRessource(RessourceType.Rohfisch, 7400, 1.50);
+		CompanyController.initRessource(RessourceType.Verpackungsmaterial, 1900, 25.00);
+		Company.getInstance().incMoney(900000);
+		Company.getInstance().getProduction().setUnitsToProduce(500);
+		Ressource sf = Company.getInstance().getRessource(RessourceType.Rohfisch);
 		sf.incStoredUnits(400);
 
 		Ressource vm = Company.getInstance().getRessource(RessourceType.Verpackungsmaterial);

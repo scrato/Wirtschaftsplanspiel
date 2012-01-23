@@ -16,7 +16,7 @@ public class Ressource {
 	public static String getUnit(RessourceType type){
 		//TODO: Units aktuell halten
 		switch(type){
-		case Stockfisch:
+		case Rohfisch:
 			return " Kilo";
 		case Verpackungsmaterial:
 			return " Tonnen";
@@ -27,7 +27,7 @@ public class Ressource {
 	
 	public static double getFixedCosts(RessourceType type){
 		switch(type){
-		case Stockfisch:
+		case Rohfisch:
 			return 125.00;
 		case Verpackungsmaterial:
 			return 100;
@@ -40,7 +40,7 @@ public class Ressource {
 	
 	public static int getNeed(RessourceType type){
 		switch(type){
-		case Stockfisch:
+		case Rohfisch:
 			return 10;
 		case Verpackungsmaterial:
 			return 1;

@@ -155,7 +155,7 @@ public class Company {
 	
 	public double getWarehouseCosts(){
 
-		int stockfisch = getRessource(RessourceType.Stockfisch).getStoredUnits();
+		int stockfisch = getRessource(RessourceType.Rohfisch).getStoredUnits();
 		int verpackung = getRessource(RessourceType.Verpackungsmaterial).getStoredUnits();
 		int finishedProducts = getFinishedProducts();
 		
