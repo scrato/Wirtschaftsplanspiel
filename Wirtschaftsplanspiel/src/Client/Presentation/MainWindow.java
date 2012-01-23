@@ -1,27 +1,22 @@
 package Client.Presentation;
 
 import java.awt.*;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.TableModelEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-
 import Client.Application.ChatController;
-import Client.Application.ClientController;
 import Client.Application.CompanyController;
+import Client.Application.NotEnoughRessourcesException;
+import Client.Application.UserCanNotPayException;
 import Client.Entities.Balance;
 import Client.Entities.Company;
 import Client.Entities.ProfitAndLoss;
@@ -31,30 +26,110 @@ import Client.Entities.MachineType;
 import Client.Entities.Ressource;
 import Client.Entities.RessourceType;
 import Client.Network.Client;
-import NetworkCommunication.*;
-
 import java.util.List;
 
 public class MainWindow extends JFrame{
 	
-	private class ressourceKeyListener implements KeyListener {
+
+	private class RessourceBuyAmountListener implements KeyListener {
+		TypeTextbox<RessourceType> tBuy;
+		JLabel tcosts;
+		
+		public RessourceBuyAmountListener(TypeTextbox<RessourceType> tBuy,
+				JLabel tcosts) {
+			this.tBuy = tBuy;
+			this.tcosts = tcosts;
+		}
+
+
+
 
 		@Override
 		public void keyPressed(KeyEvent arg0) {
-			// TODO Auto-generated method stub
 
 		}
+
+
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-
+			try
+			{			
+				int amount = Integer.parseInt(tBuy.getText().trim());
+				if (amount<= 0){
+					tcosts.setText("0€");
+					return;
+				}
+				Ressource res = Company.getInstance().getRessource(tBuy.getType());
+				
+				double costs = (res.getPricePerUnit() * amount) + Ressource.getFixedCosts(tBuy.getType());
+				tcosts.setText(costs + "€");
+				
+				
+			}
+			catch(NumberFormatException e)
+			{
+				tcosts.setText("0€");
+				return;
+					
+			}
+			
 		}
+
+
 
 		@Override
 		public void keyTyped(KeyEvent arg0) {
-			if (arg0.getKeyCode() == KeyEvent.VK_ENTER)
-				refreshRessources();
+
+		}
+
+	}
+
+	private class buyRessourceListener implements ActionListener {
+
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			for(Component c: Pwerkstoffe.getComponents()){
+				//Die Klassen, die vom Typ "Type-Label" sind...
+				if(c.getClass().equals(TypeTextbox.class)){
+					@SuppressWarnings("unchecked")
+					//Merke dir die Ressource, für die dieses Label steht
+					TypeTextbox<RessourceType> tb = (TypeTextbox<RessourceType>) c;
+					RessourceType t = tb.getType();
+					String text = tb.getText().trim();
+					//Kaufe für jede Ressource die angegebene Anzahl ein
+					try {
+					int amount = Integer.parseInt(text);
+					if(amount>0)
+							CompanyController.buyRessources(t, amount);
+							//Kein Geld -> Mit Messagebox warnen
+						} catch (UserCanNotPayException ex1) 
+						{
+							MessageBox mb = new MessageBox("Zu wenig Geld", "Sie haben zu wenig Geld um diese " +
+									"Ressource zu kaufen.");
+							mb.setVisible(true);
+							return;
+						} catch (NumberFormatException ex3)
+						{
+							MessageBox mb = new MessageBox("Keine valide Eingabe", 
+									"Bitte geben sie eine zulässige Zahl an.");
+							mb.setVisible(true);
+							return;
+						} catch (NotEnoughRessourcesException ex2) {
+							MessageBox mb = new MessageBox("Nicht genug Ressourcen auf dem Markt", 
+									"Es gibt nicht genug " + t.name() +
+									" auf dem Markt.");
+							mb.setVisible(true);
+							return;
+						} finally
+						{
+							refreshRessources();
+							tb.setText("0");
+						}
+				}
+			}
+			
 		}
 
 	}
@@ -85,8 +160,8 @@ public class MainWindow extends JFrame{
 	boolean isServer = Player.isHost();
 	
 	// Playerliste
-	DefaultListModel listModel = new DefaultListModel();
-	JList ListPlayers = new JList(listModel);
+	DefaultListModel<String> listModel = new DefaultListModel<String>();
+	JList<String> ListPlayers = new JList<String>(listModel);
 		
 	JTextArea chatOutput = new JTextArea(19,25);
 	
@@ -114,6 +189,8 @@ public class MainWindow extends JFrame{
 		buildWest();
 		buildSouth();
 		//waitForOtherPlayers();
+		
+
 	}
 	
 	
@@ -127,24 +204,37 @@ public class MainWindow extends JFrame{
 				//Merke dir die Ressource, für die dieses Label steht
 				TypeLabel<RessourceType, LabelTypes> label = (TypeLabel<RessourceType, LabelTypes>) t;
 				Ressource res = Company.getInstance().getRessource(label.getType());
-				
+				RessourceType type = res.getType();
+				String unitname = " " + Ressource.getUnit(type);
 				//Was für einen Sinn stellt dieses Label dar
 				switch (label.getSense()){
 				
 					//Label der den Güterpreis darstellt
 					case goodPrice:
-						label.setText(String.valueOf(res.getPricePerUnit()));
+						label.setText(String.valueOf(res.getPricePerUnit()) + "€");
 						break;
 						
 					//Label der Ressourcen auf Lager
 					case goodsInStock:
-						label.setText(String.valueOf(res.getStoredUnits()));
+						label.setText(String.valueOf(res.getStoredUnits()) + unitname);
 						break;
 						
 					//Label der benötigten Ressourcen
 					case goodsNeeded:
 						//TODO: Production-Units
-						label.setText(String.valueOf(CompanyController.missingRessources(100).get(res.getType())));
+						label.setText(String.valueOf(CompanyController.missingRessources(100).get(type)) + unitname);
+						break;
+						
+					//Label der Ressourcen auf dem Markt
+					case goodsBuyable:
+						//TODO: Production-Units
+						label.setText(String.valueOf(res.getBuyableUnits()) + unitname);
+						break;
+						
+					//Label der Fixkosten für den Ressourcentyp
+					case fixedPrice:
+						//TODO: Production-Units
+						label.setText(String.valueOf(Ressource.getFixedCosts(type)) + "€");
 						break;
 				}
 					
@@ -240,7 +330,10 @@ public class MainWindow extends JFrame{
 			c.gridx = 0;
 			c.gridy = rowy;
 			rowy++;
-			Pwerkstoffe.add(new JLabel(t.name()),c);
+			JLabel nlabel = new JLabel(t.name());
+			nlabel.setFont(new Font("Serif", Font.BOLD, 14));
+			
+			Pwerkstoffe.add(nlabel,c);
 			c.ipady = 0;
 			c.gridy = rowy;
 			Pwerkstoffe.add(new JLabel("Rohstoffe auf Lager: "),c);
@@ -249,28 +342,26 @@ public class MainWindow extends JFrame{
 			Pwerkstoffe.add(tStored,c);
 			rowy++;
 			
+			
 			//Nextline
 			c.gridx = 0;
 			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Für Produktion benötigt: "),c);
+			Pwerkstoffe.add(new JLabel("Rohstoffe zu Erwerben: "),c);
+			c.gridx++;
+			TypeLabel<RessourceType, LabelTypes> tbuyable = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodsBuyable);
+			Pwerkstoffe.add(tbuyable,c);
+			rowy++;
+			
+			
+			//Nextline
+			c.gridx = 0;
+			c.gridy = rowy;
+			Pwerkstoffe.add(new JLabel("Für geplante Produktion benötigt: "),c);
 			c.gridx++;
 			TypeLabel<RessourceType, LabelTypes> tNeed = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodsNeeded);
 			Pwerkstoffe.add(tNeed,c);
 			rowy++;
 			
-			//Nextline
-			c.gridx = 0;
-			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Geplanter Kauf: "),c);
-			c.gridx++;
-			TypeTextbox<RessourceType> tBuy = new TypeTextbox<RessourceType>(t);
-			tBuy.setSize(100, 30);
-			tBuy.setText("     0");
-			tBuy.addKeyListener(new ressourceKeyListener());
-			Pwerkstoffe.add(tBuy,c);
-			c.gridx++;
-			Pwerkstoffe.add(new JLabel("  " + Ressource.getUnit(t)),c);
-			rowy++;
 			
 			//Nextline
 			c.gridx = 0;
@@ -281,12 +372,47 @@ public class MainWindow extends JFrame{
 			Pwerkstoffe.add(tPrice,c);
 			rowy ++;
 			
+			//Nextline
+			c.gridx = 0;
+			c.gridy = rowy;
+			Pwerkstoffe.add(new JLabel("Fixkosten pro Bestellung: "),c);
+			c.gridx++;
+			TypeLabel<RessourceType, LabelTypes> tfixPrice = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.fixedPrice);
+			Pwerkstoffe.add(tfixPrice,c);
+			rowy ++;
+			
+			//Nextline
+			c.gridx = 0;
+			c.gridy = rowy;
+			Pwerkstoffe.add(new JLabel("Geplanter Kauf: "),c);
+			c.gridx++;
+			TypeTextbox<RessourceType> tBuy = new TypeTextbox<RessourceType>(t);
+			c.ipadx = 35;
+			c.weightx = 0;
+			tBuy.setText("0");
+			Pwerkstoffe.add(tBuy,c);
+			c.gridx++;
+			Pwerkstoffe.add(new JLabel("  " + Ressource.getUnit(t)),c);
+			rowy++;
+			
+			//Nextline
+			c.gridx = 0;
+			c.gridy = rowy;
+			Pwerkstoffe.add(new JLabel("Derzeitige Kaufsumme: "),c);
+			c.gridx++;
+			JLabel tcosts = new JLabel();
+			//tBuy sagen, die Kaufsumme direkt zu aktualisieren
+			tBuy.addKeyListener(new RessourceBuyAmountListener(tBuy, tcosts));
+			Pwerkstoffe.add(tcosts,c);
+			rowy ++;
+			
 		
 		}
 		c.gridy = rowy;
 		c.gridx = 0;
 		JButton prev = new JButton("Zurück");
 		JButton buy = new JButton("Kaufen");
+		buy.addActionListener(new buyRessourceListener());
 		JButton next = new JButton("Weiter");
 		Pwerkstoffe.add(prev,c);
 		c.gridx++;
@@ -762,7 +888,7 @@ public class MainWindow extends JFrame{
 		System.exit(3);
 	}
 	
-	private enum LabelTypes{ goodsInStock, goodsNeeded, goodPrice } 
+	private enum LabelTypes{ goodsInStock, goodsBuyable, fixedPrice, priceToPay, goodsNeeded, goodPrice } 
 
 }
 

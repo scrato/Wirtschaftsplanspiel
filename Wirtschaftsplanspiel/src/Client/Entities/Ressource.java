@@ -164,7 +164,7 @@ public void incBuyableUnits(int units){
 
 public void decBuyableUnits(int units) throws NotEnoughRessourcesException{
 	if((availableUnits - units) < 0)
-		throw new NotEnoughRessourcesException();
+		throw new NotEnoughRessourcesException(units - availableUnits, availableUnits);
 	availableUnits -= units;
 }
 

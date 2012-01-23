@@ -10,7 +10,7 @@ public class LayoutTest {
 	public static void main(String[] args){
 		CompanyController.initRessource(RessourceType.Stockfisch, 50, 1.50);
 		CompanyController.initRessource(RessourceType.Verpackungsmaterial, 100, 2.50);
-		
+		Company.getInstance().incMoney(9000);
 		Ressource sf = Company.getInstance().getRessource(RessourceType.Stockfisch);
 		sf.incStoredUnits(400);
 
