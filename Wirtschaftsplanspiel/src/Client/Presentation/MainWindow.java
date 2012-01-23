@@ -236,10 +236,12 @@ public class MainWindow extends JFrame{
 		int rowy = 1;
 		
 		for(RessourceType t: RessourceType.values()){
+			c.ipady = 40;
 			c.gridx = 0;
 			c.gridy = rowy;
 			rowy++;
 			Pwerkstoffe.add(new JLabel(t.name()),c);
+			c.ipady = 0;
 			c.gridy = rowy;
 			Pwerkstoffe.add(new JLabel("Rohstoffe auf Lager: "),c);
 			c.gridx++;
@@ -262,9 +264,11 @@ public class MainWindow extends JFrame{
 			Pwerkstoffe.add(new JLabel("Geplanter Kauf: "),c);
 			c.gridx++;
 			TypeTextbox<RessourceType> tBuy = new TypeTextbox<RessourceType>(t);
-			tBuy.setVisible(true);
+			tBuy.setSize(100, 30);
+			tBuy.setText("     0");
 			tBuy.addKeyListener(new ressourceKeyListener());
 			Pwerkstoffe.add(tBuy,c);
+			c.gridx++;
 			Pwerkstoffe.add(new JLabel("  " + Ressource.getUnit(t)),c);
 			rowy++;
 			
@@ -277,8 +281,18 @@ public class MainWindow extends JFrame{
 			Pwerkstoffe.add(tPrice,c);
 			rowy ++;
 			
-		}
 		
+		}
+		c.gridy = rowy;
+		c.gridx = 0;
+		JButton prev = new JButton("Zurück");
+		JButton buy = new JButton("Kaufen");
+		JButton next = new JButton("Weiter");
+		Pwerkstoffe.add(prev,c);
+		c.gridx++;
+		Pwerkstoffe.add(buy, c);
+		c.gridx++;
+		Pwerkstoffe.add(next, c);
 		refreshRessources();
 		//Pwerkstoffe.add(new JButton("Werkstoffe einkaufen"));
 		
