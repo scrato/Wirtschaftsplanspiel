@@ -73,7 +73,7 @@ public class MainWindow extends JFrame{
 	// Panel für diverse Screens
 	JPanel Pwerkstoffe = new JPanel();
 	JPanel Pmaschinen = new JPanel();
-	JPanel Ppersonal = new JPanel();
+	JPanel Ppersonal = new EmployeePanel();
 	JPanel Pdarlehen = new JPanel();
 	JPanel Pbericht = new ReportingPanel(new Balance(), new ProfitAndLoss()); //TODO balance, guv 
 	JPanel Ppreiskal = new JPanel();
@@ -333,9 +333,7 @@ public class MainWindow extends JFrame{
 		//Pmaschinen.add(new JButton("Einkaufen"));
 		//Pmaschinen.add(new JButton("Verkaufen"));
 		
-		// Personal
-		Ppersonal.add(new JLabel("Personalverwaltung"));
-		
+				
 		// Darlehen
 		Pdarlehen.add(new JLabel("Darlehen aufnehmen und tilgen."));
 		
