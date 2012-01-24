@@ -10,21 +10,12 @@ import java.awt.event.WindowListener;
 import java.util.Iterator;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import Client.Application.ChatController;
-import Client.Application.CompanyController;
-import Client.Application.NotEnoughRessourcesException;
-import Client.Application.UserCanNotPayException;
-import Client.Entities.Balance;
 import Client.Entities.Company;
-import Client.Entities.ProfitAndLoss;
 import Client.Entities.Machine;
 import Client.Entities.Player;
 import Client.Entities.MachineType;
-import Client.Entities.Ressource;
-import Client.Entities.RessourceType;
 import Client.Network.Client;
 import java.util.List;
 

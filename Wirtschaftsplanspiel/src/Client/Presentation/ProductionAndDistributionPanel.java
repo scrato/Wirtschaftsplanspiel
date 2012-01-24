@@ -9,9 +9,6 @@ import java.awt.event.KeyListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.JTextField;
-
-import Client.Application.PeriodController;
 import Client.Entities.Company;
 import Client.Entities.PeriodInfo;
 

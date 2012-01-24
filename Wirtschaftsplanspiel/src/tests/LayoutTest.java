@@ -1,6 +1,5 @@
 package tests;
 
-import Client.Application.CompanyController;
 import Client.Entities.Company;
 import Client.Entities.Ressource;
 import Client.Entities.RessourceType;
