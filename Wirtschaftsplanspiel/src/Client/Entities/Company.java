@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import Client.Application.EmployeeNotEmployedException;
 import Client.Entities.RessourceType;
 
 
@@ -193,10 +194,21 @@ public class Company {
 		
 	}
 	
-	public void removeEmployee(Employee oldEmployee) {
-		employee.remove(oldEmployee);
-		//Logging
-		PeriodInfo.getActualPeriod().addFiredEmployee(oldEmployee);
+	public void removeEmployee(EmployeeType type) throws EmployeeNotEmployedException {
+		Employee empOfType = null;
+		for (Employee emp : employee) {
+			if (emp.getType() == type) {
+				empOfType = emp;
+				break;
+			}
+		}
+		if (empOfType != null) {
+			employee.remove(empOfType);
+			//Logging
+			PeriodInfo.getActualPeriod().addFiredEmployee(empOfType);
+		} else {
+			throw new EmployeeNotEmployedException();
+		}
 	}
 	
 

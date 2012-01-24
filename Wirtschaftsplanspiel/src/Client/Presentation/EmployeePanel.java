@@ -9,11 +9,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
+import Client.Application.CompanyController;
+import Client.Application.EmployeeNotEmployedException;
+import Client.Application.UserCanNotPayException;
 import Client.Entities.Company;
 import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
@@ -27,6 +32,7 @@ public class EmployeePanel extends JPanel{
 	JTextField employeeAvaAdm = new JTextField(3);
 	JTextField employeeNeedPro = new JTextField(3);
 	JTextField employeeNeedAdm = new JTextField(3);
+	
 	Company company = Company.getInstance();
 	
 	public EmployeePanel(){
@@ -237,13 +243,25 @@ public class EmployeePanel extends JPanel{
 			if(((String)typeField.getSelectedItem()).equals("Verwaltung")){
 				int i = 0;
 				while(i < anzahl){
-					company.addEmployee(admin);
+					try {
+						CompanyController.employSb(admin);
+					} catch (UserCanNotPayException e) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
+						e.printStackTrace();
+					}
 					i++;
 				}
 			}else{
 				int i = 0;
 				while(i < anzahl){
-					company.addEmployee(production);
+					try {
+						CompanyController.employSb(production);
+					} catch (UserCanNotPayException e) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
+						e.printStackTrace();
+					}
 					i++;
 				}
 			}
@@ -277,7 +295,18 @@ public class EmployeePanel extends JPanel{
 			if(((String)typeField.getSelectedItem()).equals("Verwaltung")){
 				int i = 0;
 				while(i < anzahl){
-					//company.
+					try {
+						CompanyController.dismissSb(EmployeeType.Verwaltung);
+					} catch (UserCanNotPayException e1) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
+						
+						e1.printStackTrace();
+					} catch (EmployeeNotEmployedException e1) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(new JFrame(),"Keine Mitarbeiter von diesem Typ angestellt.");
+						e1.printStackTrace();
+					}
 					i++;
 				}
 			}else{

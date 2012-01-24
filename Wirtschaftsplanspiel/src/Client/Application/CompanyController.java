@@ -237,10 +237,10 @@ public abstract class CompanyController {
 		comp.addEmployee(newEmployee);	
 	}
 	
-	public static void dismissSb(Employee oldEmployee) throws UserCanNotPayException { 
+	public static void dismissSb(EmployeeType type) throws UserCanNotPayException, EmployeeNotEmployedException { 
 		Company comp = Company.getInstance();
 		payItem(Employee.getDismisscost());
-		comp.removeEmployee(oldEmployee);
+		comp.removeEmployee(type);
 	}
 	
 	public static double payEmployeesSallery() throws UserCanNotPayException {
