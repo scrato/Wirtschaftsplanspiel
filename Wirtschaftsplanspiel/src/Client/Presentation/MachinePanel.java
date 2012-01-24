@@ -2,6 +2,7 @@ package Client.Presentation;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import Client.Entities.Company;
@@ -20,6 +22,8 @@ import Client.Entities.Machine;
 import Client.Entities.MachineType;
 
 import Client.Application.CompanyController;
+import Client.Application.MachineAlreadyBoughtException;
+import Client.Application.UserCanNotPayException;
 
 public class MachinePanel extends JPanel {
 	
@@ -36,14 +40,19 @@ public class MachinePanel extends JPanel {
 	public MachinePanel(){
 	
 		String[] types = { "Filitiermaschine", "Verpackungsmaschine"};
+		String[] capacites = { "200", "400", "600", "800", "1000"};
 		JComboBox type = new JComboBox(types);
-		JTextField costOutput = new JTextField(4);
-		
+		JComboBox capacity = new JComboBox(capacites);
+		JTextField costOutput = new JTextField(6);
+		JButton kaufen = new JButton("Kaufen");
+		kaufen.addActionListener(new buyMachine(capacity, type));
+		costOutput.setEditable(false);
+						
 		machineTabModel = new DefaultTableModel(machineData, machineColumnNames);
 		machineTable = new JTable(machineTabModel);
 		machineScrollPane = new JScrollPane(machineTable);
 		
-		refreshMachineTable();
+		
 		
 		JButton verkaufen = new JButton("verkaufen");
 			
@@ -66,7 +75,11 @@ public class MachinePanel extends JPanel {
 		
 		c.gridx = 0;
 		c.gridy = 2;
+		c.gridwidth = 3;
+		c.anchor = GridBagConstraints.LINE_END;
 		add(verkaufen, c);
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.CENTER;
 		
 		c.gridx = 0;
 		c.gridy = 3;
@@ -86,7 +99,7 @@ public class MachinePanel extends JPanel {
 		
 		c.gridx = 1;
 		c.gridy = 5;
-		add(new JTextField(4),c);
+		add(capacity,c);
 		
 		c.gridx = 2;
 		c.gridy = 4;
@@ -96,47 +109,37 @@ public class MachinePanel extends JPanel {
 		c.gridy = 5;
 		add(costOutput, c);
 		
-		
-			
+		c.gridx = 0;
+		c.gridy = 6;
+		c.gridwidth = 3;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.insets = new Insets(10,0,0,0);
+		add(kaufen,c);
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.CENTER;			
 	}
 			
 		public void refreshMachineTable(){
-			System.out.println("Machine Table aktualisiert!");
+			DefaultTableModel tableModel = new DefaultTableModel(machineData, machineColumnNames); //(DefaultTableModel) machineTable.getModel();
 			
-			
-			machineData =  new String[company.getMachines().size()][5];
 				
 			Iterator<Machine> machineItr = company.getMachines().iterator();
 			Machine machine;
 
-			int i = 0;
 			while(machineItr.hasNext()){
 				 machine = machineItr.next();
-				 machineData[i][0] = machine.getType().toString();
-				 machineData[i][1] = ""+ machine.getCapacity();
-				 machineData[i][2] = machine.getInitialValue() + "";
-				 machineData[i][3] = machine.getRemaininTime()+ "";
-				 machineData[i][4] = machine.getValue() + "";
-				 i++;
-				 System.out.println(i + "Maschinen");
+				 String[] row = new String[5];
+				 row[0] = machine.getType().toString();
+				 row[1] = ""+ machine.getCapacity();
+				 row[2] = machine.getInitialValue() + "";
+				 row[3] = machine.getRemaininTime()+ "";
+				 row[4] = machine.getValue() + "";
+				 tableModel.addRow(row);
+			}
+			machineTable.setModel(tableModel);		
 			}
 			
-			
-			
-			
-			machineTabModel.fireTableDataChanged();
-			machineTabModel.fireTableStructureChanged();			
-
-			
-			//machineTable.tableChanged(new TableModelEvent(machineTable.getModel()));
-			
-
-			machineScrollPane.invalidate();
-			machineScrollPane.validate();
-			machineScrollPane.repaint();
-		}
-			
-			private class MachineVerkaufen implements ActionListener{
+		private class MachineVerkaufen implements ActionListener{
 				
 				Machine machine;
 				
@@ -155,4 +158,47 @@ public class MachinePanel extends JPanel {
 					
 				}
 			}
+		private class buyMachine implements ActionListener{
+
+			JComboBox capacity;
+			JComboBox type;
+			
+			public buyMachine(JComboBox capacity, JComboBox type)
+			{
+				this.type = type;
+				this.capacity = capacity;
+			}
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+				
+				int capacitySize = Integer.valueOf((String)capacity.getSelectedItem());
+				
+				if(((String)type.getSelectedItem()).equals("Filitiermaschine")){
+					try {
+						CompanyController.buyMachine(new Machine(MachineType.Filitiermaschine, capacitySize, capacitySize*1.5));
+					} catch (MachineAlreadyBoughtException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UserCanNotPayException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					// Verpackungsmaschine
+					try {
+						CompanyController.buyMachine(new Machine(MachineType.Verpackungsmaschine, capacitySize, capacitySize*1.5));
+					} catch (MachineAlreadyBoughtException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UserCanNotPayException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				refreshMachineTable();
+			}
+			
+		}
 }
