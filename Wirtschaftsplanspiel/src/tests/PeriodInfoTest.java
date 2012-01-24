@@ -69,8 +69,7 @@ public class PeriodInfoTest extends TestCase  {
 		
 		//Assert.assertEquals(0.0, g1.changeInStockRessources);
 		//Assert.assertEquals(200.0, g1.changeInStockFinishedProducts);
-		 System.out.println("BV Endprodukte: " + g1.changeInStockFinishedProducts);
-		 System.out.println("BV Ressourcen: " + g1.changeInStockRessources);
+		 System.out.println("Bestandsveränderung: " + g1.changeInStock);
 		 System.out.println("Abschreibung: " + g1.deprecation);
 		 System.out.println("Kosten für Feuerung MA: " + g1.employeeDismissalCosts);
 		 System.out.println("Kosten für Einstellung MA: " + g1.employeeHiringCosts);
