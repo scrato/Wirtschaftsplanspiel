@@ -1,6 +1,7 @@
 package Client.Presentation;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,6 +13,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import Client.Application.CompanyController;
 import Client.Application.NotEnoughRessourcesException;
@@ -220,7 +222,7 @@ public class RessourcePanel extends JPanel {
 				TypeLabel<RessourceType, LabelTypes> label = (TypeLabel<RessourceType, LabelTypes>) t;
 				Ressource res = Company.getInstance().getRessource(label.getType());
 				RessourceType type = res.getType();
-				String unitname = " " + Ressource.getUnit(type);
+				String unitname = " " + res.getUnit();
 				//Was für einen Sinn stellt dieses Label dar
 				switch (label.getSense()){
 				
@@ -303,6 +305,53 @@ public class RessourcePanel extends JPanel {
 		
 	}
 	private enum LabelTypes{ goodsInStock, goodsBuyable, fixedPrice, priceToPay, goodsNeeded, goodPrice } 
+	private class TypeTextbox<T> extends JTextField {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 9153416311811856149L;
+		private T type;
 
+		public TypeTextbox(T t) {
+			this.type = t;
+			this.setSize(30, 100);
+			this.setMinimumSize(new Dimension(30,100));
+		}
+
+		public T getType(){
+			return type;
+		}
+	}
+	
+
+	/**
+	 * Ein Label, dass auch später noch weißzu welchem Typ (MachinenTyp etc) es gehört
+	 * @author MicSch
+	 *
+	 * @param <E>
+	 */
+	private class TypeLabel<E,V> extends JLabel {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5643264779608954467L;
+		private E type;
+		private V sense;
+		
+		public TypeLabel(E type, V sense){
+		this.type = type;
+		this.sense = sense;
+		}
+		
+		public E getType(){
+			return type;
+		}
+		
+		public V getSense(){
+			return sense;
+		}
+		
+	}
 	
 }

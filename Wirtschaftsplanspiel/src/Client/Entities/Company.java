@@ -25,7 +25,7 @@ public class Company {
 		return company;
 	}
 	private static void initFirst() {
-		Company.getInstance().incMoney(50000.00);
+		Company.getInstance().incMoney(900000.00);
 		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 6.00);
 		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 25.00);
 	}

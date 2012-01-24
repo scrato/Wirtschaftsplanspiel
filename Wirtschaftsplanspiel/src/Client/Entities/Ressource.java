@@ -17,11 +17,11 @@ public class Ressource {
 		//TODO: Units aktuell halten
 		switch(type){
 		case Rohfisch:
-			return " Kilo";
+			return "Kilo";
 		case Verpackungsmaterial:
-			return " Tonnen";
+			return "Tonnen";
 		default:
-			return " Einheiten";
+			return "Einheiten";
 		}
 	}
 	

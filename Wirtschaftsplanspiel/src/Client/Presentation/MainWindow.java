@@ -49,7 +49,7 @@ public class MainWindow extends JFrame{
 	JPanel Ppersonal = new EmployeePanel();
 	JPanel Pdarlehen = new JPanel();
 	JPanel Pbericht = new ReportingPanel(new Balance(), new ProfitAndLoss()); //TODO balance, guv 
-	JPanel Ppreiskal = new JPanel();
+	JPanel Ppreiskal = new ProductionAndDistributionPanel();
 	
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
@@ -206,8 +206,6 @@ public class MainWindow extends JFrame{
 		// Bericht
 		//Pbericht.add(new JLabel("Berich einsehen."));
 		
-		// Preiskalkulation
-		Ppreiskal.add(new JLabel("Verkaufspreis für Produkte bestimmen."));
 		
 	}
 	
@@ -233,7 +231,7 @@ public class MainWindow extends JFrame{
 		JLabel chatLabel = new JLabel("Chat");
 		JScrollPane scrollPane = new JScrollPane(chatOutput);
 							
-		uebersicht.setText("Bank \nForderungen \nVerbindlichkeiten \nGebäude");
+		uebersicht.setText("Bank: " + Company.getInstance().getMoney() + " \nForderungen \nVerbindlichkeiten \nGebäude");
 						
 		
 		// Chat
