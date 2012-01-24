@@ -16,6 +16,7 @@ public abstract class PeriodInfo {
        periods = new LinkedList<Period>();
 	   periods.add(new Period());
 	    }
+	      
 
 	public static void initRessources() {
 		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 6.00);
