@@ -286,11 +286,12 @@ public class Period {
 			productionPrice += Ressource.getNeed(t)
 					* comp.getRessource(t).getPricePerUnit();
 		}
-		guv.changeInStockFinishedProducts = p.getFinishedProductCountDelta()
-				* productionPrice;
-
-		// Bestandsveränderungen Ressourcen
-		guv.changeInStockRessources = p.getRessourcePriceDelta();
+//		guv.changeInStockFinishedProducts = p.getFinishedProductCountDelta()
+//				* productionPrice;
+//
+//		// Bestandsveränderungen Ressourcen
+//		guv.changeInStockRessources = p.getRessourcePriceDelta();
+		guv.changeInStock = p.getFinishedProductCountDelta() * productionPrice + p.getRessourcePriceDelta();
 
 		guv.warehouseCosts = comp.getWarehouseCosts();
 

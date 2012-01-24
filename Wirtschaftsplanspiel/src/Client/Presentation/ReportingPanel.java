@@ -6,7 +6,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.RenderingHints;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -105,6 +107,13 @@ public class ReportingPanel extends JPanel {
 		public void paint(Graphics g) {
 			super.paint(g);
 
+			Graphics2D g2 = (Graphics2D) g;
+			RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
+					                     RenderingHints.VALUE_ANTIALIAS_ON);
+			renderHints.put(RenderingHints.KEY_RENDERING,
+					        RenderingHints.VALUE_RENDER_QUALITY);
+			g2.setRenderingHints(renderHints);
+			
 			int x1, x2, y1, y2 = 0;
 			
 			//Buchhalternasen
@@ -112,34 +121,34 @@ public class ReportingPanel extends JPanel {
 			x2 = x1 + (int) (sumPanel.getWidth() / 3);
 			y1 = y2 = sumPanel.getY() - 1;
 					
-			g.drawLine(x1, y1, x2, y2);	
+			g2.drawLine(x1, y1, x2, y2);	
 			
 			x1 = (int) (sumPanel.getX() + sumPanel.getWidth() / 3);
 			x2 = (int) (sumPanel.getX() + 2 * sumPanel.getWidth() / 3);
 			y1 = sumPanel.getY() - 1;
 			y2 = lastItemPanel.getY() + lastItemPanel.getHeight() - 1;
 			
-			g.drawLine(x1, y1, x2, y2);	
+			g2.drawLine(x1, y1, x2, y2);	
 			
 			x1 = (int) (sumPanel.getX() + 2 * sumPanel.getWidth() / 3);
 			x2 = (int) (sumPanel.getX() + sumPanel.getWidth());
 			y1 = lastItemPanel.getY() + lastItemPanel.getHeight() - 1;
 			
-			g.drawLine(x1, y1, x2, y2);	
+			g2.drawLine(x1, y1, x2, y2);	
 			
 //			//Unterstrich			
 			x1 = sumPanel.getX();
 			x2 = x1 + sumPanel.getWidth();
 			y1 = y2 = sumPanel.getY() + 1;
 			
-			g.drawLine(x1, y1, x2, y2);	
+			g2.drawLine(x1, y1, x2, y2);	
 			
 			//Unterstrich unter Summe.
 			x1 = sumPanel.getX();
 			x2 = x1 + sumPanel.getWidth();
 			y1 = y2 = sumPanel.getY() + sumPanel.getHeight() -1;
 			
-			g.drawLine(x1, y1, x2, y2);	
+			g2.drawLine(x1, y1, x2, y2);	
 		}
 	}
 	
@@ -219,45 +228,15 @@ public class ReportingPanel extends JPanel {
 			x1 = headerPanel.getX();
 			x2 = headerPanel.getX() + headerPanel.getWidth();
 			y1 = y2 = headerPanel.getY() + headerPanel.getHeight();
-			g.setColor(Color.BLACK);
+
 			g.drawLine(x1, y1, x2, y2);
 			x1 = x2 = bodyPanel.getX() + leftSide.getWidth();
 			y1 = bodyPanel.getY();
 			y2 = bodyPanel.getY() + leftSide.getHeight();
 			
 			g.drawLine(x1, y1, x2, y2);
-			
-//			int countAktiva = aktivaPanel.getComponentCount();
-//			int countPassiva = passivaPanel.getComponentCount();
-//			
-//			Component lastAktivaPanel = aktivaPanel.getComponents()[countAktiva-1];
-//			Component lastPassivaPanel = aktivaPanel.getComponents()[countPassiva-1];
-//			
-//			Component lastPanel;
-//			Component leastPanel;
-//			if (countAktiva >= countPassiva) {
-//				lastPanel = lastAktivaPanel;
-//				leastPanel = lastPassivaPanel;
-//			} else {
-//				lastPanel = lastPassivaPanel;
-//				leastPanel = lastAktivaPanel;
-//			}
-//			//Buchhalternase zeichnen
-//			
-//			
-//			//Unterstrich zeichnen			
-//			x1 = bodyPanel.getX();
-//			x2 = bodyPanel.getX()+bodyPanel.getWidth();
-//			
-//			y1 = y2 = lastPanel.getY() + lastPanel.getHeight();
-//			
-//			g.drawLine(x1, y1, x2, y2);
-//			
-//			//Unterstrich unter Summen
-		}
-		
-
-		
+		}	
+	
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -284,8 +263,11 @@ public class ReportingPanel extends JPanel {
 		guv.deprecation = 			   36235123.433d; 
 		guv.rental = 				      50000.000d;
 		guv.warehouseCosts =			  15226.251d;
+		guv.changeInStockExpenditures =		  0.0d;
 		guv.interest = 					 743513.256d;
+		
 		guv.sales = 				    5648144.787d;
+		guv.changeInStockEarning = 		 155126.211d;
 		
 		guv.calculateResult();
 		
@@ -318,9 +300,14 @@ public class ReportingPanel extends JPanel {
 		guVPanel.addEntry(new TAccountEntry("Afa auf SA", guv.deprecation), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Miete", guv.rental), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Lageraufwand", guv.warehouseCosts), TAccountSides.left);
+		if (guv.changeInStockExpenditures != 0) 
+			guVPanel.addEntry(new TAccountEntry("Minderbestand", guv.changeInStockExpenditures), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Zinsaufwand", guv.interest), TAccountSides.left);
 
 		guVPanel.addEntry(new TAccountEntry("Umsatzerlöse", guv.sales), TAccountSides.right);
+		if (guv.changeInStockEarning != 0) 
+			guVPanel.addEntry(new TAccountEntry("Mehrbestand", guv.changeInStockEarning), TAccountSides.right);
+	
 		
 		if (guv.profit >= 0) {
 			guVPanel.addEntry(new TAccountEntry("Gewinn", guv.profit, Color.green), TAccountSides.left);
