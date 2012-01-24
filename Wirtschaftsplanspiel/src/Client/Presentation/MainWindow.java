@@ -10,6 +10,8 @@ import java.awt.event.WindowListener;
 import java.util.Iterator;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import Client.Application.ChatController;
 import Client.Application.CompanyController;
@@ -29,106 +31,6 @@ import java.util.List;
 public class MainWindow extends JFrame{
 	
 
-	private class RessourceBuyAmountListener implements KeyListener {
-		TypeTextbox<RessourceType> tBuy;
-		JLabel tcosts;
-		
-		public RessourceBuyAmountListener(TypeTextbox<RessourceType> tBuy,
-				JLabel tcosts) {
-			this.tBuy = tBuy;
-			this.tcosts = tcosts;
-		}
-
-
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			try
-			{			
-				int amount = Integer.parseInt(tBuy.getText().trim());
-				if (amount<= 0){
-					tcosts.setText("0€");
-					return;
-				}
-				Ressource res = Company.getInstance().getRessource(tBuy.getType());
-				
-				double costs = (res.getPricePerUnit() * amount) + Ressource.getFixedCosts(tBuy.getType());
-				tcosts.setText(costs + "€");
-				
-				
-			}
-			catch(NumberFormatException e)
-			{
-				tcosts.setText("0€");
-				return;
-					
-			}
-			
-		}
-
-
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-			
-		}
-
-
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-		}
-
-	}
-
-	private class buyRessourceListener implements ActionListener {
-
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			for(Component c: Pwerkstoffe.getComponents()){
-				//Die Klassen, die vom Typ "Type-Label" sind...
-				if(c.getClass().equals(TypeTextbox.class)){
-					@SuppressWarnings("unchecked")
-					//Merke dir die Ressource, für die dieses Label steht
-					TypeTextbox<RessourceType> tb = (TypeTextbox<RessourceType>) c;
-					RessourceType t = tb.getType();
-					String text = tb.getText().trim();
-					//Kaufe für jede Ressource die angegebene Anzahl ein
-					try {
-					int amount = Integer.parseInt(text);
-					if(amount>0)
-							CompanyController.buyRessources(t, amount);
-							//Kein Geld -> Mit Messagebox warnen
-						} catch (UserCanNotPayException ex1) 
-						{
-							MessageBox mb = new MessageBox("Zu wenig Geld", "Sie haben zu wenig Geld um diese " +
-									"Ressource zu kaufen.");
-							mb.setVisible(true);
-							return;
-						} catch (NumberFormatException ex3)
-						{
-							MessageBox mb = new MessageBox("Keine valide Eingabe", 
-									"Bitte geben sie eine zulässige Zahl an.");
-							mb.setVisible(true);
-							return;
-						} catch (NotEnoughRessourcesException ex2) {
-							MessageBox mb = new MessageBox("Nicht genug Ressourcen auf dem Markt", 
-									"Es gibt nicht genug " + t.name() +
-									" auf dem Markt.");
-							mb.setVisible(true);
-							return;
-						} finally
-						{
-							refreshRessources();
-							tb.setText("0");
-						}
-				}
-			}
-			
-		}
-
-	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -142,12 +44,12 @@ public class MainWindow extends JFrame{
 	JPanel center = new JPanel();
 	
 	// Panel für diverse Screens
-	JPanel Pwerkstoffe = new JPanel();
+	JPanel Pwerkstoffe = new RessourcePanel();
 	JPanel Pmaschinen = new JPanel();
 	JPanel Ppersonal = new EmployeePanel();
 	JPanel Pdarlehen = new JPanel();
 	JPanel Pbericht = new ReportingPanel(new Balance(), new ProfitAndLoss()); //TODO balance, guv 
-	JPanel Ppreiskal = new JPanel();
+	JPanel Ppreiskal = new ProductionAndDistributionPanel();
 	
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
@@ -156,8 +58,8 @@ public class MainWindow extends JFrame{
 	boolean isServer = Player.isHost();
 	
 	// Playerliste
-	DefaultListModel<String> listModel = new DefaultListModel<String>();
-	JList<String> ListPlayers = new JList<String>(listModel);
+	DefaultListModel listModel = new DefaultListModel();
+	JList ListPlayers = new JList(listModel);
 		
 	JTextArea chatOutput = new JTextArea(19,25);
 	
@@ -190,56 +92,7 @@ public class MainWindow extends JFrame{
 	}
 	
 	
-	public void refreshRessources() {
-		// Schau dir die Entitäten von Pwerkstoffe an
-		for(Component t : Pwerkstoffe.getComponents()){
-			
-			//Die Klassen, die vom Typ "Type-Label" sind...
-			if(t.getClass().equals(TypeLabel.class)){
-				@SuppressWarnings("unchecked")
-				//Merke dir die Ressource, für die dieses Label steht
-				TypeLabel<RessourceType, LabelTypes> label = (TypeLabel<RessourceType, LabelTypes>) t;
-				Ressource res = Company.getInstance().getRessource(label.getType());
-				RessourceType type = res.getType();
-				String unitname = " " + Ressource.getUnit(type);
-				//Was für einen Sinn stellt dieses Label dar
-				switch (label.getSense()){
-				
-					//Label der den Güterpreis darstellt
-					case goodPrice:
-						label.setText(String.valueOf(res.getPricePerUnit()) + "€");
-						break;
-						
-					//Label der Ressourcen auf Lager
-					case goodsInStock:
-						label.setText(String.valueOf(res.getStoredUnits()) + unitname);
-						break;
-						
-					//Label der benötigten Ressourcen
-					case goodsNeeded:
-						//TODO: Production-Units
-						int units = Company.getInstance().getProduction().getUnitsToProduce();
-						label.setText(String.valueOf(CompanyController.missingRessources(units).get(type)) + unitname);
-						break;
-						
-					//Label der Ressourcen auf dem Markt
-					case goodsBuyable:
-						label.setText(String.valueOf(res.getBuyableUnits()) + unitname);
-						break;
-						
-					//Label der Fixkosten für den Ressourcentyp
-					case fixedPrice:
-						label.setText(String.valueOf(Ressource.getFixedCosts(type)) + "€");
-						break;
-				}
-					
-						
-			}
-				
-		}
-		
-	}
-
+	
 
 	public static MainWindow getInstance(){
 		if(instance != null){
@@ -307,116 +160,8 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void buildScreens(){
-
+		
 		GridBagConstraints c = new GridBagConstraints();
-		
-		// Werkstoffe
-		Pwerkstoffe.setLayout(new GridBagLayout());
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 3;
-		Pwerkstoffe.add(new JLabel("Rohstoffe einkaufen"),c);
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.WEST;
-		int rowy = 1;
-		
-		for(RessourceType t: RessourceType.values()){
-			c.ipady = 40;
-			c.gridx = 0;
-			c.gridy = rowy;
-			rowy++;
-			JLabel nlabel = new JLabel(t.name());
-			nlabel.setFont(new Font("Serif", Font.BOLD, 14));
-			
-			Pwerkstoffe.add(nlabel,c);
-			c.ipady = 0;
-			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Rohstoffe auf Lager: "),c);
-			c.gridx++;
-			TypeLabel<RessourceType, LabelTypes> tStored = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodsInStock );
-			Pwerkstoffe.add(tStored,c);
-			rowy++;
-			
-			
-			//Nextline
-			c.gridx = 0;
-			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Rohstoffe auf dem Markt: "),c);
-			c.gridx++;
-			TypeLabel<RessourceType, LabelTypes> tbuyable = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodsBuyable);
-			Pwerkstoffe.add(tbuyable,c);
-			rowy++;
-			
-			
-			//Nextline
-			c.gridx = 0;
-			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Für geplante Produktion benötigt: "),c);
-			c.gridx++;
-			TypeLabel<RessourceType, LabelTypes> tNeed = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodsNeeded);
-			Pwerkstoffe.add(tNeed,c);
-			rowy++;
-			
-			
-			//Nextline
-			c.gridx = 0;
-			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Preis pro Stück: "),c);
-			c.gridx++;
-			TypeLabel<RessourceType, LabelTypes> tPrice = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.goodPrice);
-			Pwerkstoffe.add(tPrice,c);
-			rowy ++;
-			
-			//Nextline
-			c.gridx = 0;
-			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Fixkosten pro Bestellung: "),c);
-			c.gridx++;
-			TypeLabel<RessourceType, LabelTypes> tfixPrice = new TypeLabel<RessourceType, LabelTypes>(t, LabelTypes.fixedPrice);
-			Pwerkstoffe.add(tfixPrice,c);
-			rowy ++;
-			
-			//Nextline
-			c.gridx = 0;
-			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Geplanter Kauf: "),c);
-			c.gridx++;
-			TypeTextbox<RessourceType> tBuy = new TypeTextbox<RessourceType>(t);
-			c.ipadx = 35;
-			c.weightx = 0;
-			tBuy.setText("0");
-			Pwerkstoffe.add(tBuy,c);
-			c.gridx++;
-			Pwerkstoffe.add(new JLabel("  " + Ressource.getUnit(t)),c);
-			rowy++;
-			
-			//Nextline
-			c.gridx = 0;
-			c.gridy = rowy;
-			Pwerkstoffe.add(new JLabel("Derzeitige Kaufsumme: "),c);
-			c.gridx++;
-			JLabel tcosts = new JLabel();
-			//tBuy sagen, die Kaufsumme direkt zu aktualisieren
-			tBuy.addKeyListener(new RessourceBuyAmountListener(tBuy, tcosts));
-			Pwerkstoffe.add(tcosts,c);
-			rowy ++;
-			
-		
-		}
-		c.gridy = rowy;
-		c.gridx = 0;
-		JButton prev = new JButton("Zurück");
-		JButton buy = new JButton("Kaufen");
-		buy.addActionListener(new buyRessourceListener());
-		JButton next = new JButton("Weiter");
-		Pwerkstoffe.add(prev,c);
-		c.gridx++;
-		Pwerkstoffe.add(buy, c);
-		c.gridx++;
-		Pwerkstoffe.add(next, c);
-		refreshRessources();
-		//Pwerkstoffe.add(new JButton("Werkstoffe einkaufen"));
-		
 		// Maschinen
 		Company company = Company.getInstance();
 		company.addMachine(new Machine(MachineType.Filitiermaschine, 100, 2000.0));
@@ -461,8 +206,6 @@ public class MainWindow extends JFrame{
 		// Bericht
 		//Pbericht.add(new JLabel("Berich einsehen."));
 		
-		// Preiskalkulation
-		Ppreiskal.add(new JLabel("Verkaufspreis für Produkte bestimmen."));
 		
 	}
 	
@@ -488,7 +231,7 @@ public class MainWindow extends JFrame{
 		JLabel chatLabel = new JLabel("Chat");
 		JScrollPane scrollPane = new JScrollPane(chatOutput);
 							
-		uebersicht.setText("Bank \nForderungen \nVerbindlichkeiten \nGebäude");
+		uebersicht.setText("Bank: " + Company.getInstance().getMoney() + " \nForderungen \nVerbindlichkeiten \nGebäude");
 						
 		
 		// Chat
@@ -883,7 +626,6 @@ public class MainWindow extends JFrame{
 		System.exit(3);
 	}
 	
-	private enum LabelTypes{ goodsInStock, goodsBuyable, fixedPrice, priceToPay, goodsNeeded, goodPrice } 
 
 }
 
