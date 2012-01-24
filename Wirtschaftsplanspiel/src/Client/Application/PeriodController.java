@@ -32,7 +32,7 @@ public abstract class PeriodController {
 	}
 
 	public static void RecieveAssignedDemand(SendAssignedDisposalMessage sendAssignedDemandMessage) {
-		//TODO Erfolgsermittlung und übertrageung des erfolgs zum Server. Dannach ErgebnisScreen (Bilanz, ProfitAndLoss) aufbauen und anzeigen.
+
 		int quantity = sendAssignedDemandMessage.getQuantity();
 		
 		Period actPeriod = PeriodInfo.getActualPeriod();
@@ -60,7 +60,6 @@ public abstract class PeriodController {
 			ProfitAndLoss guv = actPeriod.makeGuV();			
 			SendCompanyResultMessage message = new SendCompanyResultMessage(guv.profit);
 			Client.getInstance().SendMessage(message);
-			//TODO Gewinn an Server senden.
 			
 		} catch (UserCanNotPayException e) {
 			// TODO reagieren auf zahlungsunfähigkeit.

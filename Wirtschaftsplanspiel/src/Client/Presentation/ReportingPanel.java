@@ -264,6 +264,9 @@ public class ReportingPanel extends JPanel {
 		guv.rental = 				      50000.000d;
 		guv.warehouseCosts =			  15226.251d;
 		guv.changeInStockExpenditures =		  0.0d;
+		guv.lossDueDisposalOfAssets =     50000.0d;
+		guv.employeeDismissalCosts = 		  0.0d;
+		guv.employeeHiringCosts = 		   1000.0d;
 		guv.interest = 					 743513.256d;
 		
 		guv.sales = 				    5648144.787d;
@@ -297,6 +300,11 @@ public class ReportingPanel extends JPanel {
 		
 		guVPanel.addEntry(new TAccountEntry("Rohstoffaufwand", guv.ressourceCost), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Löhne/Gehälter", guv.wages), TAccountSides.left);
+		if (guv.employeeHiringCosts != 0) 
+			guVPanel.addEntry(new TAccountEntry("Aufwand für Einstellungen", guv.employeeHiringCosts), TAccountSides.left);
+		if (guv.employeeDismissalCosts != 0) 
+			guVPanel.addEntry(new TAccountEntry("Aufwand für Entlassungen", guv.employeeDismissalCosts), TAccountSides.left);
+		
 		guVPanel.addEntry(new TAccountEntry("Afa auf SA", guv.deprecation), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Miete", guv.rental), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Lageraufwand", guv.warehouseCosts), TAccountSides.left);

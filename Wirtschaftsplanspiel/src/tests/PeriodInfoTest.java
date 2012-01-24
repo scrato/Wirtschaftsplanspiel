@@ -74,7 +74,7 @@ public class PeriodInfoTest extends TestCase  {
 		 System.out.println("Abschreibung: " + g1.deprecation);
 		 System.out.println("Kosten für Feuerung MA: " + g1.employeeDismissalCosts);
 		 System.out.println("Kosten für Einstellung MA: " + g1.employeeHiringCosts);
-		 System.out.println("Unternehmerlohn: " + g1.employerSallery);
+		 //System.out.println("Unternehmerlohn: " + g1.employerSallery);
 		 System.out.println("Zinsaufwand: " + g1.interest);
 		 System.out.println("Miete: " + g1.rental);
 		 System.out.println("Ressourcenaufwand: " + g1.ressourceCost);

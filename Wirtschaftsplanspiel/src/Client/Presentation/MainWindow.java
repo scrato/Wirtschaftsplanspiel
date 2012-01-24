@@ -36,7 +36,7 @@ public class MainWindow extends JFrame{
 	
 	// Panel für diverse Screens
 	JPanel Pwerkstoffe = new RessourcePanel();
-	JPanel Pmaschinen = new JPanel();
+	JPanel Pmaschinen = new MachinePanel();
 	JPanel Ppersonal = new EmployeePanel();
 	JPanel Pdarlehen = new JPanel();
 	JPanel Pbericht = new ReportingPanel();
@@ -55,13 +55,7 @@ public class MainWindow extends JFrame{
 	JTextArea chatOutput = new JTextArea(19,25);
 	
 	Company company;
-	
-	// MachineScreen
-	String[] machineColumnNames = {"Typ", "Kapazität", "Anschaffungswert", "Restlaufzeit", "Restwert"};
-	DefaultTableModel machineTabModel = new DefaultTableModel();
-	JTable machineTable = new JTable();
-	Object[][] machineData = null;
-	JScrollPane machineScrollPane;
+
 	
 	// Singletonreferenz 
 	static MainWindow instance;
@@ -153,40 +147,7 @@ public class MainWindow extends JFrame{
 	public void buildScreens(){
 		
 		GridBagConstraints c = new GridBagConstraints();
-		// Maschinen
-		Company company = Company.getInstance();
-		company.addMachine(new Machine(MachineType.Filitiermaschine, 100, 2000.0));
-		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 240, 3000.0));
-		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 270, 8000.0));
-		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 340, 2000.0));
-		
-		
-		JButton verkaufen = new JButton("verkaufen");
-		
-		refreshMachineTable();
-		
-		//machineTabModel = new DefaultTableModel(machineData, machineColumnNames);
-		//machineTable = new JTable(machineTabModel);
-		//JScrollPane scrollPane = new JScrollPane(machineTable);
-		
-
-		
-		// Listener
-		verkaufen.addActionListener(new MachineVerkaufen());	
-		
-		Pmaschinen.setLayout(new GridBagLayout());
-		c.gridx = 0;
-		c.gridy = 0;
-		Pmaschinen.add(new JLabel("Maschinen einkaufen und verkaufen"), c);
-		
-		c.gridx = 0;
-		c.gridy = 1;
-		Pmaschinen.add(machineScrollPane,c);
-		
-		c.gridx = 0;
-		c.gridy = 2;
-		Pmaschinen.add(verkaufen, c);
-		
+				
 		//Pmaschinen.add(new JButton("Einkaufen"));
 		//Pmaschinen.add(new JButton("Verkaufen"));
 		
@@ -295,52 +256,6 @@ public class MainWindow extends JFrame{
 	
 	public void buildSouth(){
 		
-	}
-	
-	public void refreshMachineTable(){
-		System.out.println("Machine Table aktualisiert!");
-		
-		company = Company.getInstance();
-		machineData =  new String[company.getMachines().size()][5];
-			
-		Iterator<Machine> machineItr = company.getMachines().iterator();
-		Machine machine;
-
-		int i = 0;
-		while(machineItr.hasNext()){
-			 machine = machineItr.next();
-			 machineData[i][0] = machine.getType().toString();
-			 machineData[i][1] = ""+ machine.getCapacity();
-			 machineData[i][2] = machine.getInitialValue() + "";
-			 machineData[i][3] = machine.getRemaininTime()+ "";
-			 machineData[i][4] = machine.getValue() + "";
-			 i++;
-			 System.out.println(i + "Maschinen");
-		}
-		
-		
-		machineTabModel = new DefaultTableModel(machineData, machineColumnNames);
-
-		machineTable = new JTable(machineTabModel);
-		machineTable.setModel(machineTabModel);
-		
-		machineTabModel.fireTableDataChanged();
-		machineTabModel.fireTableStructureChanged();
-		machineScrollPane = new JScrollPane(machineTable);
-		
-
-		
-		//machineTable.tableChanged(new TableModelEvent(machineTable.getModel()));
-		
-
-		machineScrollPane.invalidate();
-		machineScrollPane.validate();
-		machineScrollPane.repaint();
-
-		mainWindow.invalidate();
-		mainWindow.validate();
-		mainWindow.repaint();
-
 	}
 	
 	private void waitForOtherPlayers(){
@@ -508,27 +423,7 @@ public class MainWindow extends JFrame{
 		}
 		
 	}
-	
-	private class MachineVerkaufen implements ActionListener{
 		
-		Machine machine;
-		
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			if (machineTable.getSelectedRow() != -1) {
-				//tabModel.removeRow(table.getSelectedRow());
-				machine = company.getMachines().get(machineTable.getSelectedRow());
-				company.removeMachine(machine);
-				
-				System.out.println("Maschine verkauft");
-				System.out.println(machine.toString());
-				System.out.println("Zeile" + machineTable.getSelectedRow() + " gelöscht");
-				refreshMachineTable();
-			}
-			
-		}
-	}
-	
 	private class chatKeyListener implements KeyListener{
 
 		JButton button;
