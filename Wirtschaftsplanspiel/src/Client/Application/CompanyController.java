@@ -62,10 +62,11 @@ public abstract class CompanyController {
 		Company comp = Company.getInstance();
 		Ressource res = comp.getRessource(type); 
 		//Sind nicht genug Rohstoffe da, hol einfach den Rest
-		if(res.getBuyableUnits() > amount)
-			amount = res.getBuyableUnits();
-		payItem((amount * res.getPricePerUnit()) + Ressource.getFixedCosts(res.getType()) );
 		res.decBuyableUnits(amount);
+
+			
+		payItem((amount * res.getPricePerUnit()) + Ressource.getFixedCosts(res.getType()) );
+		
 		res.incStoredUnits(amount);
 	}
 
@@ -236,10 +237,10 @@ public abstract class CompanyController {
 		comp.addEmployee(newEmployee);	
 	}
 	
-	public static void dismissSb(Employee oldEmployee) throws UserCanNotPayException { 
+	public static void dismissSb(EmployeeType type) throws UserCanNotPayException, EmployeeNotEmployedException { 
 		Company comp = Company.getInstance();
 		payItem(Employee.getDismisscost());
-		comp.removeEmployee(oldEmployee);
+		comp.removeEmployee(type);
 	}
 	
 	public static double payEmployeesSallery() throws UserCanNotPayException {

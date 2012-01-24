@@ -4,6 +4,7 @@ import Client.Entities.RessourceType;
 
 public class Production {
 	
+	int unitsToProduce;
 	/**
 	 * Gibt die Menge an Fertigprodukten zurück, die maximal produziert werden kann
 	 * @return Menge an Fertigprodukten, die maximal produziert werden kann 
@@ -31,5 +32,13 @@ public class Production {
 		
 		//TODO: Wieviel können mit dem Person produziert werden
 		return units;
+	}
+	public int getUnitsToProduce() {
+		return unitsToProduce;
+	}
+
+
+	public void setUnitsToProduce(int unitsToProduce) {
+		this.unitsToProduce = unitsToProduce;
 	}
 }

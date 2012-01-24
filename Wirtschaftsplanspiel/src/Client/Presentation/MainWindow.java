@@ -1,39 +1,37 @@
 package Client.Presentation;
 
 import java.awt.*;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.TableModelEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-
 import Client.Application.ChatController;
-import Client.Application.ClientController;
+import Client.Application.CompanyController;
+import Client.Application.NotEnoughRessourcesException;
+import Client.Application.UserCanNotPayException;
 import Client.Entities.Balance;
 import Client.Entities.Company;
 import Client.Entities.ProfitAndLoss;
 import Client.Entities.Machine;
 import Client.Entities.Player;
 import Client.Entities.MachineType;
+import Client.Entities.Ressource;
+import Client.Entities.RessourceType;
 import Client.Network.Client;
-import NetworkCommunication.*;
-
 import java.util.List;
 
 public class MainWindow extends JFrame{
 	
+
+
 	private static final long serialVersionUID = 1L;
 
 	JFrame mainWindow = this;
@@ -46,12 +44,12 @@ public class MainWindow extends JFrame{
 	JPanel center = new JPanel();
 	
 	// Panel für diverse Screens
-	JPanel Pwerkstoffe = new JPanel();
+	JPanel Pwerkstoffe = new RessourcePanel();
 	JPanel Pmaschinen = new JPanel();
-	JPanel Ppersonal = new JPanel();
+	JPanel Ppersonal = new EmployeePanel();
 	JPanel Pdarlehen = new JPanel();
-	JPanel Pbericht = new ReportingPanel(); //new Balance(), new ProfitAndLoss()); //TODO balance, guv 
-	JPanel Ppreiskal = new JPanel();
+	JPanel Pbericht = new ReportingPanel();
+	JPanel Ppreiskal = new ProductionAndDistributionPanel();
 	
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
@@ -89,9 +87,13 @@ public class MainWindow extends JFrame{
 		buildWest();
 		buildSouth();
 		//waitForOtherPlayers();
+		
+
 	}
 	
 	
+	
+
 	public static MainWindow getInstance(){
 		if(instance != null){
 			return instance;
@@ -158,13 +160,8 @@ public class MainWindow extends JFrame{
 	}
 	
 	public void buildScreens(){
-
+		
 		GridBagConstraints c = new GridBagConstraints();
-		
-		// Werkstoffe
-		Pwerkstoffe.add(new JLabel("Werkstoffe einkaufen"));
-		Pwerkstoffe.add(new JButton("Werkstoffe einkaufen"));
-		
 		// Maschinen
 		Company company = Company.getInstance();
 		company.addMachine(new Machine(MachineType.Filitiermaschine, 100, 2000.0));
@@ -202,17 +199,13 @@ public class MainWindow extends JFrame{
 		//Pmaschinen.add(new JButton("Einkaufen"));
 		//Pmaschinen.add(new JButton("Verkaufen"));
 		
-		// Personal
-		Ppersonal.add(new JLabel("Personalverwaltung"));
-		
+				
 		// Darlehen
 		Pdarlehen.add(new JLabel("Darlehen aufnehmen und tilgen."));
 		
 		// Bericht
 		//Pbericht.add(new JLabel("Berich einsehen."));
 		
-		// Preiskalkulation
-		Ppreiskal.add(new JLabel("Verkaufspreis für Produkte bestimmen."));
 		
 	}
 	
@@ -238,7 +231,7 @@ public class MainWindow extends JFrame{
 		JLabel chatLabel = new JLabel("Chat");
 		JScrollPane scrollPane = new JScrollPane(chatOutput);
 							
-		uebersicht.setText("Bank \nForderungen \nVerbindlichkeiten \nGebäude");
+		uebersicht.setText("Bank: " + Company.getInstance().getMoney() + " \nForderungen \nVerbindlichkeiten \nGebäude");
 						
 		
 		// Chat
@@ -632,6 +625,7 @@ public class MainWindow extends JFrame{
 		
 		System.exit(3);
 	}
+	
 
 }
 

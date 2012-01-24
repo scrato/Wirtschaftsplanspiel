@@ -3,6 +3,8 @@ package Client.Entities;
 import java.util.LinkedList;
 import java.util.List;
 
+import Client.Application.CompanyController;
+
 public abstract class PeriodInfo {
    //private  List<Period> periods = new LinkedList<Period>();
    private static int maxPeriods;
@@ -13,7 +15,13 @@ public abstract class PeriodInfo {
     static {
        periods = new LinkedList<Period>();
 	   periods.add(new Period());
-   }
+	    }
+	      
+
+	public static void initRessources() {
+		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 6.00);
+		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 25.00);
+	}
    
    public static Period getActualPeriod(){
 	   return periods.get(actPeriod);
@@ -32,6 +40,7 @@ public abstract class PeriodInfo {
 	   getActualPeriod().makeGuV();
 	   incNumberOfActPeriod();
 	   periods.add(new Period());
+	   initRessources();
    }
 
    public static int getMaxPeriods() {

@@ -1,4 +1,4 @@
-package unittests;
+package tests;
 
 import java.net.InetAddress;
 
