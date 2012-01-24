@@ -16,7 +16,7 @@ public class Ressource {
 	public static String getUnit(RessourceType type){
 		//TODO: Units aktuell halten
 		switch(type){
-		case Stockfisch:
+		case Rohfisch:
 			return " Kilo";
 		case Verpackungsmaterial:
 			return " Tonnen";
@@ -27,10 +27,10 @@ public class Ressource {
 	
 	public static double getFixedCosts(RessourceType type){
 		switch(type){
-		case Stockfisch:
-			return 125.00;
+		case Rohfisch:
+			return 295.00;
 		case Verpackungsmaterial:
-			return 100;
+			return 140.00;
 		default:
 			//Typ wurde noch nicht festeglegt;
 			throw new UnsupportedOperationException();
@@ -40,10 +40,10 @@ public class Ressource {
 	
 	public static int getNeed(RessourceType type){
 		switch(type){
-		case Stockfisch:
-			return 10;
+		case Rohfisch:
+			return 120;
 		case Verpackungsmaterial:
-			return 1;
+			return 30;
 		default:
 			//Typ wurde noch nicht festeglegt;
 			throw new UnsupportedOperationException();
@@ -55,7 +55,7 @@ private double pricePerUnit;
 private String unit;
 private RessourceType type;
 private int storedUnits = 0;
-private int availableUnits = 0;
+private int availableUnits = Integer.MAX_VALUE;
 
 /**
  * Konstruktor für einen neuen Typ, wird nur von getInstance benutzt.

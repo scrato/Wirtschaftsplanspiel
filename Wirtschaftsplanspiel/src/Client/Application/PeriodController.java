@@ -51,7 +51,7 @@ public abstract class PeriodController {
 			Company comp = Company.getInstance();
 			double produceCostPerProdukt = wages / Math.min(comp.getEmployeeCapacity(EmployeeType.Produktion), comp.getEmployeeCapacity(EmployeeType.Verwaltung)) 
 										 + deprecation /  Math.min(comp.getMachineCapacity(MachineType.Filitiermaschine), comp.getMachineCapacity(MachineType.Verpackungsmaschine)) 
-										 + Ressource.getNeed(RessourceType.Stockfisch) * Ressource.getFixedCosts(RessourceType.Stockfisch) 
+										 + Ressource.getNeed(RessourceType.Rohfisch) * Ressource.getFixedCosts(RessourceType.Rohfisch) 
 										 + Ressource.getNeed(RessourceType.Verpackungsmaterial) * Ressource.getFixedCosts(RessourceType.Verpackungsmaterial);		
 			//PeriodInfo.getActualPeriod().setFinishedProductsValue(produceCostForLeftFinishedProducts);
 			comp.setWarehouseCostPerProduct(produceCostPerProdukt);
