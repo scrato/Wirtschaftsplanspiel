@@ -401,6 +401,7 @@ public class MainWindow extends JFrame{
 			this.frame = frame;
 		}
 		public void actionPerformed(ActionEvent arg0) {
+			Pwerkstoffe = new RessourcePanel();
 			frame.add(Pwerkstoffe, BorderLayout.CENTER);
 			frame.remove(lastUsed);
 			frame.repaint();
@@ -490,6 +491,7 @@ public class MainWindow extends JFrame{
 			this.frame = frame;
 		}
 		public void actionPerformed(ActionEvent arg0) {
+			Ppreiskal = new ProductionAndDistributionPanel();
 			frame.add(Ppreiskal, BorderLayout.CENTER);
 			frame.remove(lastUsed);
 			frame.validate();

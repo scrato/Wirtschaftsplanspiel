@@ -15,7 +15,7 @@ import Client.Entities.RessourceType;
 public class Company {
 	private static Company company;
 	//Produktion
-	private static Production prod;
+	private static ProductionAndDistribution prod;
 	
 	public static Company getInstance(){
 		if (company != null)
@@ -140,11 +140,11 @@ public class Company {
 		return this.money;
 	}
 	
-	public Production getProduction(){
+	public ProductionAndDistribution getProdAndDistr(){
 		if (prod != null)
 			return prod;
 		
-		prod = new Production();
+		prod = new ProductionAndDistribution();
 		return prod;
 	}
 	

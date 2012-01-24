@@ -12,10 +12,10 @@ public class LayoutTest {
 		//CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 2.50);
 		//Company.getInstance().incMoney(9000);
 		Ressource sf = Company.getInstance().getRessource(RessourceType.Rohfisch);
-		sf.incStoredUnits(4000);
+		sf.incStoredUnits(4);
 
 		Ressource vm = Company.getInstance().getRessource(RessourceType.Verpackungsmaterial);
-		vm.incStoredUnits(700);
+		vm.incStoredUnits(7);
 		
 		Company.getInstance().incFinishedProducts(7000);
 		

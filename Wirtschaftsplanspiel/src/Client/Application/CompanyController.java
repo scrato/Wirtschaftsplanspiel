@@ -12,7 +12,7 @@ import Client.Entities.Machine;
 import Client.Entities.MachineType;
 import Client.Entities.Period;
 import Client.Entities.PeriodInfo;
-import Client.Entities.Production;
+import Client.Entities.ProductionAndDistribution;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
 import Client.Entities.Employee;
@@ -145,7 +145,7 @@ public abstract class CompanyController {
 		public static Map<RessourceType, Integer> missingRessources() 
 		{			
 			Company comp = Company.getInstance();			
-			int units = comp.getProduction().getUnitsToProduce();
+			int units = comp.getProdAndDistr().getUnitsToProduce();
 			
 			Map<RessourceType, Ressource> ressources = comp.getAllRessources();
 			Map<RessourceType, Integer> missingUnitPerRessource = new HashMap<RessourceType,Integer>();
@@ -163,7 +163,7 @@ public abstract class CompanyController {
 		public static Map<MachineType, Integer> missingMachines() 
 		{
 			Company comp = Company.getInstance();			
-			int units = comp.getProduction().getUnitsToProduce();
+			int units = comp.getProdAndDistr().getUnitsToProduce();
 			
 			Map<MachineType, Integer> missingUnitPerMachine = new HashMap<MachineType, Integer>();
 		   	for(MachineType type: MachineType.values()){
@@ -179,7 +179,7 @@ public abstract class CompanyController {
 		public static Map<EmployeeType, Integer> missingEmployees() 
 		{
 			Company comp = Company.getInstance();			
-			int units = comp.getProduction().getUnitsToProduce();
+			int units = comp.getProdAndDistr().getUnitsToProduce();
 			
 			Map<EmployeeType, Integer> missingEmployees = new HashMap<EmployeeType, Integer>();
 		   	for(EmployeeType type: EmployeeType.values()){
@@ -201,7 +201,7 @@ public abstract class CompanyController {
 	   public static void produce() throws CannotProduceException
 	   {
 		   Company comp = Company.getInstance();
-		   int units = comp.getProduction().getUnitsToProduce();
+		   int units = comp.getProdAndDistr().getUnitsToProduce();
 		   
 			if(!(canProduce()))
 				throw new CannotProduceException();
