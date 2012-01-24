@@ -9,10 +9,9 @@ public class ProfitAndLoss {
 	public double deprecation;
 
 	public double employeeDismissalCosts;
-
 	public double employeeHiringCosts;
-
-	public double employerSallery;
+	
+	public double lossDueDisposalOfAssets;
 
 	public double interest;
 
@@ -28,9 +27,9 @@ public class ProfitAndLoss {
 	public double warehouseCosts;
 
 	public void calculateResult() {
-		double expenditures = employerSallery + rental
+		double expenditures = rental + lossDueDisposalOfAssets
 				+ employeeHiringCosts + wages + employeeDismissalCosts
-				+ deprecation + interest + warehouseCosts;
+				+ deprecation + interest + ressourceCost + warehouseCosts;
 		double earnings = sales;
 
 		if (changeInStock > 0) {

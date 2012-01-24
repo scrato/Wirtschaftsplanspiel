@@ -62,4 +62,8 @@ public class Machine {
 		return value / 2;
 	}
 	
+	public double getLossDueSelling() {
+		return value - getSellingValue(); 
+	}
+	
 }

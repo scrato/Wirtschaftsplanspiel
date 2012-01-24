@@ -212,10 +212,10 @@ public abstract class CompanyController {
 			comp.incFinishedProducts(units);
 		}
 	
-	   /**
-	    * Produziert die maximale Menge an Fertigprodukten, sucht sich selbst wieviele Fertigprodukte er produzieren kannst
-	    * @param pricePerUnit
-	    */
+//	   /**
+//	    * Produziert die maximale Menge an Fertigprodukten, sucht sich selbst wieviele Fertigprodukte er produzieren kannst
+//	    * @param pricePerUnit
+//	    */
 //	   public static void produce() 
 //	   {
 //		   
@@ -304,12 +304,6 @@ public abstract class CompanyController {
 		Period period = PeriodInfo.getActualPeriod();
 		period.setRevenue(Revenue);
 		
-		//TODO EarnedMoney ?? meinst du revenue @ michael?
-		//TODO Bestandsveränderung bei Fertigprodukten
-		//TODO Lageraufwand für Fertigprodukte.
-		
-		
-		//period.inc
 	}
 	
 	//Lagekosten

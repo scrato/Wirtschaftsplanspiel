@@ -252,6 +252,8 @@ public class Period {
 				.hasNext();) {
 			Employee next = it.next();
 			guv.wages += next.getWage();
+			// Unternehmerlohn
+			guv.wages += comp.EMPLOYERSSALLERY;
 		}
 
 		// Sonstige tarifliche oder vertragliche Aufwendungen für Lohnempfäner
@@ -259,7 +261,6 @@ public class Period {
 				* Employee.getDismisscost();
 
 		// Aufwendungen für Personaleinstellungen
-		// TODO: DISSMISSCOST bei einstellung seltsam ^^
 		guv.employeeHiringCosts = Employee.EMPLOYCOST
 				* p.getHiredEmployees().size();
 
@@ -269,16 +270,14 @@ public class Period {
 		}
 
 		// Aufwendungen aus Abgang von Anlagevermögen
+		guv.lossDueDisposalOfAssets = 0;
 		for (Iterator<Machine> i = p.getSoldMachines().iterator(); i.hasNext();) {
 			Machine next = i.next();
-			// TODO: Verkaufsaufwand für Maschinen berechnen
-			// g.machineSellingCharge += g.getSellingValue();
+			guv.lossDueDisposalOfAssets += next.getLossDueSelling();
 		}
 
 		// Miete
 		guv.rental = comp.FACILITIESRENT;
-		// Unternehmerlohn
-		guv.employerSallery = comp.EMPLOYERSSALLERY;
 
 		// Bestandsveränderungen Endprodukte
 		double productionPrice = 0;
