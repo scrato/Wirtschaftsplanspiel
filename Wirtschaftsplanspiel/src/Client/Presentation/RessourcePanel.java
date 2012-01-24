@@ -238,19 +238,18 @@ public class RessourcePanel extends JPanel {
 						
 					//Label der benötigten Ressourcen
 					case goodsNeeded:
-						//TODO: Production-Units
-						label.setText(String.valueOf(CompanyController.missingRessources(100).get(type)) + unitname);
+						//TODO: Production-Units: (Lars) FIXED: missingBlaBla methoden umgeschrieben, lesen jetzt aus Company.Production.
+													  // diese wird im Absatz und Prod. Planungs Screen gefüllt.
+						label.setText(String.valueOf(CompanyController.missingRessources().get(type)) + unitname);
 						break;
 						
 					//Label der Ressourcen auf dem Markt
 					case goodsBuyable:
-						//TODO: Production-Units
 						label.setText(String.valueOf(res.getBuyableUnits()) + unitname);
 						break;
 						
 					//Label der Fixkosten für den Ressourcentyp
 					case fixedPrice:
-						//TODO: Production-Units
 						label.setText(String.valueOf(Ressource.getFixedCosts(type)) + "€");
 						break;
 				}

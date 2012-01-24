@@ -121,46 +121,50 @@ public abstract class CompanyController {
 	    * Prüft, ob die mitgegebene Menge an Einheiten produziert werden kann.
 	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
 	    */
-	   public static boolean canProduce(int units){
+	   public static boolean canProduce(){
 		   //Company comp = Company.getInstance();
 		   //Production prod = comp.getProduction();
 		   boolean canProduce = true;
 		   
 		   //Ressourcen prüfen
-		   if(!(missingRessources(units).isEmpty()))
+		   if(!(missingRessources().isEmpty()))
 			   canProduce = false;
 		   	
 		   
 		   //Maschinen prüfen
-		   if(!(missingMachines(units).isEmpty()))
+		   if(!(missingMachines().isEmpty()))
 				canProduce = false;
 		   	
 		   	//Personal prüfen
-		   if(!(missingEmployees(units).isEmpty()))
+		   if(!(missingEmployees().isEmpty()))
 				canProduce = false;		   
 		   
 		   return canProduce;
 	   }
 	   
-		public static Map<RessourceType, Integer> missingRessources(int units) 
-		{
-				Company comp = Company.getInstance();
-			   Map<RessourceType, Ressource> ressources = comp.getAllRessources();
-			   Map<RessourceType, Integer> missingUnitPerRessource = new HashMap<RessourceType,Integer>();
-			   
-			   for(Iterator<Ressource> it = ressources.values().iterator(); it.hasNext();){
-				   Ressource res = it.next();
-					//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Rohstoffe fehlen.
-				   int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getStoredUnits();
-				   if (missingunits > 0)
-					   missingUnitPerRessource.put(res.getType(), missingunits);
-			   }
-			   return missingUnitPerRessource;
+		public static Map<RessourceType, Integer> missingRessources() 
+		{			
+			Company comp = Company.getInstance();			
+			int units = comp.getProduction().getUnitsToProduce();
+			
+			Map<RessourceType, Ressource> ressources = comp.getAllRessources();
+			Map<RessourceType, Integer> missingUnitPerRessource = new HashMap<RessourceType,Integer>();
+		   
+			for(Iterator<Ressource> it = ressources.values().iterator(); it.hasNext();){
+				Ressource res = it.next();
+				//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Rohstoffe fehlen.
+				int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getStoredUnits();
+				if (missingunits > 0)
+				   missingUnitPerRessource.put(res.getType(), missingunits);
+			}
+			return missingUnitPerRessource;
 		}
 	   
-		public static Map<MachineType, Integer> missingMachines(int units) 
+		public static Map<MachineType, Integer> missingMachines() 
 		{
-			Company comp = Company.getInstance();
+			Company comp = Company.getInstance();			
+			int units = comp.getProduction().getUnitsToProduce();
+			
 			Map<MachineType, Integer> missingUnitPerMachine = new HashMap<MachineType, Integer>();
 		   	for(MachineType type: MachineType.values()){
 		   		
@@ -172,9 +176,11 @@ public abstract class CompanyController {
 		   	return missingUnitPerMachine;	
 		}
 	 
-		public static Map<EmployeeType, Integer> missingEmployees(int units) 
+		public static Map<EmployeeType, Integer> missingEmployees() 
 		{
-			Company comp = Company.getInstance();
+			Company comp = Company.getInstance();			
+			int units = comp.getProduction().getUnitsToProduce();
+			
 			Map<EmployeeType, Integer> missingEmployees = new HashMap<EmployeeType, Integer>();
 		   	for(EmployeeType type: EmployeeType.values()){
 		   		
@@ -188,17 +194,18 @@ public abstract class CompanyController {
 		
 	   
 	   /**
-	    * Produziert die mitgegebene Anzahl an Fertigprodukten
-	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.	    
+	    * Produziert die in Company.Production festgelegte Anzahl an Fertigprodukten	    
 	    * @throws CannotProduceException - Wenn nicht produziert werden kan, 
 	    * weil Maschinen/Employees/Ressources fehlen, wird diese Exception geworfen.
 	    */
-	   public static void produce(int units) throws CannotProduceException
+	   public static void produce() throws CannotProduceException
 	   {
-			if(!(canProduce(units)))
+		   Company comp = Company.getInstance();
+		   int units = comp.getProduction().getUnitsToProduce();
+		   
+			if(!(canProduce()))
 				throw new CannotProduceException();
-			Company comp = Company.getInstance();
-			//Production prod = comp.getProduction();
+			
 			for(RessourceType t: RessourceType.values()) {
 				comp.getRessource(t).decStoredUnits(units*Ressource.getNeed(t));
 			}
@@ -209,21 +216,21 @@ public abstract class CompanyController {
 	    * Produziert die maximale Menge an Fertigprodukten, sucht sich selbst wieviele Fertigprodukte er produzieren kannst
 	    * @param pricePerUnit
 	    */
-	   public static void produce() 
-	   {
-		   
-		   Company comp = Company.getInstance();
-		   Production prod = comp.getProduction();
-		   int units = prod.getMaxProducableUnits();
-		   try
-		   {
-		   produce(units);
-		   }
-		   catch (ApplicationException ex)
-		   {
-			   throw new UnsupportedOperationException("In der getMaxProducableUnits ist was falsch.");
-		   }
-	   }
+//	   public static void produce() 
+//	   {
+//		   
+//		   Company comp = Company.getInstance();
+//		   Production prod = comp.getProduction();
+//		   int units = prod.getMaxProducableUnits();
+//		   try
+//		   {
+//		   produce(units);
+//		   }
+//		   catch (ApplicationException ex)
+//		   {
+//			   throw new UnsupportedOperationException("In der getMaxProducableUnits ist was falsch.");
+//		   }
+//	   }
 	 
 	   
 	   
