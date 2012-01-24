@@ -40,10 +40,10 @@ public class PeriodInfoTest extends TestCase  {
 		comp = Company.getInstance();
 		comp.incMoney(400000);
 		CompanyController.takeCredit(40000, 5);
-		CompanyController.initRessource(RessourceType.Stockfisch, 100, 40);
+		CompanyController.initRessource(RessourceType.Rohfisch, 100, 40);
 		CompanyController.initRessource(RessourceType.Verpackungsmaterial, 10, 375);
 		
-		CompanyController.buyRessources(RessourceType.Stockfisch, 100);
+		CompanyController.buyRessources(RessourceType.Rohfisch, 100);
 		CompanyController.buyRessources(RessourceType.Verpackungsmaterial, 8);
 
 		CompanyController.buyMachine(new Machine(MachineType.Filitiermaschine, 40, 4000));
@@ -100,10 +100,10 @@ public class PeriodInfoTest extends TestCase  {
 			tkE =true;
 		}
 		Assert.assertEquals(true, tkE);
-		CompanyController.initRessource(RessourceType.Stockfisch, 100, 40);
+		CompanyController.initRessource(RessourceType.Rohfisch, 100, 40);
 		CompanyController.initRessource(RessourceType.Verpackungsmaterial, 10, 375);
 		
-		CompanyController.buyRessources(RessourceType.Stockfisch, 100);
+		CompanyController.buyRessources(RessourceType.Rohfisch, 100);
 		CompanyController.buyRessources(RessourceType.Verpackungsmaterial, 8);
 
 		CompanyController.buyMachine(new Machine(MachineType.Filitiermaschine, 40, 4000));

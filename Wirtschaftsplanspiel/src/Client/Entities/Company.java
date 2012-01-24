@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import Client.Application.CompanyController;
 import Client.Entities.RessourceType;
 
 
@@ -18,9 +19,14 @@ public class Company {
 		if (company != null)
 			return company;
 		company = new Company();
+		initFirst();
 		return company;
 	}
-	
+	private static void initFirst() {
+		Company.getInstance().incMoney(50000.00);
+		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 6.00);
+		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 25.00);
+	}
 	private Credit actCredit;
 	private List<Employee> employee = new LinkedList<Employee>();
 	public final double EMPLOYERSSALLERY = 45000d;
@@ -155,7 +161,7 @@ public class Company {
 	
 	public double getWarehouseCosts(){
 
-		int stockfisch = getRessource(RessourceType.Stockfisch).getStoredUnits();
+		int stockfisch = getRessource(RessourceType.Rohfisch).getStoredUnits();
 		int verpackung = getRessource(RessourceType.Verpackungsmaterial).getStoredUnits();
 		int finishedProducts = getFinishedProducts();
 		

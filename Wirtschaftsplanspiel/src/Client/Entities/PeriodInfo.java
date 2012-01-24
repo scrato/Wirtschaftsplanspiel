@@ -15,12 +15,12 @@ public abstract class PeriodInfo {
     static {
        periods = new LinkedList<Period>();
 	   periods.add(new Period());
-	   
-		//TODO: Besseren Platz für Startwerte finden
-		CompanyController.initRessource(RessourceType.Stockfisch, 400, 6.00);
-		CompanyController.initRessource(RessourceType.Verpackungsmaterial, 75, 25.00);
-		Company.getInstance().incMoney(50000.00);
-   }
+	      }
+
+	public static void initRessources() {
+		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 6.00);
+		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 25.00);
+	}
    
    public static Period getActualPeriod(){
 	   return periods.get(actPeriod);
@@ -35,6 +35,7 @@ public abstract class PeriodInfo {
 	   getActualPeriod().makeGuV();
 	   incNumberOfActPeriod();
 	   periods.add(new Period());
+	   initRessources();
    }
 
    public static int getMaxPeriods() {
