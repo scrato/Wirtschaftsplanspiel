@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 
 import org.junit.Before;
 
+import Client.Application.CannotProduceException;
 import Client.Application.CompanyController;
 import Client.Application.MachineAlreadyBoughtException;
 import Client.Application.NotEnoughRessourcesException;
@@ -117,7 +118,11 @@ public class PeriodInfoTest extends TestCase  {
 		CompanyController.payEmployersSalery();
 		
 		CompanyController.payRent();
-		CompanyController.produce();
+		try {
+			CompanyController.produce();
+		} catch (CannotProduceException e) {
+			e.printStackTrace();
+		}
 		CompanyController.depcrecateMachines();
 	}
 	
