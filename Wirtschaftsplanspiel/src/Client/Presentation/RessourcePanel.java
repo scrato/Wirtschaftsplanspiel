@@ -161,6 +161,10 @@ public class RessourcePanel extends JPanel {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
+			if (arg0.getKeyCode() == KeyEvent.VK_ENTER){
+				buy();
+				return;
+			}
 			try
 			{			
 				int amount = Integer.parseInt(tBuy.getText().trim());
@@ -188,9 +192,7 @@ public class RessourcePanel extends JPanel {
 
 		@Override
 		public void keyTyped(KeyEvent arg0) {
-				if (arg0.getKeyCode() == KeyEvent.VK_ENTER){
-					buy();
-				}
+				
 					
 		}
 
@@ -257,6 +259,7 @@ public class RessourcePanel extends JPanel {
 		}
 		
 	}
+	
 	public void buy() {
 		for(Component c: RessourcePanel.me.getComponents()){
 			//Die Klassen, die vom Typ "Type-Label" sind...
@@ -283,13 +286,13 @@ public class RessourcePanel extends JPanel {
 						MessageBox mb = new MessageBox("Keine valide Eingabe", 
 								"Bitte geben sie eine zulässige Zahl an.");
 						mb.setVisible(true);
-						return;
+						
 					} catch (NotEnoughRessourcesException ex2) {
 						MessageBox mb = new MessageBox("Nicht genug Ressourcen auf dem Markt", 
 								"Es gibt nicht genug " + t.name() +
 								" auf dem Markt.");
 						mb.setVisible(true);
-						return;
+						
 					} finally
 					{
 						refreshRessources();
