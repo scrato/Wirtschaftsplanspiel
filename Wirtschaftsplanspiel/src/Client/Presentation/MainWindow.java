@@ -34,6 +34,7 @@ public class MainWindow extends JFrame{
 	JPanel south = new JPanel();
 	JPanel center = new JPanel();
 	
+	
 	// Panel für diverse Screens
 	JPanel Pwerkstoffe = new RessourcePanel();
 	JPanel Pmaschinen = new MachinePanel();
@@ -61,6 +62,7 @@ public class MainWindow extends JFrame{
 	static MainWindow instance;
 	
 	public MainWindow(){
+		
 		super("Business Basics");
 		instance = this;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,7 +74,6 @@ public class MainWindow extends JFrame{
 		buildWest();
 		buildSouth();
 		//waitForOtherPlayers();
-		
 
 	}
 	
