@@ -441,7 +441,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 
 	private String cutAndTrim(String text) {
-		return cutAndValidate(text.replace(',', '.'));
+		return text.replace(',', '.').trim();
 	}
 
 
