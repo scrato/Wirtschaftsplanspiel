@@ -394,6 +394,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private void refreshCount() {
 		pricesell.setText(cutAndTrim(pricesell.getText()));
 		amountproduce.setText(cutAndValidate(amountproduce.getText()));
+		amountsell.setText(cutAndValidate(amountsell.getText()));
 		
 		try{unitsToProduce = Integer.parseInt(amountproduce.getText().trim());}catch(NumberFormatException e){}
 		try{priceToSell = Double.parseDouble(pricesell.getText());}catch(NumberFormatException e){}
@@ -435,7 +436,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 	}
 
 	private String cutAndValidate(String text) {
-		return "";
+		return text.replaceAll("\\D", "");
 	}
 
 
