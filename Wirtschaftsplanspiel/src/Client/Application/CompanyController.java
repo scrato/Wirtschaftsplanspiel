@@ -236,6 +236,8 @@ public abstract class CompanyController {
 				missingUnits = CompanyController.missingUnitsOnMachines().get(type);
 			else
 				return 0;
+			if (missingUnits == 0)
+				return 0;
 				int missMach = (int) ((missingUnits / capacity) + 1);
 
 				return missMach;

@@ -86,10 +86,13 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private JLabel l_lastPeriodSellingPrice;
 	private JLabel l_maxProducableUnits;
 	
-	private int actualCapacity;
+	private int actualCapacity = 1;
 	private int unitsToProduce;
 	private double priceToSell;
 	private int amountToSell;
+	
+	private final double PRICEMIN = 5.00;
+	private final double PRICEMAX = 20.00;
 	
 	private Company comp = Company.getInstance();
 	
@@ -105,6 +108,8 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private JTextArea tf_missingEmployee;
 
 	private JComboBox<String> cb_capacities;
+
+	private JLabel l_priceRating;
 	/**
 	 * 
 	 */
@@ -143,6 +148,11 @@ public class ProductionAndDistributionPanel extends JPanel {
 		pricesell = new JTextPane();
 		pricesell.addKeyListener(tl);
 		this.add(pricesell, c);
+		
+		c.gridx++;
+		l_priceRating = new JLabel();
+		this.add(l_priceRating, c);
+		
 		c.gridx = 0;		
 		c.gridy++;
 		
@@ -199,7 +209,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 			cb_capacities.addItem(capa);
 		}
 		cb_capacities.addItemListener(new CapacityItemListener());
-		this.add(new JLabel("Kapazität: "),c);
+		this.add(new JLabel("Maschinenkapazität: "),c);
 		c.gridx++;
 		this.add(cb_capacities,c);
 		cb_capacities.setEditable(false);
@@ -350,6 +360,16 @@ public class ProductionAndDistributionPanel extends JPanel {
 		tf_missingMachines.setText(getMissingMachines());
 		tf_missingEmployee.setText(getMissingEmployee());
 		
+		if(priceToSell>PRICEMAX){
+			l_priceRating.setText("Preis ist zu hoch");
+			l_priceRating.setForeground(Color.RED);
+		}else if(priceToSell<PRICEMIN){
+			l_priceRating.setText("Preis ist zu niedrig");
+			l_priceRating.setForeground(Color.BLUE);
+		}else{
+			l_priceRating.setText("Preis liegt im Rahmen");
+			l_priceRating.setForeground(Color.decode("418831"));
+		}
 	}
 
 	private String cutAndTrim(String text) {
