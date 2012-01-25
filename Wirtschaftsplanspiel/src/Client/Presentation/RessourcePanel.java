@@ -240,7 +240,7 @@ public class RessourcePanel extends JPanel {
 					case goodsNeeded:
 						//TODO: Production-Units: (Lars) FIXED: missingBlaBla methoden umgeschrieben, lesen jetzt aus Company.Production.
 													  // diese wird im Absatz und Prod. Planungs Screen gefüllt.
-						label.setText(String.valueOf(CompanyController.missingRessources().get(type)) + unitname);
+						label.setText(String.valueOf(CompanyController.missingUnitsOnRessources().get(type)) + unitname);
 						break;
 						
 					//Label der Ressourcen auf dem Markt

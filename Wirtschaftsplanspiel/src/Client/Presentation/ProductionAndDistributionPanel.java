@@ -234,18 +234,12 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 	private String getMissingEmployee() {
 		String missEmpl = "";
-		for(Iterator<Entry<EmployeeType, Integer>> it = CompanyController.missingEmployees().entrySet().iterator(); it.hasNext();){
-			Entry<EmployeeType, Integer> next = it.next();
-			int capacity = 0;
-			switch(next.getKey()){
-			case Produktion:
-				capacity = Employee.PRODUCTIONUNITS;
-			case Verwaltung:
-				capacity = Employee.ADMINUNITS;
-			}
-			
-			missEmpl += next.getKey().name() + ": " + (int) ((next.getValue() / capacity) + 1) + "\n";
+		
+		for(EmployeeType type: EmployeeType.values()){
+			missEmpl += type.name() + ": " + CompanyController.missingEmployees(type) + "\n";	
 		}
+
+		
 		if(missEmpl.length() > 0)
 			return missEmpl.substring(0, missEmpl.length() - 1);
 		else
@@ -255,23 +249,20 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 	private String getMissingMachines() {
 		String missMach = "";
-		for(Iterator<Entry<MachineType, Integer>> it = CompanyController.missingMachines().entrySet().iterator(); it.hasNext();){
-			Entry<MachineType, Integer> next = it.next();
-			
-			missMach += next.getKey().name() + ": " + (int) ((next.getValue() /  200)+ 1 ) + "\n";
+		for(MachineType type : MachineType.values()){
+		missMach += type.name() + ": " + CompanyController.missingMachines(type,200) + "\n";
 		}
 		if(missMach.length() > 0)
 			return missMach.substring(0, missMach.length() - 1);
 		else
-			return missMach;
+		return missMach;
 	}
 
 
 	private String getMissingRessources() {
 		String missRes = "";
-		for(Iterator<Entry<RessourceType, Integer>> it = CompanyController.missingRessources().entrySet().iterator(); it.hasNext();){
-			Entry<RessourceType, Integer> next = it.next();
-			missRes += next.getKey().name() + ": " + next.getValue() + " " + Ressource.getUnit(next.getKey()) + "\n";
+		for(RessourceType type : RessourceType.values()){
+			missRes += type.name() + ": " + CompanyController.missingRessources(type) + " " + Ressource.getUnit(type) + "\n";
 		}
 		if(missRes.length() > 0)
 			return missRes.substring(0, missRes.length() - 1);

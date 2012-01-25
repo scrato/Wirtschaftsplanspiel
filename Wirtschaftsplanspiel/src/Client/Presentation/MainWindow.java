@@ -344,6 +344,7 @@ public class MainWindow extends JFrame{
 			this.frame = frame;
 		}
 		public void actionPerformed(ActionEvent arg0) {
+			Ppersonal = new EmployeePanel();
 			frame.add(Ppersonal, BorderLayout.CENTER);
 			frame.remove(lastUsed);
 			frame.validate();

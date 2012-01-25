@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import Client.Entities.Company;
 import Client.Entities.Credit;
@@ -127,22 +128,22 @@ public abstract class CompanyController {
 		   boolean canProduce = true;
 		   
 		   //Ressourcen prüfen
-		   if(!(missingRessources().isEmpty()))
+		   if(!(missingUnitsOnRessources().isEmpty()))
 			   canProduce = false;
 		   	
 		   
 		   //Maschinen prüfen
-		   if(!(missingMachines().isEmpty()))
+		   if(!(missingUnitsOnMachines().isEmpty()))
 				canProduce = false;
 		   	
 		   	//Personal prüfen
-		   if(!(missingEmployees().isEmpty()))
+		   if(!(missingUnitsOnEmployees().isEmpty()))
 				canProduce = false;		   
 		   
 		   return canProduce;
 	   }
 	   
-		public static Map<RessourceType, Integer> missingRessources() 
+		public static Map<RessourceType, Integer> missingUnitsOnRessources() 
 		{			
 			Company comp = Company.getInstance();			
 			int units = comp.getProdAndDistr().getUnitsToProduce();
@@ -160,7 +161,7 @@ public abstract class CompanyController {
 			return missingUnitPerRessource;
 		}
 	   
-		public static Map<MachineType, Integer> missingMachines() 
+		public static Map<MachineType, Integer> missingUnitsOnMachines() 
 		{
 			Company comp = Company.getInstance();			
 			int units = comp.getProdAndDistr().getUnitsToProduce();
@@ -176,7 +177,7 @@ public abstract class CompanyController {
 		   	return missingUnitPerMachine;	
 		}
 	 
-		public static Map<EmployeeType, Integer> missingEmployees() 
+		public static Map<EmployeeType, Integer> missingUnitsOnEmployees() 
 		{
 			Company comp = Company.getInstance();			
 			int units = comp.getProdAndDistr().getUnitsToProduce();
@@ -192,8 +193,63 @@ public abstract class CompanyController {
 		   	return missingEmployees;
 		}
 		
+		public static int missingRessources(RessourceType type){
+			int missingUnits = 0;
+			Map<RessourceType, Integer> misUn = CompanyController.missingUnitsOnRessources();
+			if(misUn.containsKey(type))
+				missingUnits = CompanyController.missingUnitsOnRessources().get(type);
+			else
+				return 0;
+
+				return missingUnits;
+		}
+		
+		public static int missingEmployees(EmployeeType type){
+			
+			int capacity = 0;
+			int missingUnits = 0;
+			Map<EmployeeType, Integer> misUn = CompanyController.missingUnitsOnEmployees();
+			if(misUn.containsKey(type))
+				missingUnits = CompanyController.missingUnitsOnEmployees().get(type);
+			else
+				return 0;
+			switch(type){
+				case Produktion:
+					capacity = Employee.PRODUCTIONUNITS;
+				case Verwaltung:
+					capacity = Employee.ADMINUNITS;
+				}
+				
+			//Anzahl der noch nicht gedeckten Einheiten durch die gegebene Kapazität + 1 
+			
+				int missEmpl = (int) ((missingUnits / capacity) + 1);
+
+				return missEmpl;
+		}
 	   
-	   /**
+		public static int missingMachines(MachineType type, int capacity){
+			int missingUnits = 0;
+			Map<MachineType, Integer> misUn = CompanyController.missingUnitsOnMachines();
+			if(misUn.containsKey(type))
+				missingUnits = CompanyController.missingUnitsOnMachines().get(type);
+			else
+				return 0;
+			/*switch(type){
+				case Filitiermaschine:
+					capacity = 0;
+				case Verpackungsmaschine:
+					capacity = 0;
+				}*/
+				
+			//Anzahl der noch nicht gedeckten Einheiten durch die gegebene Kapazität + 1 
+			
+				int missMach = (int) ((missingUnits / capacity) + 1);
+
+				return missMach;
+		}
+		
+		
+		/**
 	    * Produziert die in Company.Production festgelegte Anzahl an Fertigprodukten	    
 	    * @throws CannotProduceException - Wenn nicht produziert werden kan, 
 	    * weil Maschinen/Employees/Ressources fehlen, wird diese Exception geworfen.
