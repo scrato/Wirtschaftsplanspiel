@@ -129,15 +129,10 @@ public class RessourcePanel extends JPanel {
 		}
 		c.gridy = rowy;
 		c.gridx = 0;
-		JButton prev = new JButton("Zurück");
 		JButton buy = new JButton("Kaufen");
 		buy.addActionListener(new buyRessourceListener());
-		JButton next = new JButton("Weiter");
-		this.add(prev,c);
 		c.gridx++;
 		this.add(buy, c);
-		c.gridx++;
-		this.add(next, c);
 		refreshRessources();
 	}
 	
@@ -240,7 +235,7 @@ public class RessourcePanel extends JPanel {
 					case goodsNeeded:
 						//TODO: Production-Units: (Lars) FIXED: missingBlaBla methoden umgeschrieben, lesen jetzt aus Company.Production.
 													  // diese wird im Absatz und Prod. Planungs Screen gefüllt.
-						label.setText(String.valueOf(CompanyController.missingRessources().get(type)) + unitname);
+						label.setText(String.valueOf(CompanyController.missingUnitsOnRessources().get(type)) + unitname);
 						break;
 						
 					//Label der Ressourcen auf dem Markt
