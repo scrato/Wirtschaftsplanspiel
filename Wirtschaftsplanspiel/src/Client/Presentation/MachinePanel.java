@@ -23,6 +23,7 @@ import Client.Entities.MachineType;
 
 import Client.Application.CompanyController;
 import Client.Application.MachineAlreadyBoughtException;
+import Client.Application.MachineNotOwnedException;
 import Client.Application.UserCanNotPayException;
 
 public class MachinePanel extends JPanel {
@@ -69,13 +70,13 @@ public class MachinePanel extends JPanel {
 		
 		c.gridx = 0;
 		c.gridy = 1;
-		c.gridwidth = 3;
+		c.gridwidth = 4;
 		add(machineScrollPane,c);
 		c.gridwidth = 1;
 		
 		c.gridx = 0;
 		c.gridy = 2;
-		c.gridwidth = 3;
+		c.gridwidth = 4;
 		c.anchor = GridBagConstraints.LINE_END;
 		add(verkaufen, c);
 		c.gridwidth = 1;
@@ -83,37 +84,48 @@ public class MachinePanel extends JPanel {
 		
 		c.gridx = 0;
 		c.gridy = 3;
+		c.gridwidth = 3;
+		c.anchor = GridBagConstraints.LINE_START;
 		add(new JLabel("Machinen kaufen"),c);
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.CENTER;
 		
 		c.gridx = 0;
 		c.gridy = 4;
+		c.insets = new Insets(10,0,0,0);
+		c.anchor = GridBagConstraints.LINE_START;
 		add(new JLabel("Typ"),c);
+		c.insets = new Insets(0,0,0,0);
 		
 		c.gridx = 0;
 		c.gridy = 5;
+		c.anchor = GridBagConstraints.LINE_START;
 		add(type,c);
-		
+				
 		c.gridx = 1;
 		c.gridy = 4;
 		add(new JLabel("Kapazität"),c);
 		
 		c.gridx = 1;
 		c.gridy = 5;
+		c.anchor = GridBagConstraints.LINE_START;
 		add(capacity,c);
+		
 		
 		c.gridx = 2;
 		c.gridy = 4;
+		c.insets = new Insets(0,10,0,0);
 		add(new JLabel("Preis"),c);
 		
 		c.gridx = 2;
 		c.gridy = 5;
 		add(costOutput, c);
+		c.insets = new Insets(0,0,0,0);
 		
-		c.gridx = 0;
-		c.gridy = 6;
-		c.gridwidth = 3;
+		c.gridx = 3;
+		c.gridy = 5;
 		c.anchor = GridBagConstraints.LINE_END;
-		c.insets = new Insets(10,0,0,0);
+		c.insets = new Insets(0,0,0,0);
 		add(kaufen,c);
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.CENTER;			
@@ -146,13 +158,14 @@ public class MachinePanel extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					if (machineTable.getSelectedRow() != -1) {
-						//tabModel.removeRow(table.getSelectedRow());
 						machine = company.getMachines().get(machineTable.getSelectedRow());
-						company.removeMachine(machine);
-						
-						System.out.println("Maschine verkauft");
-						System.out.println(machine.toString());
-						System.out.println("Zeile" + machineTable.getSelectedRow() + " gelöscht");
+						//company.removeMachine(machine);
+						try {
+							CompanyController.sellMachine(machine);
+						} catch (MachineNotOwnedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						refreshMachineTable();
 					}
 					
