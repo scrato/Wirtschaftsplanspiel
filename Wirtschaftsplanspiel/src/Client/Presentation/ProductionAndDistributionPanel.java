@@ -393,6 +393,9 @@ public class ProductionAndDistributionPanel extends JPanel {
 	
 	private void refreshCount() {
 		pricesell.setText(cutAndTrim(pricesell.getText()));
+		amountproduce.setText(cutAndValidate(amountproduce.getText()));
+		amountsell.setText(cutAndValidate(amountsell.getText()));
+		
 		try{unitsToProduce = Integer.parseInt(amountproduce.getText().trim());}catch(NumberFormatException e){}
 		try{priceToSell = Double.parseDouble(pricesell.getText());}catch(NumberFormatException e){}
 		try{amountToSell = Integer.parseInt(amountsell.getText().trim());}catch(NumberFormatException e){}
@@ -431,6 +434,11 @@ public class ProductionAndDistributionPanel extends JPanel {
 			l_priceRating.setForeground(Color.decode("418831"));
 		}
 	}
+
+	private String cutAndValidate(String text) {
+		return text.replaceAll("\\D", "");
+	}
+
 
 	private String cutAndTrim(String text) {
 		return text.replace(',', '.').trim();
