@@ -236,7 +236,7 @@ public class MainWindow extends JFrame{
 		JButton personal = new JButton("Personalverwaltung");
 		JButton darlehen = new JButton("Darlehen");
 		JButton bericht = new JButton("Berichtserstattung");
-		JButton preiskal = new JButton("Preiskalkulation");
+		JButton preiskal = new JButton("Produktionsplanung");
 					
 		// Action Listener
 		werkstoffe.addActionListener(new showWerkstoffe(this));
@@ -247,12 +247,13 @@ public class MainWindow extends JFrame{
 		preiskal.addActionListener(new showPreiskal(this));
 									
 		west.add(lMenue);
+		west.add(preiskal);
 		west.add(werkstoffe);
 		west.add(maschinen);
 		west.add(personal);
 		west.add(darlehen);
 		west.add(bericht);
-		west.add(preiskal);	
+			
 	}
 	
 	public void buildSouth(){

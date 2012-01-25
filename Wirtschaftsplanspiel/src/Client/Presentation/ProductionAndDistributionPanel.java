@@ -107,7 +107,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 	private JTextArea tf_missingEmployee;
 
-	private JComboBox<String> cb_capacities;
+	private JComboBox cb_capacities;
 
 	private JLabel l_priceRating;
 	/**
@@ -204,7 +204,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 		this.add(tf_missingMachines,c);
 		
 		c.gridx++;
-		cb_capacities = new JComboBox<String>();
+		cb_capacities = new JComboBox();
 		for(String capa: Machine.capacites){
 			cb_capacities.addItem(capa);
 		}
