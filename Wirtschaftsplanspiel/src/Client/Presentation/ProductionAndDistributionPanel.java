@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -101,30 +102,76 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private int maxProducableUnits;
 	private int maxSellableUnits;
 
-	private JTextArea tf_missingRessources;
-
-	private JTextArea tf_missingMachines;
-
-	private JTextArea tf_missingEmployee;
-
-	private JComboBox cb_capacities;
+	private JComboBox<String> cb_capacities;
 
 	private JLabel l_priceRating;
+
+	private JLabel l_missingRessource1;
+
+	private JLabel l_missingEmployee0;
+
+	private JLabel l_missingRessource0;
+
+	private JLabel l_missingEmployee1;
+
+	private JLabel l_missingMachine0;
+
+	private JLabel l_missingMachine1;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2375380045275272220L;
 
 	public ProductionAndDistributionPanel(){
-		
+		/*public Insets(int top,
+      int left,
+      int bottom,
+      int right)*/
 		GridBagConstraints c = new GridBagConstraints();
-		c.ipady = 30;
+		Insets standard = new Insets(0,0,0,0);
+		Insets newLine = new Insets(15,0,5,0);
 		c.gridx = 0;
 		c.gridy = 0;
+		c.insets = standard;
 		c.anchor = GridBagConstraints.WEST;
 		this.setLayout(new GridBagLayout());
 		
+		c.ipady = 30;
+		JLabel title3 = new JLabel("Informationen");
+		title3.setFont(new Font("Serif", Font.BOLD, 14));
+		this.add(title3,c);
+		c.ipady = 1;
+		c.gridy++;
+		//Neue Zeile
+		this.add(new JLabel("Fertigprodukte auf Lager: "),c);
+		c.gridx++;
+		l_finishedProducts = new JLabel(String.valueOf(comp.getFinishedProducts()) + " Einheiten");
+		this.add(l_finishedProducts ,c);
+		c.gridx=0;
+		c.gridy++;
+
+		//Neue Zeile
+		this.add(new JLabel("Verkaufspreis der letzen Periode: "),c);
+		c.gridx++;
+		if(PeriodInfo.getNumberOfActPeriod() == 0)
+			l_lastPeriodSellingPrice = new JLabel("Bisher keine Produkte verkauft");
+		else
+			l_lastPeriodSellingPrice = new JLabel(String.valueOf(PeriodInfo.getActualPeriod().getProductPrice()) + "€");
+		
+		this.add(l_lastPeriodSellingPrice , c);
+		c.gridx=0;
+		c.gridy++;
+
+		//Neue Zeile
+		this.add(new JLabel("Aktuell produzierbare Fertigprodukte : "),c);
+		c.gridx++;
+		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Einheiten");
+		this.add(l_maxProducableUnits,c);
+		c.gridx=0;
+		c.gridy++;
+		
 		//SellingScreen
+		c.ipady = 30;
 		JLabel title1 = new JLabel("Absatzplanung");
 		title1.setFont(new Font("Serif", Font.BOLD, 14));
 		this.add(title1,c);
@@ -182,90 +229,85 @@ public class ProductionAndDistributionPanel extends JPanel {
 		
 		c.anchor = GridBagConstraints.NORTHWEST;
 		//Neue Zeile
-		c.gridheight = RessourceType.values().length;
+		c.insets = newLine;
 		this.add(new JLabel("Fehlende Ressourcen : "),c);
+		c.gridy++;
+		c.insets = standard;
+
+		RessourceType t0 = RessourceType.values()[0];
+		this.add(new JLabel(t0.name() + ": "),c);
 		c.gridx++;
-		
-		
-		tf_missingRessources =new JTextArea(getMissingRessources());
-		tf_missingRessources.setEditable(false);
-		this.add(tf_missingRessources,c);
+		l_missingRessource0 =new JLabel(getMissingRessource(t0));
+		this.add(l_missingRessource0,c);
 		c.gridx=0;
-		c.gridy += c.gridheight;
+		c.gridy ++;
+		
+		RessourceType t1 = RessourceType.values()[1];
+		this.add(new JLabel(t1.name() + ": "),c);
+		c.gridx++;
+		l_missingRessource1 =new JLabel(getMissingRessource(t1));
+		this.add(l_missingRessource1,c);
+		c.gridx=0;
+		c.gridy ++;
+		
+
 		
 		//Neue Zeile
-		c.gridheight = MachineType.values().length;
-		this.add(new JLabel("Fehlende Maschinen"),c);
+		c.insets = newLine;
+		this.add(new JLabel("Fehlende Mitarbeiter : "),c);
+		c.gridy++;
+		c.insets = standard;
+		EmployeeType e0 = EmployeeType.values()[0];
+		JLabel le0 = new JLabel(e0.name() + ": ");
+		this.add(le0,c);
 		c.gridx++;
+		l_missingEmployee0 =new JLabel(getMissingEmployee(e0));
+		this.add(l_missingEmployee0,c);
+		c.gridx=0;
+		c.gridy ++;
 		
-		
-		tf_missingMachines =new JTextArea(getMissingMachines());
-		tf_missingMachines.setEditable(false);
-		this.add(tf_missingMachines,c);
-		
+		EmployeeType e1 = EmployeeType.values()[1];
+		this.add(new JLabel(e1.name() + ": "),c);
 		c.gridx++;
-		cb_capacities = new JComboBox();
+		l_missingEmployee1 =new JLabel(getMissingEmployee(e1));
+		this.add(l_missingEmployee1,c);
+		c.gridx=0;
+		c.gridy ++;
+
+		
+		//Neue Zeile
+		c.insets = newLine;
+		this.add(new JLabel("Fehlende Maschinen : "),c);
+		c.gridy++;
+		c.insets = standard;
+		
+		MachineType m0 = MachineType.values()[0];
+		this.add(new JLabel(m0.name() + ": "),c);
+		c.gridx++;
+		l_missingMachine0 =new JLabel(getMissingMachine(m0));
+		this.add(l_missingMachine0,c);
+		c.gridx=0;
+		c.gridy ++;
+		
+		MachineType m1 = MachineType.values()[1];
+		this.add(new JLabel(m1.name() + ": "),c);
+		c.gridx++;
+		l_missingMachine1 =new JLabel(getMissingMachine(m1));
+		this.add(l_missingMachine1,c);
+		c.gridx=0;
+		c.gridy ++;
+		
+		this.add(new JLabel("Maschinenkapazität: "),c);
+		c.gridx++;
+		cb_capacities = new JComboBox<String>();
 		for(String capa: Machine.capacites){
 			cb_capacities.addItem(capa);
 		}
 		cb_capacities.addItemListener(new CapacityItemListener());
-		this.add(new JLabel("Maschinenkapazität: "),c);
-		c.gridx++;
 		this.add(cb_capacities,c);
 		cb_capacities.setEditable(false);
 		actualCapacity = Integer.parseInt((String) cb_capacities.getSelectedItem());
 		
-		c.gridx=0;
-		c.gridy += c.gridheight;
-		
-		//Neue Zeile
-		c.gridheight = MachineType.values().length;
-		this.add(new JLabel("Fehlende Mitarbeiter : "),c);
-		c.gridx++;
-		
-		
-		tf_missingEmployee =new JTextArea(getMissingEmployee());
-		tf_missingEmployee.setEditable(false);
-		this.add(tf_missingEmployee,c);
-		c.gridx=0;
-		c.gridy += c.gridheight;
-		c.gridheight = 1;
-		c.gridy++;
-
-		
-		c.ipady = 30;
-		JLabel title3 = new JLabel("Informationen");
-		title3.setFont(new Font("Serif", Font.BOLD, 14));
-		this.add(title3,c);
-		c.ipady = 1;
-		c.gridy++;
-		//Neue Zeile
-		this.add(new JLabel("Fertigprodukte auf Lager: "),c);
-		c.gridx++;
-		l_finishedProducts = new JLabel(String.valueOf(comp.getFinishedProducts()) + " Einheiten");
-		this.add(l_finishedProducts ,c);
-		c.gridx=0;
-		c.gridy++;
-
-		//Neue Zeile
-		this.add(new JLabel("Verkaufspreis der letzen Periode: "),c);
-		c.gridx++;
-		if(PeriodInfo.getNumberOfActPeriod() == 0)
-			l_lastPeriodSellingPrice = new JLabel("Bisher keine Produkte verkauft");
-		else
-			l_lastPeriodSellingPrice = new JLabel(String.valueOf(PeriodInfo.getActualPeriod().getProductPrice()) + "€");
-		
-		this.add(l_lastPeriodSellingPrice , c);
-		c.gridx=0;
-		c.gridy++;
-
-		//Neue Zeile
-		this.add(new JLabel("Aktuell produzierbare Fertigprodukte : "),c);
-		c.gridx++;
-		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Einheiten");
-		this.add(l_maxProducableUnits,c);
-		c.gridx=0;
-		c.gridy++;
 	
 
 		
@@ -278,42 +320,20 @@ public class ProductionAndDistributionPanel extends JPanel {
 	}
 
 
-	private String getMissingEmployee() {
-		String missEmpl = "";
-		
-		for(EmployeeType type: EmployeeType.values()){
-			missEmpl += type.name() + ": " + CompanyController.missingEmployees(type) + "\n";	
-		}
+	private String getMissingEmployee(EmployeeType type) {
+		return	String.valueOf(CompanyController.missingEmployees(type));	
 
-		
-		if(missEmpl.length() > 0)
-			return missEmpl.substring(0, missEmpl.length() - 1);
-		else
-			return missEmpl;
 	}
 
 
-	private String getMissingMachines() {
-		String missMach = "";
-		for(MachineType type : MachineType.values()){
-		missMach += type.name() + ": " + CompanyController.missingMachines(type,actualCapacity) + "\n";
-		}
-		if(missMach.length() > 0)
-			return missMach.substring(0, missMach.length() - 1);
-		else
-		return missMach;
+	private String getMissingMachine(MachineType type) {
+		return String.valueOf(CompanyController.missingMachines(type,actualCapacity));
+
 	}
 
 
-	private String getMissingRessources() {
-		String missRes = "";
-		for(RessourceType type : RessourceType.values()){
-			missRes += type.name() + ": " + CompanyController.missingRessources(type) + " " + Ressource.getUnit(type) + "\n";
-		}
-		if(missRes.length() > 0)
-			return missRes.substring(0, missRes.length() - 1);
-		else
-			return missRes;
+	private String getMissingRessource(RessourceType type) {
+			return CompanyController.missingRessources(type) + " " + Ressource.getUnit(type);
 	}
 
 
@@ -356,9 +376,12 @@ public class ProductionAndDistributionPanel extends JPanel {
 			amountproduce.setForeground(Color.BLACK);
 		
 		
-		tf_missingRessources.setText(getMissingRessources());
-		tf_missingMachines.setText(getMissingMachines());
-		tf_missingEmployee.setText(getMissingEmployee());
+		l_missingRessource0.setText(getMissingRessource(RessourceType.values()[0]));
+		l_missingRessource1.setText(getMissingRessource(RessourceType.values()[1]));
+		l_missingMachine0.setText(getMissingMachine(MachineType.values()[0]));
+		l_missingMachine1.setText(getMissingMachine(MachineType.values()[1]));
+		l_missingEmployee0.setText(getMissingEmployee(EmployeeType.values()[0]));
+		l_missingEmployee1.setText(getMissingEmployee(EmployeeType.values()[1]));
 		
 		if(priceToSell>PRICEMAX){
 			l_priceRating.setText("Preis ist zu hoch");
