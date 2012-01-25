@@ -65,8 +65,13 @@ public class MachinePanel extends JPanel {
 		type.addItemListener(new customItemListener(type, capacity, costOutput));
 		
 		machineTabModel = new DefaultTableModel(machineData, machineColumnNames);
-		machineTable = new JTable(machineTabModel);
-		machineScrollPane = new JScrollPane(machineTable);
+		machineTable = new JTable(machineTabModel){
+		  public boolean isCellEditable(int rowIndex, int colIndex) {
+		  return false; //Disallow the editing of any cell
+		  }};
+			
+		  machineScrollPane = new JScrollPane(machineTable);
+	
 		
 		
 		
