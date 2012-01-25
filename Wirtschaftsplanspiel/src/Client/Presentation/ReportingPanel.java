@@ -305,7 +305,7 @@ public class ReportingPanel extends JPanel {
 		if (guv.employeeDismissalCosts != 0) 
 			guVPanel.addEntry(new TAccountEntry("Aufwand für Entlassungen", guv.employeeDismissalCosts), TAccountSides.left);
 		
-		guVPanel.addEntry(new TAccountEntry("Afa auf SA", guv.deprecation), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Abschreibungen", guv.deprecation), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Miete", guv.rental), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Lageraufwand", guv.warehouseCosts), TAccountSides.left);
 		if (guv.changeInStockExpenditures != 0) 
