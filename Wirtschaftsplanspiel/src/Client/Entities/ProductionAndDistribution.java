@@ -33,6 +33,12 @@ public class ProductionAndDistribution {
 		}
 		
 		//TODO: Wieviel können mit dem Person produziert werden
+		for(EmployeeType type : EmployeeType.values()){
+			int unitsWhichCanBeProduced = comp.getEmployeeCapacity(type);
+			if (units > unitsWhichCanBeProduced)
+				units = unitsWhichCanBeProduced;
+		}
+		
 		return units;
 	}
 	public int getUnitsToProduce() {

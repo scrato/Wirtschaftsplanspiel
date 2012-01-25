@@ -239,8 +239,8 @@ public class EmployeePanel extends JPanel{
 		
 		employeeAvaPro.setText(employeePro+"");
 		employeeAvaAdm.setText(employeeAdm+"");
-		employeeNeedPro.setText(CompanyController.missingUnitsOnEmployees().get(EmployeeType.Produktion)+"");
-		employeeNeedAdm.setText(CompanyController.missingUnitsOnEmployees().get(EmployeeType.Verwaltung)+ "");
+		employeeNeedPro.setText(CompanyController.missingEmployees(EmployeeType.Produktion)+"");
+		employeeNeedAdm.setText(CompanyController.missingEmployees(EmployeeType.Verwaltung)+ "");
 		
 	}
 

@@ -41,7 +41,7 @@ public class MachinePanel extends JPanel {
 	public MachinePanel(){
 	
 		String[] types = { "Filitiermaschine", "Verpackungsmaschine"};
-		String[] capacites = { "200", "400", "600", "800", "1000"};
+		String[] capacites = Machine.capacites;
 		JComboBox type = new JComboBox(types);
 		JComboBox capacity = new JComboBox(capacites);
 		JTextField costOutput = new JTextField(6);

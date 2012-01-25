@@ -4,11 +4,16 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -18,12 +23,24 @@ import Client.Application.CompanyController;
 import Client.Entities.Company;
 import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
+import Client.Entities.Machine;
 import Client.Entities.MachineType;
 import Client.Entities.PeriodInfo;
 import Client.Entities.Ressource;
 import Client.Entities.RessourceType;
 
 public class ProductionAndDistributionPanel extends JPanel {
+	private class CapacityItemListener implements ItemListener {
+
+		@Override
+		public void itemStateChanged(ItemEvent arg0) {
+			actualCapacity = Integer.parseInt((String) cb_capacities.getSelectedItem());
+			refreshCount();
+		}
+
+	}
+
+
 	private class TextListener implements KeyListener {
 
 		@Override
@@ -69,6 +86,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private JLabel l_lastPeriodSellingPrice;
 	private JLabel l_maxProducableUnits;
 	
+	private int actualCapacity;
 	private int unitsToProduce;
 	private double priceToSell;
 	private int amountToSell;
@@ -85,6 +103,8 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private JTextArea tf_missingMachines;
 
 	private JTextArea tf_missingEmployee;
+
+	private JComboBox<String> cb_capacities;
 	/**
 	 * 
 	 */
@@ -152,34 +172,50 @@ public class ProductionAndDistributionPanel extends JPanel {
 		
 		c.anchor = GridBagConstraints.NORTHWEST;
 		//Neue Zeile
+		c.gridheight = RessourceType.values().length;
 		this.add(new JLabel("Fehlende Ressourcen : "),c);
 		c.gridx++;
 		
-		c.gridheight = RessourceType.values().length;
+		
 		tf_missingRessources =new JTextArea(getMissingRessources());
-		tf_missingRessources.enableInputMethods(false);
+		tf_missingRessources.setEditable(false);
 		this.add(tf_missingRessources,c);
 		c.gridx=0;
 		c.gridy += c.gridheight;
 		
 		//Neue Zeile
-		this.add(new JLabel("Fehlende Maschinen (Kapazität 200): "),c);
+		c.gridheight = MachineType.values().length;
+		this.add(new JLabel("Fehlende Maschinen"),c);
 		c.gridx++;
 		
-		c.gridheight = MachineType.values().length;
+		
 		tf_missingMachines =new JTextArea(getMissingMachines());
-		tf_missingMachines.enableInputMethods(false);
+		tf_missingMachines.setEditable(false);
 		this.add(tf_missingMachines,c);
+		
+		c.gridx++;
+		cb_capacities = new JComboBox<String>();
+		for(String capa: Machine.capacites){
+			cb_capacities.addItem(capa);
+		}
+		cb_capacities.addItemListener(new CapacityItemListener());
+		this.add(new JLabel("Kapazität: "),c);
+		c.gridx++;
+		this.add(cb_capacities,c);
+		cb_capacities.setEditable(false);
+		actualCapacity = Integer.parseInt((String) cb_capacities.getSelectedItem());
+		
 		c.gridx=0;
 		c.gridy += c.gridheight;
 		
 		//Neue Zeile
+		c.gridheight = MachineType.values().length;
 		this.add(new JLabel("Fehlende Mitarbeiter : "),c);
 		c.gridx++;
 		
-		c.gridheight = MachineType.values().length;
+		
 		tf_missingEmployee =new JTextArea(getMissingEmployee());
-		tf_missingEmployee.enableInputMethods(false);
+		tf_missingEmployee.setEditable(false);
 		this.add(tf_missingEmployee,c);
 		c.gridx=0;
 		c.gridy += c.gridheight;
@@ -250,7 +286,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private String getMissingMachines() {
 		String missMach = "";
 		for(MachineType type : MachineType.values()){
-		missMach += type.name() + ": " + CompanyController.missingMachines(type,200) + "\n";
+		missMach += type.name() + ": " + CompanyController.missingMachines(type,actualCapacity) + "\n";
 		}
 		if(missMach.length() > 0)
 			return missMach.substring(0, missMach.length() - 1);

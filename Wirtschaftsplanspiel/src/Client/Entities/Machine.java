@@ -1,7 +1,7 @@
 package Client.Entities;
 
 public class Machine {
-
+	public static String[] capacites = { "200", "400", "600", "800", "1000"};
 	public Machine(MachineType Type, int Capacity, double Value) { //, int Lifetime) {
 		type = Type;
 		capacity = Capacity;

@@ -216,8 +216,10 @@ public abstract class CompanyController {
 			switch(type){
 				case Produktion:
 					capacity = Employee.PRODUCTIONUNITS;
+					break;
 				case Verwaltung:
 					capacity = Employee.ADMINUNITS;
+					break;
 				}
 				
 			//Anzahl der noch nicht gedeckten Einheiten durch die gegebene Kapazität + 1 
@@ -234,15 +236,6 @@ public abstract class CompanyController {
 				missingUnits = CompanyController.missingUnitsOnMachines().get(type);
 			else
 				return 0;
-			/*switch(type){
-				case Filitiermaschine:
-					capacity = 0;
-				case Verpackungsmaschine:
-					capacity = 0;
-				}*/
-				
-			//Anzahl der noch nicht gedeckten Einheiten durch die gegebene Kapazität + 1 
-			
 				int missMach = (int) ((missingUnits / capacity) + 1);
 
 				return missMach;
