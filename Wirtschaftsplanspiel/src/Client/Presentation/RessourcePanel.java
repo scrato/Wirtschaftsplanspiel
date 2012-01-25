@@ -129,15 +129,10 @@ public class RessourcePanel extends JPanel {
 		}
 		c.gridy = rowy;
 		c.gridx = 0;
-		JButton prev = new JButton("Zurück");
 		JButton buy = new JButton("Kaufen");
 		buy.addActionListener(new buyRessourceListener());
-		JButton next = new JButton("Weiter");
-		this.add(prev,c);
 		c.gridx++;
 		this.add(buy, c);
-		c.gridx++;
-		this.add(next, c);
 		refreshRessources();
 	}
 	

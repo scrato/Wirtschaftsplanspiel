@@ -46,7 +46,6 @@ public class MainWindow extends JFrame{
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
 	
-	
 	boolean isServer = Player.isHost();
 	
 	// Playerliste
