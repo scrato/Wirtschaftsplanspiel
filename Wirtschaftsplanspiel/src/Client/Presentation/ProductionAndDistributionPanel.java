@@ -6,11 +6,22 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+
+import Client.Application.CompanyController;
 import Client.Entities.Company;
+import Client.Entities.Employee;
+import Client.Entities.EmployeeType;
+import Client.Entities.MachineType;
 import Client.Entities.PeriodInfo;
+import Client.Entities.Ressource;
+import Client.Entities.RessourceType;
 
 public class ProductionAndDistributionPanel extends JPanel {
 	private class TextListener implements KeyListener {
@@ -68,6 +79,12 @@ public class ProductionAndDistributionPanel extends JPanel {
 	
 	private int maxProducableUnits;
 	private int maxSellableUnits;
+
+	private JTextArea tf_missingRessources;
+
+	private JTextArea tf_missingMachines;
+
+	private JTextArea tf_missingEmployee;
 	/**
 	 * 
 	 */
@@ -129,13 +146,45 @@ public class ProductionAndDistributionPanel extends JPanel {
 		c.gridy++;
 		
 		
-		
-		
-		
-		
+
 		maxProducableUnits = comp.getProdAndDistr().getMaxProducableUnits();
 		maxSellableUnits = comp.getFinishedProducts();
 		
+		c.anchor = GridBagConstraints.NORTHWEST;
+		//Neue Zeile
+		this.add(new JLabel("Fehlende Ressourcen : "),c);
+		c.gridx++;
+		
+		c.gridheight = RessourceType.values().length;
+		tf_missingRessources =new JTextArea(getMissingRessources());
+		tf_missingRessources.enableInputMethods(false);
+		this.add(tf_missingRessources,c);
+		c.gridx=0;
+		c.gridy += c.gridheight;
+		
+		//Neue Zeile
+		this.add(new JLabel("Fehlende Maschinen (Kapazität 200): "),c);
+		c.gridx++;
+		
+		c.gridheight = MachineType.values().length;
+		tf_missingMachines =new JTextArea(getMissingMachines());
+		tf_missingMachines.enableInputMethods(false);
+		this.add(tf_missingMachines,c);
+		c.gridx=0;
+		c.gridy += c.gridheight;
+		
+		//Neue Zeile
+		this.add(new JLabel("Fehlende Mitarbeiter : "),c);
+		c.gridx++;
+		
+		c.gridheight = MachineType.values().length;
+		tf_missingEmployee =new JTextArea(getMissingEmployee());
+		tf_missingEmployee.enableInputMethods(false);
+		this.add(tf_missingEmployee,c);
+		c.gridx=0;
+		c.gridy += c.gridheight;
+		c.gridheight = 1;
+		c.gridy++;
 
 		
 		c.ipady = 30;
@@ -172,7 +221,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 		c.gridx=0;
 		c.gridy++;
 	
-	
+
 		
 		//Startwerte gleich dem vorher gespeicherten
 		
@@ -181,6 +230,55 @@ public class ProductionAndDistributionPanel extends JPanel {
 		pricesell.setText(String.valueOf(comp.getProdAndDistr().getSellingPrice()));
 		refreshCount();
 	}
+
+
+	private String getMissingEmployee() {
+		String missEmpl = "";
+		for(Iterator<Entry<EmployeeType, Integer>> it = CompanyController.missingEmployees().entrySet().iterator(); it.hasNext();){
+			Entry<EmployeeType, Integer> next = it.next();
+			int capacity = 0;
+			switch(next.getKey()){
+			case Produktion:
+				capacity = Employee.PRODUCTIONUNITS;
+			case Verwaltung:
+				capacity = Employee.ADMINUNITS;
+			}
+			
+			missEmpl += next.getKey().name() + ": " + (int) ((next.getValue() / capacity) + 1) + "\n";
+		}
+		if(missEmpl.length() > 0)
+			return missEmpl.substring(0, missEmpl.length() - 1);
+		else
+			return missEmpl;
+	}
+
+
+	private String getMissingMachines() {
+		String missMach = "";
+		for(Iterator<Entry<MachineType, Integer>> it = CompanyController.missingMachines().entrySet().iterator(); it.hasNext();){
+			Entry<MachineType, Integer> next = it.next();
+			
+			missMach += next.getKey().name() + ": " + (int) ((next.getValue() /  200)+ 1 ) + "\n";
+		}
+		if(missMach.length() > 0)
+			return missMach.substring(0, missMach.length() - 1);
+		else
+			return missMach;
+	}
+
+
+	private String getMissingRessources() {
+		String missRes = "";
+		for(Iterator<Entry<RessourceType, Integer>> it = CompanyController.missingRessources().entrySet().iterator(); it.hasNext();){
+			Entry<RessourceType, Integer> next = it.next();
+			missRes += next.getKey().name() + ": " + next.getValue() + " " + Ressource.getUnit(next.getKey()) + "\n";
+		}
+		if(missRes.length() > 0)
+			return missRes.substring(0, missRes.length() - 1);
+		else
+			return missRes;
+	}
+
 
 	/*public void update(){
 		
@@ -192,11 +290,18 @@ public class ProductionAndDistributionPanel extends JPanel {
 			l_lastPeriodSellingPrice.setText(String.valueOf(PeriodInfo.getActualPeriod().getProductPrice()) + "€");
 		
 		l_finishedProducts.setText(String.valueOf(String.valueOf(comp.getFinishedProducts()) + " Einheiten"));
+		
+		for(Iterator<Entry<RessourceType, Integer>> it = CompanyController.missingRessources().entrySet().iterator(); it.hasNext();){
+			Entry<RessourceType, Integer> next = it.next();
+			missRes += next.getKey().name() + ": " + next.getValue() + " " + Ressource.getUnit(next.getKey()) + "; ";
+		}
+		return missRes;
 	}*/
 	
 	private void refreshCount() {
+		pricesell.setText(cutAndTrim(pricesell.getText()));
 		try{unitsToProduce = Integer.parseInt(amountproduce.getText().trim());}catch(NumberFormatException e){}
-		try{priceToSell = Double.parseDouble(pricesell.getText().trim());}catch(NumberFormatException e){}
+		try{priceToSell = Double.parseDouble(pricesell.getText());}catch(NumberFormatException e){}
 		try{amountToSell = Integer.parseInt(amountsell.getText().trim());}catch(NumberFormatException e){}
 
 		comp.getProdAndDistr().setUnitsToProduce(unitsToProduce);
@@ -214,5 +319,15 @@ public class ProductionAndDistributionPanel extends JPanel {
 			amountproduce.setForeground(Color.BLACK);
 		
 		
+		tf_missingRessources.setText(getMissingRessources());
+		tf_missingMachines.setText(getMissingMachines());
+		tf_missingEmployee.setText(getMissingEmployee());
+		
 	}
+
+	private String cutAndTrim(String text) {
+		return text.replace(',', '.').trim();
+	}
+
+
 }

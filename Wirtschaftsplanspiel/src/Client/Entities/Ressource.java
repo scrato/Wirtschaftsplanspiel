@@ -28,9 +28,9 @@ public class Ressource {
 	public static double getFixedCosts(RessourceType type){
 		switch(type){
 		case Rohfisch:
-			return 295.00;
+			return 2950.00;
 		case Verpackungsmaterial:
-			return 140.00;
+			return 1400.00;
 		default:
 			//Typ wurde noch nicht festeglegt;
 			throw new UnsupportedOperationException();
@@ -41,9 +41,9 @@ public class Ressource {
 	public static int getNeed(RessourceType type){
 		switch(type){
 		case Rohfisch:
-			return 120;
+			return 4;
 		case Verpackungsmaterial:
-			return 30;
+			return 1;
 		default:
 			//Typ wurde noch nicht festeglegt;
 			throw new UnsupportedOperationException();
