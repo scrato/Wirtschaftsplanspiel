@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -29,6 +32,8 @@ public class RessourcePanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 253066089188179500L;
+
+	private List<RessourceBuyAmountListener> buyAmountListener = new LinkedList<RessourceBuyAmountListener>();
 
 	public RessourcePanel(){
 		me = this;
@@ -121,7 +126,9 @@ public class RessourcePanel extends JPanel {
 			c.gridx++;
 			JLabel tcosts = new JLabel();
 			//tBuy sagen, die Kaufsumme direkt zu aktualisieren
-			tBuy.addKeyListener(new RessourceBuyAmountListener(tBuy, tcosts));
+			RessourceBuyAmountListener buyAmountListen = new RessourceBuyAmountListener(tBuy, tcosts);
+			buyAmountListener.add(buyAmountListen);
+			tBuy.addKeyListener(buyAmountListen);
 			this.add(tcosts,c);
 			rowy ++;
 			
@@ -158,12 +165,19 @@ public class RessourcePanel extends JPanel {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
+			//manuelles aufrufen -> Zurücksetzen
+			if(arg0 == null)
+			{
+				tcosts.setText("0€");
+				return;
+			}
 			if (arg0.getKeyCode() == KeyEvent.VK_ENTER){
 				buy();
 				return;
 			}
 			try
 			{			
+				tBuy.setText(tBuy.getText().replaceAll("\\D", ""));
 				int amount = Integer.parseInt(tBuy.getText().trim());
 				if (amount<= 0){
 					tcosts.setText("0€");
@@ -291,8 +305,12 @@ public class RessourcePanel extends JPanel {
 						
 					} finally
 					{
-						refreshRessources();
+						
 						tb.setText("0");
+						//Setze alles auf 0
+						for(Iterator<RessourceBuyAmountListener> it = buyAmountListener.iterator(); it.hasNext();)
+							it.next().keyReleased(null);
+						refreshRessources();
 					}
 			}
 		}
