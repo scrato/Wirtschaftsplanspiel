@@ -56,7 +56,7 @@ public class PeriodInfoTest extends TestCase  {
 		
 		
 		CompanyController.payInterestAndRepayment();
-		CompanyController.payEmployersSalery();
+		CompanyController.paySallery();
 		
 		CompanyController.payRent();
 		CompanyController.produce();
@@ -115,7 +115,6 @@ public class PeriodInfoTest extends TestCase  {
 		
 		
 		CompanyController.payInterestAndRepayment();
-		CompanyController.payEmployersSalery();
 		
 		CompanyController.payRent();
 		try {

@@ -31,7 +31,7 @@ public abstract class PeriodController {
 		client.SendMessage(new SendSupplyMessage(supply));
 	}
 
-	public static void RecieveAssignedDemand(SendAssignedDisposalMessage sendAssignedDemandMessage) {
+	public static void RecieveAssignedDisposal(SendAssignedDisposalMessage sendAssignedDemandMessage) {
 
 		int quantity = sendAssignedDemandMessage.getQuantity();
 		
@@ -42,19 +42,21 @@ public abstract class PeriodController {
 		CompanyController.receiveSalesRevenue(revenue, quantity);
 		
 		try {
-			double wages = CompanyController.payEmployeesSallery();
-			double deprecation = CompanyController.depcrecateMachines();
+			//double wages = CompanyController.payEmployeesSallery();
+			//double deprecation = CompanyController.depcrecateMachines();
+			CompanyController.paySallery();
+			CompanyController.depcrecateMachines();
 			CompanyController.payInterestAndRepayment();
-			CompanyController.payEmployersSalery();
+			//CompanyController.payEmployersSalery(); //integrated in paySallery.
 			CompanyController.payRent();
 			
-			Company comp = Company.getInstance();
-			double produceCostPerProdukt = wages / Math.min(comp.getEmployeeCapacity(EmployeeType.Produktion), comp.getEmployeeCapacity(EmployeeType.Verwaltung)) 
-										 + deprecation /  Math.min(comp.getMachineCapacity(MachineType.Filitiermaschine), comp.getMachineCapacity(MachineType.Verpackungsmaschine)) 
-										 + Ressource.getNeed(RessourceType.Rohfisch) * Ressource.getFixedCosts(RessourceType.Rohfisch) 
-										 + Ressource.getNeed(RessourceType.Verpackungsmaterial) * Ressource.getFixedCosts(RessourceType.Verpackungsmaterial);		
+			//Company comp = Company.getInstance();
+			//double produceCostPerProdukt = wages / Math.min(comp.getEmployeeCapacity(EmployeeType.Produktion), comp.getEmployeeCapacity(EmployeeType.Verwaltung)) 
+			//							 + deprecation /  Math.min(comp.getMachineCapacity(MachineType.Filitiermaschine), comp.getMachineCapacity(MachineType.Verpackungsmaschine)) 
+			//							 + Ressource.getNeed(RessourceType.Rohfisch) * Ressource.getFixedCosts(RessourceType.Rohfisch) 
+			//							 + Ressource.getNeed(RessourceType.Verpackungsmaterial) * Ressource.getFixedCosts(RessourceType.Verpackungsmaterial);		
 			//PeriodInfo.getActualPeriod().setFinishedProductsValue(produceCostForLeftFinishedProducts);
-			comp.setWarehouseCostPerProduct(produceCostPerProdukt);
+			//comp.setWarehouseCostPerProduct(produceCostPerProdukt);
 			CompanyController.payWarehouseCosts();
 			
 			ProfitAndLoss guv = actPeriod.makeGuV();			

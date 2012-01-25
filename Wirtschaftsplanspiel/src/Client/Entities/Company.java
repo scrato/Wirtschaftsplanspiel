@@ -42,8 +42,9 @@ public class Company {
 	
 	private Map<RessourceType, Ressource> ressources;
 	public final double WAREHOUSECOST_PER_STOCKFISCH = 0.1d;
-	public final double WAREHOUSECOST_PER_VERPACKUNG = 0.05d;	;
-	private double warehouseCostPerProduct;
+	public final double WAREHOUSECOST_PER_VERPACKUNG = 0.05d;
+	public final double WAREHOUSECOST_PER_PRODUCT = 0.2d;
+	//private double warehouseCostPerProduct;
 	
 
 	private Company(){
@@ -169,7 +170,7 @@ public class Company {
 		
 		return                  stockfisch * WAREHOUSECOST_PER_STOCKFISCH 
 							  + verpackung * WAREHOUSECOST_PER_VERPACKUNG  
-							  + finishedProducts * warehouseCostPerProduct;
+							  + finishedProducts * WAREHOUSECOST_PER_PRODUCT;
 	}
 	
 	public void incFinishedProducts(int prod){
@@ -229,11 +230,6 @@ public class Company {
 		actCredit = cred;
 		//Logging
 		PeriodInfo.getActualPeriod().addTakenCredit(cred);
-	}
-	
-	//Lagerkosten
-	public void setWarehouseCostPerProduct(double value) {
-		warehouseCostPerProduct = value;
 	}
 
 }

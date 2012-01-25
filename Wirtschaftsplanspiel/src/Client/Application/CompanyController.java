@@ -301,9 +301,10 @@ public abstract class CompanyController {
 		comp.removeEmployee(type);
 	}
 	
-	public static double payEmployeesSallery() throws UserCanNotPayException {
+	public static double paySallery() throws UserCanNotPayException {
 		Company comp = Company.getInstance();
 		double wages = comp.getWages();
+		wages += comp.EMPLOYERSSALLERY;
 		payItem(wages);
 		return wages;
 	}
@@ -337,10 +338,6 @@ public abstract class CompanyController {
 	
 	public static void payRent() throws UserCanNotPayException {
 		payItem(Company.getInstance().FACILITIESRENT);
-	}
-	
-	public static void payEmployersSalery() throws UserCanNotPayException {
-		payItem(Company.getInstance().EMPLOYERSSALLERY);
 	}
 	
 	//end of fixtkostenabschnitt

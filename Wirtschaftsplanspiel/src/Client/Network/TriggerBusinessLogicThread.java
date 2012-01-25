@@ -36,7 +36,7 @@ public class TriggerBusinessLogicThread extends Thread {
 				break;
 			}
 			case MessageType.SEND_ASSIGNED_DEMAND: {
-				PeriodController.RecieveAssignedDemand(new SendAssignedDisposalMessage(message.get_Content()));
+				PeriodController.RecieveAssignedDisposal(new SendAssignedDisposalMessage(message.get_Content()));
 			}
 			case MessageType.BROADCAST_COMPANYRESULT: {
 				PeriodController.RecieveCompanyResult(new BroadcastCompanyResultMessage(message.get_Content()));
