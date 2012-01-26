@@ -237,7 +237,7 @@ public class RessourcePanel extends JPanel {
 				
 					//Label der den Güterpreis darstellt
 					case goodPrice:
-						label.setText(String.valueOf(res.getPricePerUnit()) + "€");
+						label.setText(getPricePointed(res));
 						break;
 						
 					//Label der Ressourcen auf Lager
@@ -268,6 +268,10 @@ public class RessourcePanel extends JPanel {
 				
 		}
 		
+	}
+
+	private String getPricePointed(Ressource res) {
+		return (String.valueOf(res.getPricePerUnit()) + "€");
 	}
 	
 	public void buy() {
