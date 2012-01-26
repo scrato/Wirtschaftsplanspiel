@@ -10,6 +10,7 @@ import Client.Entities.Company;
 import Client.Entities.EmployeeType;
 import Client.Entities.MachineType;
 import Client.Entities.Period;
+import Client.Entities.ProductionAndDistribution;
 import Client.Entities.ProfitAndLoss;
 import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
@@ -23,12 +24,29 @@ import NetworkCommunication.SendSupplyMessage;
 
 public abstract class PeriodController {
 
+	/**
+	 * 
+	 * @param supply
+	 */
 	public static void SendSupply(Supply supply) {
 		Period period = PeriodInfo.getActualPeriod();
 		period.setProductPrice(supply.price);
 		
 		Client client = Client.getInstance();
 		client.SendMessage(new SendSupplyMessage(supply));
+	}
+	
+	/**
+	 * Sendet den Supply an den Server, Supplydaten werden aus der Klasse prodAndDistr gezogen
+	 */
+	public static void SendSupply() {
+		Period period = PeriodInfo.getActualPeriod();
+		ProductionAndDistribution pad = Company.getInstance().getProdAndDistr();
+		period.setProductPrice(pad.getSellingPrice());
+		Supply s = new Supply(pad.getUnitsToSell(), pad.getSellingPrice());
+		
+		Client client = Client.getInstance();
+		client.SendMessage(new SendSupplyMessage(s));
 	}
 
 	public static void RecieveAssignedDisposal(SendAssignedDisposalMessage sendAssignedDemandMessage) {
