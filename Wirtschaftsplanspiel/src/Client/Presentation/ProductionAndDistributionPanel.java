@@ -105,8 +105,8 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private double priceToSell;
 	private int amountToSell;
 	
-	private final double PRICEMIN = 5.00;
-	private final double PRICEMAX = 20.00;
+	private final double PRICEMIN = 80000;
+	private final double PRICEMAX = 90000;
 	
 	private Company comp = Company.getInstance();
 	
@@ -329,7 +329,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 		//Neue Zeile
 		this.add(new JLabel("Fertigprodukte auf Lager: "),c);
 		c.gridx++;
-		l_finishedProducts = new JLabel(String.valueOf(comp.getFinishedProducts()) + " Einheiten");
+		l_finishedProducts = new JLabel(String.valueOf(comp.getFinishedProducts()) + " Paletten");
 		this.add(l_finishedProducts ,c);
 		c.gridx=0;
 		c.gridy++;
@@ -349,7 +349,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 		//Neue Zeile
 		this.add(new JLabel("Aktuell produzierbare Fertigprodukte : "),c);
 		c.gridx++;
-		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Einheiten");
+		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");
 		this.add(l_maxProducableUnits,c);
 		c.gridx=0;
 		c.gridy++;
@@ -375,7 +375,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 	/*public void update(){
 		
-		l_maxProducableUnits.setText(String.valueOf(comp.getProduction().getMaxProducableUnits()) + " Einheiten");
+		l_maxProducableUnits.setText(String.valueOf(comp.getProduction().getMaxProducableUnits()) + " Paletten");
 				
 		if(PeriodInfo.getNumberOfActPeriod() == 0)
 			l_lastPeriodSellingPrice.setText("Bisher keine Produkte verkauft");
