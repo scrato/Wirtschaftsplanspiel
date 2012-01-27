@@ -225,6 +225,9 @@ public class ConnectionView extends JFrame{
 					}
 					
 					Player.setHost(true);
+					if(!Player.isHost()){
+						MainWindow.getInstance().serverMenuInit();
+					}
 					//Client c1 = new Client(this.username.getText(), address, 51515);
 					ClientController.ConnectToServer(this.username.getText(), address, 51515);	
 					
