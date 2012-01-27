@@ -255,6 +255,7 @@ public class MainWindow extends JFrame{
 	
 	public void startGame(){
 		west.setVisible(true);
+		JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
 	}
 	
 	public void setPlayers(List<Player> players){
@@ -512,7 +513,6 @@ public class MainWindow extends JFrame{
 		public void actionPerformed(ActionEvent arg0) {
 			ServerController.StartGame();
 			JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
-			// TODO remove startGame(), debug ServerController.StartGame()
 		}
 		
 	}
