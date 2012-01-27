@@ -48,7 +48,7 @@ public class MainWindow extends JFrame{
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
 	
-	boolean isServer = Player.isHost();
+	boolean isServer;// = Player.isHost();
 	
 	// Playerliste
 	DefaultListModel listModel = new DefaultListModel();
@@ -462,7 +462,7 @@ public class MainWindow extends JFrame{
 			try {
 				Client.getInstance().close();
 			} catch (Exception exc) { }
-			
+			isServer = Player.isHost();
  			if(isServer){
  				try {
  					Server.Network.Server.getInstance().close();
@@ -508,7 +508,6 @@ public class MainWindow extends JFrame{
 			ServerController.StartGame();
 			JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
 			// TODO remove startGame(), debug ServerController.StartGame()
-			startGame();
 		}
 		
 	}
