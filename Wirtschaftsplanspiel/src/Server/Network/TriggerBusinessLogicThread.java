@@ -25,9 +25,11 @@ public class TriggerBusinessLogicThread extends Thread {
 			}
 			case MessageType.SEND_SUPPLY : {
 				ServerController.receiveSupply(sender, new SendSupplyMessage(message.get_Content()));
+				break;
 			}
 			case MessageType.SEND_COMPANYRESULT:{
 				ServerController.collectResults(sender, new SendCompanyResultMessage(message.get_Content()));
+				break;
 			}
 		}
 	}
