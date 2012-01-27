@@ -9,6 +9,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.DecimalFormat;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -436,12 +438,16 @@ public class ProductionAndDistributionPanel extends JPanel {
 	}
 
 	private String cutAndValidate(String text) {
-		return text.replaceAll("\\D", "");
+		DecimalFormat format = new DecimalFormat();
+		text = text.replaceAll("\\D", "");
+		return format.format(Integer.valueOf(text));
 	}
 
 
 	private String cutAndTrim(String text) {
-		return text.replace(',', '.').trim();
+		DecimalFormat format = new DecimalFormat();
+		text = text.replaceAll("\\D", "");
+		return format.format(Double.valueOf(text));
 	}
 
 
