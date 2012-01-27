@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import Client.Entities.Company;
 import Client.Entities.Credit;
@@ -12,7 +13,7 @@ import Client.Entities.Machine;
 import Client.Entities.MachineType;
 import Client.Entities.Period;
 import Client.Entities.PeriodInfo;
-import Client.Entities.Production;
+import Client.Entities.ProductionAndDistribution;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
 import Client.Entities.Employee;
@@ -121,46 +122,50 @@ public abstract class CompanyController {
 	    * Prüft, ob die mitgegebene Menge an Einheiten produziert werden kann.
 	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.
 	    */
-	   public static boolean canProduce(int units){
+	   public static boolean canProduce(){
 		   //Company comp = Company.getInstance();
 		   //Production prod = comp.getProduction();
 		   boolean canProduce = true;
 		   
 		   //Ressourcen prüfen
-		   if(!(missingRessources(units).isEmpty()))
+		   if(!(missingUnitsOnRessources().isEmpty()))
 			   canProduce = false;
 		   	
 		   
 		   //Maschinen prüfen
-		   if(!(missingMachines(units).isEmpty()))
+		   if(!(missingUnitsOnMachines().isEmpty()))
 				canProduce = false;
 		   	
 		   	//Personal prüfen
-		   if(!(missingEmployees(units).isEmpty()))
+		   if(!(missingUnitsOnEmployees().isEmpty()))
 				canProduce = false;		   
 		   
 		   return canProduce;
 	   }
 	   
-		public static Map<RessourceType, Integer> missingRessources(int units) 
-		{
-				Company comp = Company.getInstance();
-			   Map<RessourceType, Ressource> ressources = comp.getAllRessources();
-			   Map<RessourceType, Integer> missingUnitPerRessource = new HashMap<RessourceType,Integer>();
-			   
-			   for(Iterator<Ressource> it = ressources.values().iterator(); it.hasNext();){
-				   Ressource res = it.next();
-					//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Rohstoffe fehlen.
-				   int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getStoredUnits();
-				   if (missingunits > 0)
-					   missingUnitPerRessource.put(res.getType(), missingunits);
-			   }
-			   return missingUnitPerRessource;
+		public static Map<RessourceType, Integer> missingUnitsOnRessources() 
+		{			
+			Company comp = Company.getInstance();			
+			int units = comp.getProdAndDistr().getUnitsToProduce();
+			
+			Map<RessourceType, Ressource> ressources = comp.getAllRessources();
+			Map<RessourceType, Integer> missingUnitPerRessource = new HashMap<RessourceType,Integer>();
+		   
+			for(Iterator<Ressource> it = ressources.values().iterator(); it.hasNext();){
+				Ressource res = it.next();
+				//MissingUnits sind die Einheiten, die nicht produziert werden können, weil Rohstoffe fehlen.
+				int missingunits = (Ressource.getNeed(res.getType())* units)  - res.getStoredUnits();
+				if (missingunits > 0)
+				   missingUnitPerRessource.put(res.getType(), missingunits);
+			}
+			return missingUnitPerRessource;
 		}
 	   
-		public static Map<MachineType, Integer> missingMachines(int units) 
+		public static Map<MachineType, Integer> missingUnitsOnMachines() 
 		{
-			Company comp = Company.getInstance();
+			Company comp = Company.getInstance();			
+			int units = comp.getProdAndDistr().getUnitsToProduce();
+			
 			Map<MachineType, Integer> missingUnitPerMachine = new HashMap<MachineType, Integer>();
 		   	for(MachineType type: MachineType.values()){
 		   		
@@ -172,9 +177,11 @@ public abstract class CompanyController {
 		   	return missingUnitPerMachine;	
 		}
 	 
-		public static Map<EmployeeType, Integer> missingEmployees(int units) 
+		public static Map<EmployeeType, Integer> missingUnitsOnEmployees() 
 		{
-			Company comp = Company.getInstance();
+			Company comp = Company.getInstance();			
+			int units = comp.getProdAndDistr().getUnitsToProduce();
+			
 			Map<EmployeeType, Integer> missingEmployees = new HashMap<EmployeeType, Integer>();
 		   	for(EmployeeType type: EmployeeType.values()){
 		   		
@@ -186,44 +193,95 @@ public abstract class CompanyController {
 		   	return missingEmployees;
 		}
 		
+		public static int missingRessources(RessourceType type){
+			int missingUnits = 0;
+			Map<RessourceType, Integer> misUn = CompanyController.missingUnitsOnRessources();
+			if(misUn.containsKey(type))
+				missingUnits = CompanyController.missingUnitsOnRessources().get(type);
+			else
+				return 0;
+
+				return missingUnits;
+		}
+		
+		public static int missingEmployees(EmployeeType type){
+			
+			int capacity = 0;
+			int missingUnits = 0;
+			Map<EmployeeType, Integer> misUn = CompanyController.missingUnitsOnEmployees();
+			if(misUn.containsKey(type))
+				missingUnits = CompanyController.missingUnitsOnEmployees().get(type);
+			else
+				return 0;
+			switch(type){
+				case Produktion:
+					capacity = Employee.PRODUCTIONUNITS;
+					break;
+				case Verwaltung:
+					capacity = Employee.ADMINUNITS;
+					break;
+				}
+				
+			//Anzahl der noch nicht gedeckten Einheiten durch die gegebene Kapazität + 1 
+			
+				int missEmpl = (int) ((missingUnits / capacity) + 1);
+
+				return missEmpl;
+		}
 	   
-	   /**
-	    * Produziert die mitgegebene Anzahl an Fertigprodukten
-	    * @param units Die Anzahl der Fertigprodukte, die produziert werden soll.	    
+		public static int missingMachines(MachineType type, int capacity){
+			int missingUnits = 0;
+			Map<MachineType, Integer> misUn = CompanyController.missingUnitsOnMachines();
+			if(misUn.containsKey(type))
+				missingUnits = CompanyController.missingUnitsOnMachines().get(type);
+			else
+				return 0;
+			if (missingUnits == 0)
+				return 0;
+				int missMach = (int) ((missingUnits / capacity) + 1);
+
+				return missMach;
+		}
+		
+		
+		/**
+	    * Produziert die in Company.Production festgelegte Anzahl an Fertigprodukten	    
 	    * @throws CannotProduceException - Wenn nicht produziert werden kan, 
 	    * weil Maschinen/Employees/Ressources fehlen, wird diese Exception geworfen.
 	    */
-	   public static void produce(int units) throws CannotProduceException
+	   public static void produce() throws CannotProduceException
 	   {
-			if(!(canProduce(units)))
+		   Company comp = Company.getInstance();
+		   int units = comp.getProdAndDistr().getUnitsToProduce();
+		   
+			if(!(canProduce()))
 				throw new CannotProduceException();
-			Company comp = Company.getInstance();
-			//Production prod = comp.getProduction();
+			
 			for(RessourceType t: RessourceType.values()) {
 				comp.getRessource(t).decStoredUnits(units*Ressource.getNeed(t));
 			}
 			comp.incFinishedProducts(units);
 		}
 	
-	   /**
-	    * Produziert die maximale Menge an Fertigprodukten, sucht sich selbst wieviele Fertigprodukte er produzieren kannst
-	    * @param pricePerUnit
-	    */
-	   public static void produce() 
-	   {
-		   
-		   Company comp = Company.getInstance();
-		   Production prod = comp.getProduction();
-		   int units = prod.getMaxProducableUnits();
-		   try
-		   {
-		   produce(units);
-		   }
-		   catch (ApplicationException ex)
-		   {
-			   throw new UnsupportedOperationException("In der getMaxProducableUnits ist was falsch.");
-		   }
-	   }
+//	   /**
+//	    * Produziert die maximale Menge an Fertigprodukten, sucht sich selbst wieviele Fertigprodukte er produzieren kannst
+//	    * @param pricePerUnit
+//	    */
+//	   public static void produce() 
+//	   {
+//		   
+//		   Company comp = Company.getInstance();
+//		   Production prod = comp.getProduction();
+//		   int units = prod.getMaxProducableUnits();
+//		   try
+//		   {
+//		   produce(units);
+//		   }
+//		   catch (ApplicationException ex)
+//		   {
+//			   throw new UnsupportedOperationException("In der getMaxProducableUnits ist was falsch.");
+//		   }
+//	   }
 	 
 	   
 	   
@@ -243,9 +301,10 @@ public abstract class CompanyController {
 		comp.removeEmployee(type);
 	}
 	
-	public static double payEmployeesSallery() throws UserCanNotPayException {
+	public static double paySallery() throws UserCanNotPayException {
 		Company comp = Company.getInstance();
 		double wages = comp.getWages();
+		wages += comp.EMPLOYERSSALLERY;
 		payItem(wages);
 		return wages;
 	}
@@ -281,10 +340,6 @@ public abstract class CompanyController {
 		payItem(Company.getInstance().FACILITIESRENT);
 	}
 	
-	public static void payEmployersSalery() throws UserCanNotPayException {
-		payItem(Company.getInstance().EMPLOYERSSALLERY);
-	}
-	
 	//end of fixtkostenabschnitt
 	//------------------------------------------------------
 	
@@ -297,12 +352,6 @@ public abstract class CompanyController {
 		Period period = PeriodInfo.getActualPeriod();
 		period.setRevenue(Revenue);
 		
-		//TODO EarnedMoney ?? meinst du revenue @ michael?
-		//TODO Bestandsveränderung bei Fertigprodukten
-		//TODO Lageraufwand für Fertigprodukte.
-		
-		
-		//period.inc
 	}
 	
 	//Lagekosten

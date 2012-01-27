@@ -1,7 +1,7 @@
 package Client.Entities;
 
 public class Machine {
-
+	public static String[] capacites = { "200", "400", "600", "800", "1000"};
 	public Machine(MachineType Type, int Capacity, double Value) { //, int Lifetime) {
 		type = Type;
 		capacity = Capacity;
@@ -60,6 +60,10 @@ public class Machine {
 	
 	public double getSellingValue() {
 		return value / 2;
+	}
+	
+	public double getLossDueSelling() {
+		return value - getSellingValue(); 
 	}
 	
 }

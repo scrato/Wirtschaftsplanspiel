@@ -10,6 +10,7 @@ import Client.Entities.Company;
 import Client.Entities.EmployeeType;
 import Client.Entities.MachineType;
 import Client.Entities.Period;
+import Client.Entities.ProductionAndDistribution;
 import Client.Entities.ProfitAndLoss;
 import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
@@ -23,6 +24,10 @@ import NetworkCommunication.SendSupplyMessage;
 
 public abstract class PeriodController {
 
+	/**
+	 * 
+	 * @param supply
+	 */
 	public static void SendSupply(Supply supply) {
 		Period period = PeriodInfo.getActualPeriod();
 		period.setProductPrice(supply.price);
@@ -30,9 +35,22 @@ public abstract class PeriodController {
 		Client client = Client.getInstance();
 		client.SendMessage(new SendSupplyMessage(supply));
 	}
+	
+	/**
+	 * Sendet den Supply an den Server, Supplydaten werden aus der Klasse prodAndDistr gezogen
+	 */
+	public static void SendSupply() {
+		Period period = PeriodInfo.getActualPeriod();
+		ProductionAndDistribution pad = Company.getInstance().getProdAndDistr();
+		period.setProductPrice(pad.getSellingPrice());
+		Supply s = new Supply(pad.getUnitsToSell(), pad.getSellingPrice());
+		
+		Client client = Client.getInstance();
+		client.SendMessage(new SendSupplyMessage(s));
+	}
 
-	public static void RecieveAssignedDemand(SendAssignedDisposalMessage sendAssignedDemandMessage) {
-		//TODO Erfolgsermittlung und übertrageung des erfolgs zum Server. Dannach ErgebnisScreen (Bilanz, ProfitAndLoss) aufbauen und anzeigen.
+	public static void RecieveAssignedDisposal(SendAssignedDisposalMessage sendAssignedDemandMessage) {
+
 		int quantity = sendAssignedDemandMessage.getQuantity();
 		
 		Period actPeriod = PeriodInfo.getActualPeriod();
@@ -42,25 +60,26 @@ public abstract class PeriodController {
 		CompanyController.receiveSalesRevenue(revenue, quantity);
 		
 		try {
-			double wages = CompanyController.payEmployeesSallery();
-			double deprecation = CompanyController.depcrecateMachines();
+			//double wages = CompanyController.payEmployeesSallery();
+			//double deprecation = CompanyController.depcrecateMachines();
+			CompanyController.paySallery();
+			CompanyController.depcrecateMachines();
 			CompanyController.payInterestAndRepayment();
-			CompanyController.payEmployersSalery();
+			//CompanyController.payEmployersSalery(); //integrated in paySallery.
 			CompanyController.payRent();
 			
-			Company comp = Company.getInstance();
-			double produceCostPerProdukt = wages / Math.min(comp.getEmployeeCapacity(EmployeeType.Produktion), comp.getEmployeeCapacity(EmployeeType.Verwaltung)) 
-										 + deprecation /  Math.min(comp.getMachineCapacity(MachineType.Filitiermaschine), comp.getMachineCapacity(MachineType.Verpackungsmaschine)) 
-										 + Ressource.getNeed(RessourceType.Rohfisch) * Ressource.getFixedCosts(RessourceType.Rohfisch) 
-										 + Ressource.getNeed(RessourceType.Verpackungsmaterial) * Ressource.getFixedCosts(RessourceType.Verpackungsmaterial);		
+			//Company comp = Company.getInstance();
+			//double produceCostPerProdukt = wages / Math.min(comp.getEmployeeCapacity(EmployeeType.Produktion), comp.getEmployeeCapacity(EmployeeType.Verwaltung)) 
+			//							 + deprecation /  Math.min(comp.getMachineCapacity(MachineType.Filitiermaschine), comp.getMachineCapacity(MachineType.Verpackungsmaschine)) 
+			//							 + Ressource.getNeed(RessourceType.Rohfisch) * Ressource.getFixedCosts(RessourceType.Rohfisch) 
+			//							 + Ressource.getNeed(RessourceType.Verpackungsmaterial) * Ressource.getFixedCosts(RessourceType.Verpackungsmaterial);		
 			//PeriodInfo.getActualPeriod().setFinishedProductsValue(produceCostForLeftFinishedProducts);
-			comp.setWarehouseCostPerProduct(produceCostPerProdukt);
+			//comp.setWarehouseCostPerProduct(produceCostPerProdukt);
 			CompanyController.payWarehouseCosts();
 			
 			ProfitAndLoss guv = actPeriod.makeGuV();			
 			SendCompanyResultMessage message = new SendCompanyResultMessage(guv.profit);
 			Client.getInstance().SendMessage(message);
-			//TODO Gewinn an Server senden.
 			
 		} catch (UserCanNotPayException e) {
 			// TODO reagieren auf zahlungsunfähigkeit.

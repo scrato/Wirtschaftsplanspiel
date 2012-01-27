@@ -1,6 +1,5 @@
 package tests;
 
-import Client.Application.CompanyController;
 import Client.Entities.Company;
 import Client.Entities.Ressource;
 import Client.Entities.RessourceType;
@@ -12,10 +11,12 @@ public class LayoutTest {
 		//CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 2.50);
 		//Company.getInstance().incMoney(9000);
 		Ressource sf = Company.getInstance().getRessource(RessourceType.Rohfisch);
-		sf.incStoredUnits(400);
+		sf.incStoredUnits(4);
 
 		Ressource vm = Company.getInstance().getRessource(RessourceType.Verpackungsmaterial);
-		vm.incStoredUnits(70);
+		vm.incStoredUnits(7);
+		
+		Company.getInstance().incFinishedProducts(7000);
 		
 		 MainWindow m = new MainWindow();
 		 m.setVisible(true);

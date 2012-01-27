@@ -2,8 +2,11 @@ package Client.Entities;
 
 import Client.Entities.RessourceType;
 
-public class Production {
+public class ProductionAndDistribution {
 	
+	int unitsToProduce;
+	double sellingPrice;
+	int unitsToSell;
 	/**
 	 * Gibt die Menge an Fertigprodukten zurück, die maximal produziert werden kann
 	 * @return Menge an Fertigprodukten, die maximal produziert werden kann 
@@ -30,6 +33,32 @@ public class Production {
 		}
 		
 		//TODO: Wieviel können mit dem Person produziert werden
+		for(EmployeeType type : EmployeeType.values()){
+			int unitsWhichCanBeProduced = comp.getEmployeeCapacity(type);
+			if (units > unitsWhichCanBeProduced)
+				units = unitsWhichCanBeProduced;
+		}
+		
 		return units;
+	}
+	public int getUnitsToProduce() {
+		return unitsToProduce;
+	}
+
+
+	public void setUnitsToProduce(int unitsToProduce) {
+		this.unitsToProduce = unitsToProduce;
+	}
+	public double getSellingPrice() {
+		return sellingPrice;
+	}
+	public void setSellingPrice(double sellingPrice) {
+		this.sellingPrice = sellingPrice;
+	}
+	public int getUnitsToSell() {
+		return unitsToSell;
+	}
+	public void setUnitsToSell(int unitsToSell) {
+		this.unitsToSell = unitsToSell;
 	}
 }

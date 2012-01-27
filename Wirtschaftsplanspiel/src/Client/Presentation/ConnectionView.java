@@ -224,12 +224,16 @@ public class ConnectionView extends JFrame{
 						e.printStackTrace();
 					}
 					
+					Player.setHost(true);
+					if(Player.isHost()){
+						MainWindow.getInstance().serverMenuInit();
+					}
 					//Client c1 = new Client(this.username.getText(), address, 51515);
 					ClientController.ConnectToServer(this.username.getText(), address, 51515);	
 					
 					connectionView.setVisible(false);
 					MainWindow.getInstance().setVisible(true);
-					Player.setHost(true);
+					
 					
 				}else{
 					JOptionPane.showMessageDialog(new JFrame(),"Rundenzahl überprüfen.");

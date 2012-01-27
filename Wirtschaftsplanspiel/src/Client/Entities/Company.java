@@ -15,7 +15,7 @@ import Client.Entities.RessourceType;
 public class Company {
 	private static Company company;
 	//Produktion
-	private static Production prod;
+	private static ProductionAndDistribution prod;
 	
 	public static Company getInstance(){
 		if (company != null)
@@ -25,9 +25,9 @@ public class Company {
 		return company;
 	}
 	private static void initFirst() {
-		Company.getInstance().incMoney(900000.00);
-		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 6.00);
-		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 25.00);
+		Company.getInstance().incMoney(10000000.00);
+		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 2.00);
+		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 5.00);
 	}
 	private Credit actCredit;
 	private List<Employee> employee = new LinkedList<Employee>();
@@ -42,8 +42,9 @@ public class Company {
 	
 	private Map<RessourceType, Ressource> ressources;
 	public final double WAREHOUSECOST_PER_STOCKFISCH = 0.1d;
-	public final double WAREHOUSECOST_PER_VERPACKUNG = 0.05d;	;
-	private double warehouseCostPerProduct;
+	public final double WAREHOUSECOST_PER_VERPACKUNG = 0.05d;
+	public final double WAREHOUSECOST_PER_PRODUCT = 0.2d;
+	//private double warehouseCostPerProduct;
 	
 
 	private Company(){
@@ -140,11 +141,11 @@ public class Company {
 		return this.money;
 	}
 	
-	public Production getProduction(){
+	public ProductionAndDistribution getProdAndDistr(){
 		if (prod != null)
 			return prod;
 		
-		prod = new Production();
+		prod = new ProductionAndDistribution();
 		return prod;
 	}
 	
@@ -169,7 +170,7 @@ public class Company {
 		
 		return                  stockfisch * WAREHOUSECOST_PER_STOCKFISCH 
 							  + verpackung * WAREHOUSECOST_PER_VERPACKUNG  
-							  + finishedProducts * warehouseCostPerProduct;
+							  + finishedProducts * WAREHOUSECOST_PER_PRODUCT;
 	}
 	
 	public void incFinishedProducts(int prod){
@@ -229,11 +230,6 @@ public class Company {
 		actCredit = cred;
 		//Logging
 		PeriodInfo.getActualPeriod().addTakenCredit(cred);
-	}
-	
-	//Lagerkosten
-	public void setWarehouseCostPerProduct(double value) {
-		warehouseCostPerProduct = value;
 	}
 
 }

@@ -15,5 +15,9 @@ public class Balance {
 		equity = machineValue + ressourceValue + bank + finishedProductsValue - credit;
 
 	}
+	
+	public double getTAccountSum() {
+		return machineValue + ressourceValue + bank + finishedProductsValue;
+	}
 
 }

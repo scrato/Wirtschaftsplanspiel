@@ -10,28 +10,21 @@ import java.awt.event.WindowListener;
 import java.util.Iterator;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+
+import Server.Application.ServerController;
 import Client.Application.ChatController;
-import Client.Application.CompanyController;
-import Client.Application.NotEnoughRessourcesException;
-import Client.Application.UserCanNotPayException;
-import Client.Entities.Balance;
 import Client.Entities.Company;
-import Client.Entities.ProfitAndLoss;
 import Client.Entities.Machine;
 import Client.Entities.Player;
 import Client.Entities.MachineType;
-import Client.Entities.Ressource;
-import Client.Entities.RessourceType;
 import Client.Network.Client;
 import java.util.List;
+import Client.Application.CompanyController;
+import Client.Application.PeriodController;
 
 public class MainWindow extends JFrame{
 	
-
-
 	private static final long serialVersionUID = 1L;
 
 	JFrame mainWindow = this;
@@ -43,19 +36,19 @@ public class MainWindow extends JFrame{
 	JPanel south = new JPanel();
 	JPanel center = new JPanel();
 	
+	
 	// Panel für diverse Screens
 	JPanel Pwerkstoffe = new RessourcePanel();
-	JPanel Pmaschinen = new JPanel();
+	JPanel Pmaschinen = new MachinePanel();
 	JPanel Ppersonal = new EmployeePanel();
 	JPanel Pdarlehen = new JPanel();
-	JPanel Pbericht = new ReportingPanel(new Balance(), new ProfitAndLoss()); //TODO balance, guv 
+	JPanel Pbericht = new ReportingPanel();
 	JPanel Ppreiskal = new ProductionAndDistributionPanel();
 	
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
 	
-	
-	boolean isServer = Player.isHost();
+	boolean isServer;// = Player.isHost();
 	
 	// Playerliste
 	DefaultListModel listModel = new DefaultListModel();
@@ -64,36 +57,27 @@ public class MainWindow extends JFrame{
 	JTextArea chatOutput = new JTextArea(19,25);
 	
 	Company company;
-	
-	// MachineScreen
-	String[] machineColumnNames = {"Typ", "Kapazität", "Anschaffungswert", "Restlaufzeit", "Restwert"};
-	DefaultTableModel machineTabModel = new DefaultTableModel();
-	JTable machineTable = new JTable();
-	Object[][] machineData = null;
-	JScrollPane machineScrollPane;
+	JTextArea infoPanel = new JTextArea();
+
+	private JMenuBar menuBar;
+
 	
 	// Singletonreferenz 
 	static MainWindow instance;
 	
 	public MainWindow(){
+		
 		super("Business Basics");
 		instance = this;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.addWindowListener(new specialWindowListener());
 		initBasis();
-		buildScreens();
-		buildNorth();
 		buildEast();
 		buildWest();
-		buildSouth();
-		//waitForOtherPlayers();
-		
+		waitForOtherPlayers();
 
 	}
 	
-	
-	
-
 	public static MainWindow getInstance(){
 		if(instance != null){
 			return instance;
@@ -105,28 +89,31 @@ public class MainWindow extends JFrame{
 
 	public void initBasis(){
 		// Menü
-		JMenuBar menuBar = new JMenuBar();
+		 menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu( "Datei" );
+
 		
 		// Menü-Items
 		JMenuItem MenuButtonBeenden = new JMenuItem("Beenden");
 		JMenuItem MenuButtonInfo = new JMenuItem("Info");
+
 		MenuButtonBeenden.addActionListener(new closeWindow());
 		MenuButtonInfo.addActionListener(new showInfo());
+
 		
 		menuBar.add( fileMenu );
 		this.setJMenuBar( menuBar );
 		fileMenu.add( MenuButtonBeenden );
 		fileMenu.add( MenuButtonInfo );
+		
+
 			
 		// Layout
 		this.setLayout(new BorderLayout() );
 		this.setSize(1200,768);
 		this.setMinimumSize(new Dimension(800,680));
-		//this.add(north, BorderLayout.NORTH);
 		this.add(east, BorderLayout.EAST);
 		this.add(west, BorderLayout.WEST);
-		//this.add(south, BorderLayout.SOUTH);
 		this.add(center, BorderLayout.CENTER);
 		lastUsed = center;
 		
@@ -136,6 +123,7 @@ public class MainWindow extends JFrame{
 		JLabel welcome = new JLabel("Herzlich willkommen bei Business Basics!");
 		JLabel LabelActivePlayers = new JLabel("Zur Zeit sind folgende Spieler verbunden:");
 		welcome.setFont(new Font("Dialog", 0, 20));
+		updateInfoPanel();
 		
 		
 		c.gridx = 0;
@@ -159,64 +147,16 @@ public class MainWindow extends JFrame{
 		center.add(ListPlayers,c);
 	}
 	
-	public void buildScreens(){
-		
-		GridBagConstraints c = new GridBagConstraints();
-		// Maschinen
-		Company company = Company.getInstance();
-		company.addMachine(new Machine(MachineType.Filitiermaschine, 100, 2000.0));
-		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 240, 3000.0));
-		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 270, 8000.0));
-		company.addMachine(new Machine(MachineType.Verpackungsmaschine, 340, 2000.0));
-		
-		
-		JButton verkaufen = new JButton("verkaufen");
-		
-		refreshMachineTable();
-		
-		//machineTabModel = new DefaultTableModel(machineData, machineColumnNames);
-		//machineTable = new JTable(machineTabModel);
-		//JScrollPane scrollPane = new JScrollPane(machineTable);
-		
-
-		
-		// Listener
-		verkaufen.addActionListener(new MachineVerkaufen());	
-		
-		Pmaschinen.setLayout(new GridBagLayout());
-		c.gridx = 0;
-		c.gridy = 0;
-		Pmaschinen.add(new JLabel("Maschinen einkaufen und verkaufen"), c);
-		
-		c.gridx = 0;
-		c.gridy = 1;
-		Pmaschinen.add(machineScrollPane,c);
-		
-		c.gridx = 0;
-		c.gridy = 2;
-		Pmaschinen.add(verkaufen, c);
-		
-		//Pmaschinen.add(new JButton("Einkaufen"));
-		//Pmaschinen.add(new JButton("Verkaufen"));
-		
-				
-		// Darlehen
-		Pdarlehen.add(new JLabel("Darlehen aufnehmen und tilgen."));
-		
-		// Bericht
-		//Pbericht.add(new JLabel("Berich einsehen."));
-		
-		
-	}
-	
-	public void buildNorth(){
-		
-	}
-	
+ void serverMenuInit(){
+		JMenu serverMenu = new JMenu("Server");
+		JMenuItem MenuButtonSpielStarten = new JMenuItem("Spiel starten");
+		MenuButtonSpielStarten.addActionListener(new startGame());
+	    serverMenu.add(MenuButtonSpielStarten);
+		menuBar.add(serverMenu);
+ }
 	public void buildEast(){
 		
 		east.setBackground(Color.LIGHT_GRAY);
-		//east.setBorder(BorderFactory.createLineBorder(Color.black));
 		east.setPreferredSize(new Dimension(300, (int)east.getSize().getHeight()));
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
@@ -224,15 +164,13 @@ public class MainWindow extends JFrame{
 		
 		// UI-Elemente
 		JLabel imgBusinessBa = new JLabel(new ImageIcon(this.getClass().getResource("logo.png")));
-		JTextArea uebersicht = new JTextArea();
 		JTextField chatInput = new JTextField();
 		JPanel sendbar = new JPanel();
 		JButton Jsend = new JButton("Send");
 		JLabel chatLabel = new JLabel("Chat");
 		JScrollPane scrollPane = new JScrollPane(chatOutput);
 							
-		uebersicht.setText("Bank: " + Company.getInstance().getMoney() + " \nForderungen \nVerbindlichkeiten \nGebäude");
-						
+								
 		
 		// Chat
 		chatInput.setPreferredSize(new Dimension(210, 30));
@@ -250,11 +188,11 @@ public class MainWindow extends JFrame{
 		Jsend.addActionListener(new sendChatMessage(chatInput));
 						
 		// Übersicht Layout
-		uebersicht.setSize(200,200);
-		uebersicht.setBackground(Color.LIGHT_GRAY);
+		infoPanel.setSize(200,200);
+		infoPanel.setBackground(Color.LIGHT_GRAY);
 		
-		uebersicht.validate();
-		uebersicht.repaint();
+		infoPanel.validate();
+		infoPanel.repaint();
 						
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -272,7 +210,11 @@ public class MainWindow extends JFrame{
 		c.gridx = 0;
 		c.gridy = 2;
 		c.insets = new Insets(10,10,0,5);  //top padding
-		east.add(uebersicht,c); 
+		east.add(infoPanel,c); 
+	}
+	
+	public void updateInfoPanel(){
+		infoPanel.setText("Bank: " + Company.getInstance().getMoney() + " \nForderungen \nVerbindlichkeiten \nGebäude");
 	}
 	
 	public void buildWest(){
@@ -283,7 +225,8 @@ public class MainWindow extends JFrame{
 		JButton personal = new JButton("Personalverwaltung");
 		JButton darlehen = new JButton("Darlehen");
 		JButton bericht = new JButton("Berichtserstattung");
-		JButton preiskal = new JButton("Preiskalkulation");
+		JButton preiskal = new JButton("Produktionsplanung");
+		JButton periode = new JButton("Periode abschließen");
 					
 		// Action Listener
 		werkstoffe.addActionListener(new showWerkstoffe(this));
@@ -292,72 +235,27 @@ public class MainWindow extends JFrame{
 		darlehen.addActionListener(new showDarlehen(this));
 		bericht.addActionListener(new showBericht(this));
 		preiskal.addActionListener(new showPreiskal(this));
-									
+		periode.addActionListener(new periodeAbschliessen());
+		
 		west.add(lMenue);
+		west.add(preiskal);
 		west.add(werkstoffe);
 		west.add(maschinen);
 		west.add(personal);
 		west.add(darlehen);
 		west.add(bericht);
-		west.add(preiskal);	
-	}
-	
-	public void buildSouth(){
-		
-	}
-	
-	public void refreshMachineTable(){
-		System.out.println("Machine Table aktualisiert!");
-		
-		company = Company.getInstance();
-		machineData =  new String[company.getMachines().size()][5];
+		west.add(new JSeparator());
+		west.add(periode);
 			
-		Iterator<Machine> machineItr = company.getMachines().iterator();
-		Machine machine;
-
-		int i = 0;
-		while(machineItr.hasNext()){
-			 machine = machineItr.next();
-			 machineData[i][0] = machine.getType().toString();
-			 machineData[i][1] = ""+ machine.getCapacity();
-			 machineData[i][2] = machine.getInitialValue() + "";
-			 machineData[i][3] = machine.getRemaininTime()+ "";
-			 machineData[i][4] = machine.getValue() + "";
-			 i++;
-			 System.out.println(i + "Maschinen");
-		}
-		
-		
-		machineTabModel = new DefaultTableModel(machineData, machineColumnNames);
-
-		machineTable = new JTable(machineTabModel);
-		machineTable.setModel(machineTabModel);
-		
-		machineTabModel.fireTableDataChanged();
-		machineTabModel.fireTableStructureChanged();
-		machineScrollPane = new JScrollPane(machineTable);
-		
-
-		
-		//machineTable.tableChanged(new TableModelEvent(machineTable.getModel()));
-		
-
-		machineScrollPane.invalidate();
-		machineScrollPane.validate();
-		machineScrollPane.repaint();
-
-		mainWindow.invalidate();
-		mainWindow.validate();
-		mainWindow.repaint();
-
 	}
-	
+		
 	private void waitForOtherPlayers(){
 		west.setVisible(false);
 	}
 	
 	public void startGame(){
 		west.setVisible(true);
+		JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
 	}
 	
 	public void setPlayers(List<Player> players){
@@ -401,6 +299,7 @@ public class MainWindow extends JFrame{
 			this.frame = frame;
 		}
 		public void actionPerformed(ActionEvent arg0) {
+			Pwerkstoffe = new RessourcePanel();
 			frame.add(Pwerkstoffe, BorderLayout.CENTER);
 			frame.remove(lastUsed);
 			frame.repaint();
@@ -436,6 +335,7 @@ public class MainWindow extends JFrame{
 			this.frame = frame;
 		}
 		public void actionPerformed(ActionEvent arg0) {
+			Ppersonal = new EmployeePanel();
 			frame.add(Ppersonal, BorderLayout.CENTER);
 			frame.remove(lastUsed);
 			frame.validate();
@@ -490,6 +390,7 @@ public class MainWindow extends JFrame{
 			this.frame = frame;
 		}
 		public void actionPerformed(ActionEvent arg0) {
+			Ppreiskal = new ProductionAndDistributionPanel();
 			frame.add(Ppreiskal, BorderLayout.CENTER);
 			frame.remove(lastUsed);
 			frame.validate();
@@ -515,27 +416,7 @@ public class MainWindow extends JFrame{
 		}
 		
 	}
-	
-	private class MachineVerkaufen implements ActionListener{
 		
-		Machine machine;
-		
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			if (machineTable.getSelectedRow() != -1) {
-				//tabModel.removeRow(table.getSelectedRow());
-				machine = company.getMachines().get(machineTable.getSelectedRow());
-				company.removeMachine(machine);
-				
-				System.out.println("Maschine verkauft");
-				System.out.println(machine.toString());
-				System.out.println("Zeile" + machineTable.getSelectedRow() + " gelöscht");
-				refreshMachineTable();
-			}
-			
-		}
-	}
-	
 	private class chatKeyListener implements KeyListener{
 
 		JButton button;
@@ -587,7 +468,7 @@ public class MainWindow extends JFrame{
 			try {
 				Client.getInstance().close();
 			} catch (Exception exc) { }
-			
+			isServer = Player.isHost();
  			if(isServer){
  				try {
  					Server.Network.Server.getInstance().close();
@@ -626,6 +507,26 @@ public class MainWindow extends JFrame{
 		System.exit(3);
 	}
 	
+	private class startGame implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			ServerController.StartGame();
+			JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
+		}
+		
+	}
+	
+	private class periodeAbschliessen implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			PeriodController.SendSupply();
+			
+		}
+		
+	}
 
 }
 

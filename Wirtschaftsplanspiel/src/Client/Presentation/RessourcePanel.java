@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -29,6 +32,8 @@ public class RessourcePanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 253066089188179500L;
+
+	private List<RessourceBuyAmountListener> buyAmountListener = new LinkedList<RessourceBuyAmountListener>();
 
 	public RessourcePanel(){
 		me = this;
@@ -121,7 +126,9 @@ public class RessourcePanel extends JPanel {
 			c.gridx++;
 			JLabel tcosts = new JLabel();
 			//tBuy sagen, die Kaufsumme direkt zu aktualisieren
-			tBuy.addKeyListener(new RessourceBuyAmountListener(tBuy, tcosts));
+			RessourceBuyAmountListener buyAmountListen = new RessourceBuyAmountListener(tBuy, tcosts);
+			buyAmountListener.add(buyAmountListen);
+			tBuy.addKeyListener(buyAmountListen);
 			this.add(tcosts,c);
 			rowy ++;
 			
@@ -129,15 +136,10 @@ public class RessourcePanel extends JPanel {
 		}
 		c.gridy = rowy;
 		c.gridx = 0;
-		JButton prev = new JButton("Zurück");
 		JButton buy = new JButton("Kaufen");
 		buy.addActionListener(new buyRessourceListener());
-		JButton next = new JButton("Weiter");
-		this.add(prev,c);
 		c.gridx++;
 		this.add(buy, c);
-		c.gridx++;
-		this.add(next, c);
 		refreshRessources();
 	}
 	
@@ -163,12 +165,19 @@ public class RessourcePanel extends JPanel {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
+			//manuelles aufrufen -> Zurücksetzen
+			if(arg0 == null)
+			{
+				tcosts.setText("0€");
+				return;
+			}
 			if (arg0.getKeyCode() == KeyEvent.VK_ENTER){
 				buy();
 				return;
 			}
 			try
 			{			
+				tBuy.setText(tBuy.getText().replaceAll("\\D", ""));
 				int amount = Integer.parseInt(tBuy.getText().trim());
 				if (amount<= 0){
 					tcosts.setText("0€");
@@ -228,7 +237,7 @@ public class RessourcePanel extends JPanel {
 				
 					//Label der den Güterpreis darstellt
 					case goodPrice:
-						label.setText(String.valueOf(res.getPricePerUnit()) + "€");
+						label.setText(getPricePointed(res));
 						break;
 						
 					//Label der Ressourcen auf Lager
@@ -238,19 +247,18 @@ public class RessourcePanel extends JPanel {
 						
 					//Label der benötigten Ressourcen
 					case goodsNeeded:
-						//TODO: Production-Units
-						label.setText(String.valueOf(CompanyController.missingRessources(100).get(type)) + unitname);
+						//TODO: Production-Units: (Lars) FIXED: missingBlaBla methoden umgeschrieben, lesen jetzt aus Company.Production.
+													  // diese wird im Absatz und Prod. Planungs Screen gefüllt.
+						label.setText(String.valueOf(CompanyController.missingUnitsOnRessources().get(type)) + unitname);
 						break;
 						
 					//Label der Ressourcen auf dem Markt
 					case goodsBuyable:
-						//TODO: Production-Units
 						label.setText(String.valueOf(res.getBuyableUnits()) + unitname);
 						break;
 						
 					//Label der Fixkosten für den Ressourcentyp
 					case fixedPrice:
-						//TODO: Production-Units
 						label.setText(String.valueOf(Ressource.getFixedCosts(type)) + "€");
 						break;
 				}
@@ -260,6 +268,10 @@ public class RessourcePanel extends JPanel {
 				
 		}
 		
+	}
+
+	private String getPricePointed(Ressource res) {
+		return (String.valueOf(res.getPricePerUnit()) + "€");
 	}
 	
 	public void buy() {
@@ -297,8 +309,12 @@ public class RessourcePanel extends JPanel {
 						
 					} finally
 					{
-						refreshRessources();
+						
 						tb.setText("0");
+						//Setze alles auf 0
+						for(Iterator<RessourceBuyAmountListener> it = buyAmountListener.iterator(); it.hasNext();)
+							it.next().keyReleased(null);
+						refreshRessources();
 					}
 			}
 		}

@@ -15,7 +15,8 @@ public abstract class PeriodInfo {
     static {
        periods = new LinkedList<Period>();
 	   periods.add(new Period());
-	      }
+	    }
+	      
 
 	public static void initRessources() {
 		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 6.00);
@@ -24,6 +25,10 @@ public abstract class PeriodInfo {
    
    public static Period getActualPeriod(){
 	   return periods.get(actPeriod);
+   }
+   
+   public static int getActualPeriodNumber(){
+	   return actPeriod;
    }
    
    public static Period getPeriod(int period){

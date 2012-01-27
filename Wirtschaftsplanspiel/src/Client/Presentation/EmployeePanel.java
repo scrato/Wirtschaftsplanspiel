@@ -6,6 +6,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -45,13 +51,19 @@ public class EmployeePanel extends JPanel{
 		updateCapacity();
 		
 		
+		
+		employeeAvaPro.setEditable(false);
+		employeeAvaAdm.setEditable(false);
+		employeeNeedPro.setEditable(false);
+		employeeNeedAdm.setEditable(false);
 		// Employe
 		JTextField anzahlEmploy = new JTextField(4);
 		JComboBox typeListEmploy = new JComboBox(types);
 		JButton employButton = new JButton("Einstellen");
 		JTextField kostenEmploy = new JTextField(5);
 		
-		
+		typeListEmploy.addItemListener(new costItemListener(anzahlEmploy, typeListEmploy, kostenEmploy));
+		anzahlEmploy.addFocusListener(new costFocusListener(anzahlEmploy, typeListEmploy, kostenEmploy));
 		employButton.addActionListener(new employ(anzahlEmploy, typeListEmploy));
 		
 		// Dimiss
@@ -60,7 +72,8 @@ public class EmployeePanel extends JPanel{
 		JTextField kostenDismiss = new JTextField(5);
 		JButton dismissButton = new JButton("Entlassen");
 		
-		
+		anzahlDismiss.addFocusListener(new costFocusListener(anzahlDismiss, typeListDismiss, kostenDismiss));
+		typeListDismiss.addItemListener(new costItemListener(anzahlDismiss, typeListDismiss, kostenDismiss));
 		dismissButton.addActionListener(new dismiss(anzahlDismiss, typeListDismiss));
 		
 		kostenDismiss.setEditable(false);
@@ -72,9 +85,10 @@ public class EmployeePanel extends JPanel{
 		
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 3;
+		c.insets = new Insets(0,0,30,0);
 		add(new JLabel("Personalverwaltung"), c);
-		c.gridwidth = 1;
+		c.insets = new Insets(0,0,0,0);
+		
 		
 		c.gridx = 0;
 		c.gridy = 1;
@@ -148,7 +162,9 @@ public class EmployeePanel extends JPanel{
 		
 		c.gridx = 4;
 		c.gridy = 6;
-		add(new JLabel("Kosten:"), c);
+		c.insets = new Insets(0,20,0,5);
+		add(new JLabel("Kosten"), c);
+		c.insets = new Insets(0,0,0,0);
 		
 		c.gridx = 5;
 		c.gridy = 6;
@@ -156,7 +172,9 @@ public class EmployeePanel extends JPanel{
 		
 		c.gridx = 6;
 		c.gridy = 6;
+		c.insets = new Insets(0,20,0,0);
 		add(employButton, c);
+		c.insets = new Insets(0,0,0,0);
 		
 		// Dismiss
 		
@@ -187,7 +205,9 @@ public class EmployeePanel extends JPanel{
 		
 		c.gridx = 4;
 		c.gridy = 8;
+		c.insets = new Insets(0,20,0,5);
 		add(new JLabel("Kosten"), c);
+		c.insets = new Insets(0,0,0,0);
 		
 		c.gridx = 5;
 		c.gridy = 8;
@@ -195,7 +215,9 @@ public class EmployeePanel extends JPanel{
 		
 		c.gridx = 6;
 		c.gridy = 8;
+		c.insets = new Insets(0,20,0,0);
 		add(dismissButton,c);
+		c.insets = new Insets(0,00,0,0);
 		
 		
 		
@@ -217,6 +239,8 @@ public class EmployeePanel extends JPanel{
 		
 		employeeAvaPro.setText(employeePro+"");
 		employeeAvaAdm.setText(employeeAdm+"");
+		employeeNeedPro.setText(CompanyController.missingEmployees(EmployeeType.Produktion)+"");
+		employeeNeedAdm.setText(CompanyController.missingEmployees(EmployeeType.Verwaltung)+ "");
 		
 	}
 
@@ -239,35 +263,38 @@ public class EmployeePanel extends JPanel{
 						
 			anzahl = Integer.valueOf(anzahlField.getText());
 			
-			
-			if(((String)typeField.getSelectedItem()).equals("Verwaltung")){
-				int i = 0;
-				while(i < anzahl){
-					try {
-						CompanyController.employSb(admin);
-					} catch (UserCanNotPayException e) {
-						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
-						e.printStackTrace();
+			if(anzahl > 0){
+				if(((String)typeField.getSelectedItem()).equals("Verwaltung")){
+					int i = 0;
+					while(i < anzahl){
+						try {
+							CompanyController.employSb(admin);
+						} catch (UserCanNotPayException e) {
+							// TODO Auto-generated catch block
+							JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
+							e.printStackTrace();
+							break;
+						}
+						i++;
 					}
-					i++;
-				}
-			}else{
-				int i = 0;
-				while(i < anzahl){
-					try {
-						CompanyController.employSb(production);
-					} catch (UserCanNotPayException e) {
-						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
-						e.printStackTrace();
+				}else{
+					int i = 0;
+					while(i < anzahl){
+						try {
+							CompanyController.employSb(production);
+						} catch (UserCanNotPayException e) {
+							// TODO Auto-generated catch block
+							JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
+							e.printStackTrace();
+							break;
+						}
+						i++;
 					}
-					i++;
 				}
+				
+				updateCapacity();
+				anzahlField.setText(0+"");
 			}
-			
-			updateCapacity();
-			
 		}
 		
 	}
@@ -291,35 +318,108 @@ public class EmployeePanel extends JPanel{
 						
 			anzahl = Integer.valueOf(anzahlField.getText());
 			
-			
-			if(((String)typeField.getSelectedItem()).equals("Verwaltung")){
-				int i = 0;
-				while(i < anzahl){
-					try {
-						CompanyController.dismissSb(EmployeeType.Verwaltung);
-					} catch (UserCanNotPayException e1) {
-						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
-						
-						e1.printStackTrace();
-					} catch (EmployeeNotEmployedException e1) {
-						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(new JFrame(),"Keine Mitarbeiter von diesem Typ angestellt.");
-						e1.printStackTrace();
+			if(anzahl > 0){
+				if(((String)typeField.getSelectedItem()).equals("Verwaltung")){
+					int i = 0;
+					while(i < anzahl){
+						try {
+							CompanyController.dismissSb(EmployeeType.Verwaltung);
+						} catch (UserCanNotPayException e1) {
+							// TODO Auto-generated catch block
+							JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
+							e1.printStackTrace();
+							break;
+						} catch (EmployeeNotEmployedException e1) {
+							// TODO Auto-generated catch block
+							JOptionPane.showMessageDialog(new JFrame(),"Keine Mitarbeiter von diesem Typ angestellt.");
+							e1.printStackTrace();
+							break;
+						}
+						i++;
 					}
-					i++;
+				}else{
+					int i = 0;
+					while(i < anzahl){
+						try {
+							CompanyController.dismissSb(EmployeeType.Produktion);
+						} catch (UserCanNotPayException e1) {
+							// TODO Auto-generated catch block
+							JOptionPane.showMessageDialog(new JFrame(),"Nicht genügend liquide Mittel.");
+							e1.printStackTrace();
+							break;
+						} catch (EmployeeNotEmployedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+							JOptionPane.showMessageDialog(new JFrame(),"Keine Mitarbeiter von diesem Typ angestellt.");
+							break;
+						}
+						
+						i++;
+					}
 				}
-			}else{
-				int i = 0;
-				while(i < anzahl){
-					//company.addEmployee(production);
-					i++;
-				}
+				
+				updateCapacity();
+				anzahlField.setText(0+"");
 			}
 			
-			updateCapacity();
+		}
+		
+	}
+
+	private class costFocusListener implements FocusListener{
+
+		JTextField anzahlField;
+		JComboBox typeField;
+		JTextField kostenOutput;
+		public costFocusListener( JTextField anzahl, JComboBox type, JTextField kostenOutput){
+			this.anzahlField = anzahl;
+			this.typeField = type;
+			this.kostenOutput = kostenOutput;
+		}
+
+		
+		@Override
+		public void focusGained(FocusEvent arg0) {
+			// TODO Auto-generated method stub
 			
 			
+		}
+
+		@Override
+		public void focusLost(FocusEvent arg0) {
+			// TODO Auto-generated method stub
+			double cost = 0;
+			int anzahl = Integer.valueOf(anzahlField.getText());
+			
+			if(anzahl > 0){
+				cost = anzahl * Employee.EMPLOYCOST;
+				kostenOutput.setText(cost+"");
+			}
+		}
+		
+	}
+	
+	private class costItemListener implements ItemListener{
+
+		JTextField anzahlField;
+		JComboBox typeField;
+		JTextField kostenOutput;
+		
+		public costItemListener( JTextField anzahl, JComboBox type, JTextField kostenOutput){
+			this.anzahlField = anzahl;
+			this.typeField = type;
+			this.kostenOutput = kostenOutput;
+		}
+		
+		@Override
+		public void itemStateChanged(ItemEvent arg0) {
+			// TODO Auto-generated method stub
+			double cost = 0;
+			int anzahl = Integer.valueOf(anzahlField.getText());
+			if(anzahl > 0){
+				cost = anzahl * Employee.EMPLOYCOST;
+				kostenOutput.setText(cost+"");
+			}
 		}
 		
 	}

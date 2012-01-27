@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 
 import org.junit.Before;
 
+import Client.Application.CannotProduceException;
 import Client.Application.CompanyController;
 import Client.Application.MachineAlreadyBoughtException;
 import Client.Application.NotEnoughRessourcesException;
@@ -55,7 +56,7 @@ public class PeriodInfoTest extends TestCase  {
 		
 		
 		CompanyController.payInterestAndRepayment();
-		CompanyController.payEmployersSalery();
+		CompanyController.paySallery();
 		
 		CompanyController.payRent();
 		CompanyController.produce();
@@ -69,12 +70,11 @@ public class PeriodInfoTest extends TestCase  {
 		
 		//Assert.assertEquals(0.0, g1.changeInStockRessources);
 		//Assert.assertEquals(200.0, g1.changeInStockFinishedProducts);
-		 System.out.println("BV Endprodukte: " + g1.changeInStockFinishedProducts);
-		 System.out.println("BV Ressourcen: " + g1.changeInStockRessources);
+		 System.out.println("Bestandsveränderung: " + g1.changeInStock);
 		 System.out.println("Abschreibung: " + g1.deprecation);
 		 System.out.println("Kosten für Feuerung MA: " + g1.employeeDismissalCosts);
 		 System.out.println("Kosten für Einstellung MA: " + g1.employeeHiringCosts);
-		 System.out.println("Unternehmerlohn: " + g1.employerSallery);
+		 //System.out.println("Unternehmerlohn: " + g1.employerSallery);
 		 System.out.println("Zinsaufwand: " + g1.interest);
 		 System.out.println("Miete: " + g1.rental);
 		 System.out.println("Ressourcenaufwand: " + g1.ressourceCost);
@@ -115,10 +115,13 @@ public class PeriodInfoTest extends TestCase  {
 		
 		
 		CompanyController.payInterestAndRepayment();
-		CompanyController.payEmployersSalery();
 		
 		CompanyController.payRent();
-		CompanyController.produce();
+		try {
+			CompanyController.produce();
+		} catch (CannotProduceException e) {
+			e.printStackTrace();
+		}
 		CompanyController.depcrecateMachines();
 	}
 	
