@@ -12,7 +12,8 @@ import java.awt.event.KeyListener;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.JTextField;
+import javax.swing.JTextField;
 
 import Client.Application.CompanyController;
 import Client.Entities.Company;
@@ -70,7 +71,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 			}
 			catch(NumberFormatException ex1)
 			{
-				JTextPane c = (JTextPane) arg0.getComponent();
+				JTextField c = (JTextField) arg0.getComponent();
 				c.setText(String.valueOf(0));
 				return;
 			}
@@ -92,9 +93,9 @@ public class ProductionAndDistributionPanel extends JPanel {
 	
 	private static int capid = 0;
 	private TextListener tl = new TextListener();
-	private JTextPane amountproduce;
-	private JTextPane pricesell;
-	private JTextPane amountsell;
+	private JTextField amountproduce;
+	private JTextField pricesell;
+	private JTextField amountsell;
 	
 	private JLabel l_finishedProducts;
 	private JLabel l_lastPeriodSellingPrice;
@@ -105,8 +106,8 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private double priceToSell;
 	private int amountToSell;
 	
-	private final double PRICEMIN = 80000;
-	private final double PRICEMAX = 90000;
+	private final double PRICEMIN = 800;
+	private final double PRICEMAX = 10000;
 	
 	private Company comp = Company.getInstance();
 	
@@ -182,7 +183,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 		
 		this.add(new JLabel("Geplante Produktionsmenge: "),c);
 		c.gridx++;		
-		amountproduce = new JTextPane();
+		amountproduce = new JTextField();
 		amountproduce.setSize(100, 500);
 		amountproduce.addKeyListener(tl);
 		//amountproduce.setText(String.valueOf(comp.getProdAndDistr().getUnitsToProduce()));
@@ -290,20 +291,20 @@ public class ProductionAndDistributionPanel extends JPanel {
 		c.gridy++;
 		
 		//Verkaufsmenge
-		this.add(new JLabel("Geplante Verkaufsmenge: "),c);
+		this.add(new JLabel("Geplante Verkaufsmenge (pro Palette) "),c);
 		
 		c.gridx++;
 		c.fill = GridBagConstraints.BOTH;
-		amountsell = new JTextPane();
+		amountsell = new JTextField();
 		amountsell.addKeyListener(tl);
 		this.add(amountsell, c);  
 		c.gridy++;
 		c.gridx = 0;
 		
 		//Verkaufspreis
-		this.add(new JLabel("Geplanter Verkaufspreis: "),c);
+		this.add(new JLabel("Geplanter Verkaufspreis (pro Palette): "),c);
 		c.gridx++;
-		pricesell = new JTextPane();
+		pricesell = new JTextField();
 		pricesell.addKeyListener(tl);
 		this.add(pricesell, c);
 		
