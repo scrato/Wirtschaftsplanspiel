@@ -48,7 +48,7 @@ public class MainWindow extends JFrame{
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
 	JPanel lastUsed;
 	
-	boolean isServer = Player.isHost();
+	boolean isServer;// = Player.isHost();
 	
 	// Playerliste
 	DefaultListModel listModel = new DefaultListModel();
@@ -58,6 +58,8 @@ public class MainWindow extends JFrame{
 	
 	Company company;
 	JTextArea infoPanel = new JTextArea();
+
+	private JMenuBar menuBar;
 
 	
 	// Singletonreferenz 
@@ -87,27 +89,24 @@ public class MainWindow extends JFrame{
 
 	public void initBasis(){
 		// Menü
-		JMenuBar menuBar = new JMenuBar();
+		 menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu( "Datei" );
-		JMenu serverMenu = new JMenu("Server");
+
 		
 		// Menü-Items
 		JMenuItem MenuButtonBeenden = new JMenuItem("Beenden");
 		JMenuItem MenuButtonInfo = new JMenuItem("Info");
-		JMenuItem MenuButtonSpielStarten = new JMenuItem("Spiel starten");
+
 		MenuButtonBeenden.addActionListener(new closeWindow());
 		MenuButtonInfo.addActionListener(new showInfo());
-		MenuButtonSpielStarten.addActionListener(new startGame());
+
 		
 		menuBar.add( fileMenu );
 		this.setJMenuBar( menuBar );
 		fileMenu.add( MenuButtonBeenden );
 		fileMenu.add( MenuButtonInfo );
 		
-		if(!Player.isHost()){
-			serverMenu.add(MenuButtonSpielStarten);
-			menuBar.add(serverMenu);
-		}
+
 			
 		// Layout
 		this.setLayout(new BorderLayout() );
@@ -148,7 +147,13 @@ public class MainWindow extends JFrame{
 		center.add(ListPlayers,c);
 	}
 	
-
+ void serverMenuInit(){
+		JMenu serverMenu = new JMenu("Server");
+		JMenuItem MenuButtonSpielStarten = new JMenuItem("Spiel starten");
+		MenuButtonSpielStarten.addActionListener(new startGame());
+	    serverMenu.add(MenuButtonSpielStarten);
+		menuBar.add(serverMenu);
+ }
 	public void buildEast(){
 		
 		east.setBackground(Color.LIGHT_GRAY);
@@ -250,6 +255,7 @@ public class MainWindow extends JFrame{
 	
 	public void startGame(){
 		west.setVisible(true);
+		JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
 	}
 	
 	public void setPlayers(List<Player> players){
@@ -462,7 +468,7 @@ public class MainWindow extends JFrame{
 			try {
 				Client.getInstance().close();
 			} catch (Exception exc) { }
-			
+			isServer = Player.isHost();
  			if(isServer){
  				try {
  					Server.Network.Server.getInstance().close();
@@ -507,8 +513,6 @@ public class MainWindow extends JFrame{
 		public void actionPerformed(ActionEvent arg0) {
 			ServerController.StartGame();
 			JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
-			// TODO remove startGame(), debug ServerController.StartGame()
-			startGame();
 		}
 		
 	}

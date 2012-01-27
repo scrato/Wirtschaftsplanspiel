@@ -151,11 +151,13 @@ public class Client {
 		        			stream.skip(stream.available());
 		        			break;
 		        		}
-		        		NetMessage message = new NetMessage(messageType, messageContent);
-		        		 
-		        		TriggerBusinessLogicThread triggerBusLogic = new TriggerBusinessLogicThread(message);		        				
-		        		triggerBusLogic.start();
-		        	}      
+		        	} else {
+		        		messageContent = new byte[0];
+		        	}
+	        		NetMessage message = new NetMessage(messageType, messageContent);
+	        		 
+	        		TriggerBusinessLogicThread triggerBusLogic = new TriggerBusinessLogicThread(message);		        				
+	        		triggerBusLogic.start();      
 		        }		        
 			} catch (IOException e) {
 				if (!isClosed) { 

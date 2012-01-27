@@ -91,7 +91,6 @@ public class ServerController {
 		try {
 			for (ClientHandler client : clients) {
 				if (!supplies.containsKey(client.get_ID())) {
-					lockSupplies.release();
 					return;
 				}
 			}
@@ -231,7 +230,6 @@ public class ServerController {
 		try {
 			for (ClientHandler client : clients) {
 				if (!profits.profitList.containsKey(client.get_ID())) {
-					profitlocker.release();
 					return;
 				}
 			}
