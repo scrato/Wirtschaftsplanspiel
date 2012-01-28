@@ -10,6 +10,9 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.util.Currency;
+import java.util.Locale;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -110,6 +113,9 @@ public class ProductionAndDistributionPanel extends JPanel {
 	
 	private final double PRICEMIN = 800;
 	private final double PRICEMAX = 10000;
+	DecimalFormat currencyFormat = new DecimalFormat();
+	DecimalFormat unitFormat = new DecimalFormat();
+	
 	
 	private Company comp = Company.getInstance();
 	
@@ -139,6 +145,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private static final long serialVersionUID = 2375380045275272220L;
 
 	public ProductionAndDistributionPanel(){
+		currencyFormat.setCurrency(Currency.getInstance(Locale.getDefault()));
 		/*public Insets(int top,
       int left,
       int bottom,
@@ -395,14 +402,19 @@ public class ProductionAndDistributionPanel extends JPanel {
 	}*/
 	
 	private void refreshCount() {
-		pricesell.setText(cutAndTrim(pricesell.getText()));
-		amountproduce.setText(cutAndValidate(amountproduce.getText()));
-		amountsell.setText(cutAndValidate(amountsell.getText()));
+		pricesell.setText(convertToCurrency(pricesell.getText()));
+		amountproduce.setText(convertToUnit(amountproduce.getText()));
+		amountsell.setText(convertToUnit(amountsell.getText()));
 		
-		try{unitsToProduce = Integer.parseInt(amountproduce.getText().trim());}catch(NumberFormatException e){}
-		try{priceToSell = Double.parseDouble(pricesell.getText());}catch(NumberFormatException e){}
-		try{amountToSell = Integer.parseInt(amountsell.getText().trim());}catch(NumberFormatException e){}
-
+		try{unitsToProduce = unitFormat.parse((amountproduce.getText())).intValue();}	
+			catch(NumberFormatException e){} 
+			catch (ParseException e) {}
+		try{priceToSell = currencyFormat.parse(pricesell.getText()).doubleValue();}
+		catch(NumberFormatException e){} 
+		catch (ParseException e) {}
+		try{amountToSell = unitFormat.parse(amountsell.getText()).intValue();}
+		catch(NumberFormatException e){} 
+		catch (ParseException e) {}
 		comp.getProdAndDistr().setUnitsToProduce(unitsToProduce);
 		comp.getProdAndDistr().setUnitsToSell(amountToSell);
 		comp.getProdAndDistr().setSellingPrice(priceToSell);
@@ -438,17 +450,13 @@ public class ProductionAndDistributionPanel extends JPanel {
 		}
 	}
 
-	private String cutAndValidate(String text) {
-		DecimalFormat format = new DecimalFormat();
-		text = text.replaceAll("\\D", "");
-		return format.format(Integer.valueOf(text));
+	private String convertToUnit(String text) {
+		return unitFormat.format(Integer.valueOf(text));
 	}
 
 
-	private String cutAndTrim(String text) {
-		DecimalFormat format = new DecimalFormat();
-		text = text.replaceAll("\\D", "");
-		return format.format(Double.valueOf(text));
+	private String convertToCurrency(String text) {
+		return currencyFormat.format(Double.valueOf(text));
 	}
 
 
