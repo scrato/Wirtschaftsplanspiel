@@ -21,6 +21,8 @@ import Client.Entities.Player;
 import Client.Entities.MachineType;
 import Client.Network.Client;
 import java.util.List;
+
+import Client.Application.CannotProduceException;
 import Client.Application.CompanyController;
 import Client.Application.PeriodController;
 
@@ -529,9 +531,13 @@ public class MainWindow extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			PeriodController.SendSupply();
-			
+			try {
+				PeriodController.ClosePeriod();
+			} catch (CannotProduceException e1) {
+				//TODO: Anpassen und spezifieren.
+
+				JOptionPane.showMessageDialog(null, "Es konnte nicht produziert werden.", "Zu wenig Produktionsfaktoren", JOptionPane.CANCEL_OPTION);
+			}
 		}
 		
 	}
