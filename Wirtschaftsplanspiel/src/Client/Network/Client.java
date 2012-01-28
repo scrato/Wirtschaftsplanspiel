@@ -153,6 +153,12 @@ public class Client {
 		        		}
 		        	} else {
 		        		messageContent = new byte[0];
+		        		checkint = stream.readInt();
+		        		if (checkint != NetMessage.MESSAGE_END) {
+		        			System.err.println("Unvollstaendige Nachricht vom Server erhalten.");
+		        			stream.skip(stream.available());
+		        			break;
+		        		}
 		        	}
 	        		NetMessage message = new NetMessage(messageType, messageContent);
 	        		 
