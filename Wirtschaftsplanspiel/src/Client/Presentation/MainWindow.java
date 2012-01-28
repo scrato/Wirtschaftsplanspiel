@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 
 import javax.swing.*;
@@ -213,8 +214,15 @@ public class MainWindow extends JFrame{
 		east.add(infoPanel,c); 
 	}
 	
+	
+	private static DecimalFormat format = new DecimalFormat("###,###,##0.00");
+	private static String getValueString(double Value) {
+		return format.format(Math.round(Value*100.0)/100.0);
+	}
+	
+	
 	public void updateInfoPanel(){
-		infoPanel.setText("Bank: " + Company.getInstance().getMoney() + " \nForderungen \nVerbindlichkeiten \nGebäude");
+		infoPanel.setText("Bank: " + MainWindow.getValueString(Company.getInstance().getMoney()) + " \nForderungen \nVerbindlichkeiten \nGebäude");
 	}
 	
 	public void buildWest(){
