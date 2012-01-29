@@ -79,13 +79,19 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		        			stream.skip(stream.available());
 		        			break;
 		        		}
+		        	} else {
+		        		messageContent = new byte[0];
+		        		checkint = stream.readInt();
+		        		if (checkint != NetMessage.MESSAGE_END) {
+		        			if (!parent.isClosed) System.err.println("Unvollstaendige Nachricht erhalten von Client " + this.id + ".");
+		        			stream.skip(stream.available());
+		        			break;
+		        		}
+		        	}
+	        		NetMessage message = new NetMessage(messageType, messageContent);
 
-		        		NetMessage message = new NetMessage(messageType, messageContent);
-
-		        		TriggerBusinessLogicThread triggerBusLogic = new TriggerBusinessLogicThread(this, message);		        				
-		        		triggerBusLogic.start();
-		        		//parent.receiveMessage(message, this);
-		        	}		
+	        		TriggerBusinessLogicThread triggerBusLogic = new TriggerBusinessLogicThread(this, message);		        				
+	        		triggerBusLogic.start();
 		        }		        
 			} catch (IOException e) {
 				// Verbindung zum Client verloren. TODO darauf reagieren.
