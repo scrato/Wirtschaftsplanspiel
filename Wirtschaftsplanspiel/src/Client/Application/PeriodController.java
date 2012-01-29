@@ -29,6 +29,7 @@ public abstract class PeriodController {
 	 * @param supply
 	 */
 	public static void SendSupply(Supply supply) {
+		//TODO: Lars fragen ob man das noch braucht
 		Period period = PeriodInfo.getActualPeriod();
 		period.setProductPrice(supply.price);
 		
