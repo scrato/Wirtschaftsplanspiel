@@ -60,7 +60,7 @@ public class MainWindow extends JFrame{
 	JTextArea chatOutput = new JTextArea(19,25);
 	
 	Company company;
-	JTextArea infoPanel = new JTextArea();
+	JTextField infoPanel = new JTextField(10);
 
 	private JMenuBar menuBar;
 
@@ -191,7 +191,6 @@ public class MainWindow extends JFrame{
 		Jsend.addActionListener(new sendChatMessage(chatInput));
 						
 		// Übersicht Layout
-		infoPanel.setSize(200,200);
 		infoPanel.setBackground(Color.LIGHT_GRAY);
 		
 		infoPanel.validate();
@@ -224,7 +223,7 @@ public class MainWindow extends JFrame{
 	
 	
 	public void updateInfoPanel(){
-		infoPanel.setText("Bank: " + MainWindow.getValueString(Company.getInstance().getMoney()) + " \nForderungen \nVerbindlichkeiten \nGebäude");
+		infoPanel.setText("  Bank: " + MainWindow.getValueString(Company.getInstance().getMoney()));
 	}
 	
 	public void buildWest(){

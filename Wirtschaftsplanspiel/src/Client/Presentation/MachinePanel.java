@@ -72,7 +72,7 @@ public class MachinePanel extends JPanel {
 			
 		  machineScrollPane = new JScrollPane(machineTable);
 	
-		
+		 refreshCapacity();
 		
 		
 		JButton verkaufen = new JButton("verkaufen");
@@ -293,7 +293,5 @@ public class MachinePanel extends JPanel {
 				}
 			}
 			
-		}
-
-		
+		}		
 }
