@@ -60,7 +60,8 @@ public class ProductionAndDistributionPanel extends JPanel {
 	 *
 	 */
 	private class TextListener implements KeyListener {
-
+		//Rücktaste, Pfeiltasten, Komma, Punkt
+		private Integer[] keysallowed = {110,46,37,39,38,40,8};
 		@Override
 		public void keyPressed(KeyEvent arg0) {			
 		
@@ -69,8 +70,9 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			if (arg0.getKeyCode() == 110)
-				return;
+			//Wenn es eine Zahl ist
+			if ((arg0.getKeyCode() >= KeyEvent.VK_0 && arg0.getKeyCode() <= KeyEvent.VK_9) || 
+					(arg0.getKeyCode() >= KeyEvent.VK_NUMPAD0 && arg0.getKeyCode() <= KeyEvent.VK_NUMPAD9))	{
 			
 			try
 			{
@@ -85,6 +87,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 			catch(ClassCastException ex2)
 			{
 				return;
+			}
 			}
 
 		}
@@ -169,7 +172,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 		//Startwerte gleich dem vorher gespeicherten
 		amountsell.setText(decformat.format(comp.getProdAndDistr().getUnitsToSell()));
 		amountproduce.setText(decformat.format(comp.getProdAndDistr().getUnitsToProduce()));
-		pricesell.setText(String.valueOf(comp.getProdAndDistr().getSellingPrice()));
+		pricesell.setText(curformat.format(comp.getProdAndDistr().getSellingPrice()));
 		refreshCount();
 		cb_capacities.setSelectedIndex(capid);
 		actualCapacity = Integer.parseInt((String) cb_capacities.getSelectedItem());
@@ -456,7 +459,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 			return decformat.format(decformat.parse(text).intValue());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return text;
 	}
@@ -467,7 +470,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 			return curformat.format(curformat.parse(text).doubleValue());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return text;
 	}

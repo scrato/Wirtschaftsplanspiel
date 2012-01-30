@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import Client.Application.CreditNotExistsException;
 import Client.Entities.RessourceType;
 
 public class Period {
@@ -213,7 +214,11 @@ public class Period {
 		
 		balance.finishedProductsValue = p.finishedProductsValue;
 
-		balance.credit = comp.getCredit().getCreditLeft();
+		try {
+			balance.credit = comp.getCredit().getCreditLeft();
+		} catch (CreditNotExistsException e) {
+			balance.credit = 0;
+		}
 
 		balance.bank = comp.getMoney();
 
