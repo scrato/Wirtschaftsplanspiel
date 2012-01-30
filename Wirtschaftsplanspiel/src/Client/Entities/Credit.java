@@ -4,17 +4,25 @@ package Client.Entities;
 
 public class Credit {
 	
+	private double initialCreditHeight;	
 	private double creditLeft;
+
+	private int contractPeriod;
+	private int leftPeriods;
+	
 	private double anuity;
 	
-	private int contractPeriod;
-	
 	private double interestPercentage;
-	private double baseInterestInPercent = 5;
+	public final static double INTERESTPERPERIODINPERCENT = 5d;
+	public final static double BASEINTERESTINPERCENT = 5d;
 	
 	public Credit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException{
 		//Dynamische Anpassung des Zinsatzes -> (Laufzeit * 0,5) + Basissatz von 5%... heißt Kredit über 10 Jahre hat 10% Zinsen 
-		this.interestPercentage = ((contractPeriod * 0.5) + baseInterestInPercent) / 100;
+		this.interestPercentage = ((contractPeriod * INTERESTPERPERIODINPERCENT) + BASEINTERESTINPERCENT) / 100;
+		
+		this.initialCreditHeight = creditHeight;
+		this.leftPeriods = contractPeriod;
+		
 		this.creditLeft = creditHeight;
 		this.contractPeriod = contractPeriod;
 		setAnuity(creditHeight);
@@ -36,13 +44,6 @@ public class Credit {
 		this.anuity = creditHeight * (Math.pow(1+interestPercentage,contractPeriod)*interestPercentage)/(Math.pow(1+interestPercentage,contractPeriod)-1);
 	}
 
-	public Credit(double creditHeight, int contractPeriod, double baseInterestInPercent) throws UnableToTakeCreditException{
-		this.interestPercentage = ((contractPeriod * 0.5) + baseInterestInPercent) / 100;
-		this.creditLeft = creditHeight;
-		CanTakeCredit(creditHeight, contractPeriod);
-		this.baseInterestInPercent = baseInterestInPercent;
-	}
-	
 	private void CanTakeCredit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException {
 		//TODO: Sind Kreditvorraussetzungen so ok?
 		//comment(lars): über nen maximalwert müsste man sich nochmal gedanken machen.
@@ -61,12 +62,14 @@ public class Credit {
 	 * @return true => Kredit wurde vollständig zurückbezahlt
 	 */
 	public boolean payInterestAndRepayment(){
-		double interestPayment = (creditLeft * interestPercentage);
+		double interestPayment = getInterestPayment();
 		//Logging
 		PeriodInfo.getActualPeriod().setInterestPayment(interestPayment);
 		
 		double repayment = (anuity - interestPayment);
-		if((int) repayment >=  (int) creditLeft - 1){
+		leftPeriods--;
+		//if((int) repayment >=  (int) creditLeft - 1){
+		if (leftPeriods == 0) {
 			creditLeft = 0;
 			return true;
 		}
@@ -79,12 +82,28 @@ public class Credit {
 	 * Gibt den zu zahlenen Betrag (Anuität) zurück
 	 * @return Anuität
 	 */
+	public double getInitialCreditHeight(){
+		return initialCreditHeight;
+	}
+	
 	public double getAnuity(){
 		return anuity;
+	}
+	
+	public double getInterestPercentage() {
+		return interestPercentage;
+	}
+	
+	public double getInterestPayment() {
+		return (creditLeft * interestPercentage);
 	}
 
 	public double getCreditLeft() {
 		return creditLeft;
+	}
+	
+	public double getLeftPeriods() {
+		return leftPeriods;
 	}
 
 }
