@@ -44,7 +44,7 @@ public class MainWindow extends JFrame{
 	JPanel Pwerkstoffe = new RessourcePanel();
 	JPanel Pmaschinen = new MachinePanel();
 	JPanel Ppersonal = new EmployeePanel();
-	JPanel Pdarlehen = new JPanel();
+	JPanel Pdarlehen = new CreditPanel();
 	JPanel Pbericht = new ReportingPanel();
 	JPanel Ppreiskal = new ProductionAndDistributionPanel();
 	
