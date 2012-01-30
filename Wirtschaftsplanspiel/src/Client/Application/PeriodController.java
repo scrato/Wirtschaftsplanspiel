@@ -21,25 +21,20 @@ import NetworkCommunication.BroadcastCompanyResultMessage;
 import NetworkCommunication.SendAssignedDisposalMessage;
 import NetworkCommunication.SendCompanyResultMessage;
 import NetworkCommunication.SendSupplyMessage;
+import Client.Presentation.MainWindow;
 
 public abstract class PeriodController {
 
-	/**
-	 * 
-	 * @param supply
-	 */
-	public static void SendSupply(Supply supply) {
-		Period period = PeriodInfo.getActualPeriod();
-		period.setProductPrice(supply.price);
-		
-		Client client = Client.getInstance();
-		client.SendMessage(new SendSupplyMessage(supply));
+	
+	public static void ClosePeriod() throws CannotProduceException {
+		CompanyController.produce();
+		SendSupply();
 	}
 	
 	/**
 	 * Sendet den Supply an den Server, Supplydaten werden aus der Klasse prodAndDistr gezogen
 	 */
-	public static void SendSupply() {
+	private static void SendSupply() {
 		Period period = PeriodInfo.getActualPeriod();
 		ProductionAndDistribution pad = Company.getInstance().getProdAndDistr();
 		period.setProductPrice(pad.getSellingPrice());
@@ -97,7 +92,7 @@ public abstract class PeriodController {
 			Player.getPlayer(result.clientid).addCompanyResult(result);
 		}
 		
-		//TODO: Im UI die Ergebnisliste anzeigen
+		//MainWindow.getInstance().setAct
 		
 	}
 	

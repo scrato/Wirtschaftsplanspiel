@@ -152,8 +152,8 @@ public class ConnectionView extends JFrame{
 					//Client c1 = new Client(this.username.getText(), inetAddress, 51515);
 					ClientController.ConnectToServer(this.username.getText(), inetAddress, 51515);
 				}catch(RuntimeException ex){
-					System.err.println("Server nicht ereichbar!");
-					JOptionPane.showMessageDialog(new JFrame(),"Server nicht gefunden.");
+					System.err.println("Server ( "+ip.getText()+" ) nicht ereichbar!");
+					JOptionPane.showMessageDialog(new JFrame(),"Server ( "+ip.getText()+" ) nicht gefunden.");
 					error = true;
 				}
 			}catch(UnknownHostException ex){

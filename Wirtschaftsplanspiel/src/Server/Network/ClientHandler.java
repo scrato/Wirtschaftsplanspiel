@@ -81,6 +81,12 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		        		}
 		        	} else {
 		        		messageContent = new byte[0];
+		        		checkint = stream.readInt();
+		        		if (checkint != NetMessage.MESSAGE_END) {
+		        			if (!parent.isClosed) System.err.println("Unvollstaendige Nachricht erhalten von Client " + this.id + ".");
+		        			stream.skip(stream.available());
+		        			break;
+		        		}
 		        	}
 	        		NetMessage message = new NetMessage(messageType, messageContent);
 

@@ -10,6 +10,9 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
+import java.util.Currency;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -66,6 +69,9 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
+			if (arg0.getKeyCode() == 110)
+				return;
+			
 			try
 			{
 					refreshCount();
@@ -109,7 +115,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 	
 	private final double PRICEMIN = 80000;
 	private final double PRICEMAX = 90000;
-	
 	private Company comp = Company.getInstance();
 	
 	
@@ -132,6 +137,8 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private JLabel l_missingMachine0;
 
 	private JLabel l_missingMachine1;
+	private DecimalFormat decformat;
+	private DecimalFormat curformat;
 	/**
 	 * 
 	 */
@@ -142,6 +149,10 @@ public class ProductionAndDistributionPanel extends JPanel {
       int left,
       int bottom,
       int right)*/
+		decformat = new DecimalFormat();
+		curformat = new DecimalFormat();
+		curformat.setCurrency(Currency.getInstance(getDefaultLocale()));
+		curformat.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(getDefaultLocale()));
 		GridBagConstraints c = new GridBagConstraints();
 
 		c.gridx = 0;
@@ -156,8 +167,8 @@ public class ProductionAndDistributionPanel extends JPanel {
 		createProductionPart(c);
 		
 		//Startwerte gleich dem vorher gespeicherten
-		amountsell.setText(String.valueOf(comp.getProdAndDistr().getUnitsToSell()));
-		amountproduce.setText(String.valueOf(comp.getProdAndDistr().getUnitsToProduce()));
+		amountsell.setText(decformat.format(comp.getProdAndDistr().getUnitsToSell()));
+		amountproduce.setText(decformat.format(comp.getProdAndDistr().getUnitsToProduce()));
 		pricesell.setText(String.valueOf(comp.getProdAndDistr().getSellingPrice()));
 		refreshCount();
 		cb_capacities.setSelectedIndex(capid);
@@ -359,19 +370,19 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 
 	private String getMissingEmployee(EmployeeType type) {
-		return	String.valueOf(CompanyController.missingEmployees(type));	
+		return	decformat.format(CompanyController.missingEmployees(type));	
 
 	}
 
 
 	private String getMissingMachine(MachineType type) {
-		return String.valueOf(CompanyController.missingMachines(type,actualCapacity));
+		return decformat.format(CompanyController.missingMachines(type,actualCapacity));
 
 	}
 
 
 	private String getMissingRessource(RessourceType type) {
-			return CompanyController.missingRessources(type) + " " + Ressource.getUnit(type);
+			return decformat.format(CompanyController.missingRessources(type)) + " " + Ressource.getUnit(type);
 	}
 
 
@@ -398,10 +409,13 @@ public class ProductionAndDistributionPanel extends JPanel {
 		amountproduce.setText(cutAndValidate(amountproduce.getText()));
 		amountsell.setText(cutAndValidate(amountsell.getText()));
 		
-		try{unitsToProduce = Integer.parseInt(amountproduce.getText().trim());}catch(NumberFormatException e){}
-		try{priceToSell = Double.parseDouble(pricesell.getText());}catch(NumberFormatException e){}
-		try{amountToSell = Integer.parseInt(amountsell.getText().trim());}catch(NumberFormatException e){}
+		try{unitsToProduce = decformat.parse(amountproduce.getText()).intValue();}catch(ParseException e){}
+		try{priceToSell = decformat.parse(pricesell.getText()).doubleValue();}catch(ParseException e){}
+		try{amountToSell =  decformat.parse(amountsell.getText()).intValue();}catch(ParseException e){}
+		
 
+		
+		
 		comp.getProdAndDistr().setUnitsToProduce(unitsToProduce);
 		comp.getProdAndDistr().setUnitsToSell(amountToSell);
 		comp.getProdAndDistr().setSellingPrice(priceToSell);
@@ -438,16 +452,24 @@ public class ProductionAndDistributionPanel extends JPanel {
 	}
 
 	private String cutAndValidate(String text) {
-		DecimalFormat format = new DecimalFormat();
-		text = text.replaceAll("\\D", "");
-		return format.format(Integer.valueOf(text));
+		try {
+			return decformat.format(decformat.parse(text).intValue());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return text;
 	}
 
 
 	private String cutAndTrim(String text) {
-		DecimalFormat format = new DecimalFormat();
-		text = text.replaceAll("\\D", "");
-		return format.format(Double.valueOf(text));
+		try {
+			return curformat.format(curformat.parse(text).doubleValue());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return text;
 	}
 
 
