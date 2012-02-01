@@ -326,6 +326,7 @@ public class MainWindow extends JFrame{
 			this.frame = frame;
 		}
 		public void actionPerformed(ActionEvent arg0) {
+			((MachinePanel) Pmaschinen).refreshCapacity();
 			frame.add(Pmaschinen, BorderLayout.CENTER);
 			frame.remove(lastUsed);
 			frame.validate();
