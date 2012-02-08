@@ -61,7 +61,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 	 */
 	private class TextListener implements KeyListener {
 		//Rücktaste, Pfeiltasten, Komma, Punkt
-		private Integer[] keysallowed = {110,46,37,39,38,40,8};
+		//private Integer[] keysallowed = {110,46,37,39,38,40,8};
 		@Override
 		public void keyPressed(KeyEvent arg0) {			
 		
@@ -116,8 +116,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private double priceToSell;
 	private int amountToSell;
 	
-	private final double PRICEMIN = 80000;
-	private final double PRICEMAX = 90000;
 	private Company comp = Company.getInstance();
 	
 	
@@ -126,8 +124,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private int maxSellableUnits;
 
 	private JComboBox cb_capacities;
-
-	private JLabel l_priceRating;
 
 	private JLabel l_missingRessource1;
 
@@ -323,10 +319,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 		pricesell.addKeyListener(tl);
 		this.add(pricesell, c);
 		
-		c.gridx++;
-		l_priceRating = new JLabel();
-		this.add(l_priceRating, c);
-		
 		c.gridx = 0;		
 		c.gridy++;
 	}
@@ -363,9 +355,25 @@ public class ProductionAndDistributionPanel extends JPanel {
 		c.gridy++;
 
 		//Neue Zeile
-		this.add(new JLabel("Aktuell produzierbare Fertigprodukte : "),c);
+		this.add(new JLabel("Aktuell produzierbare Fertigprodukte: "),c);
 		c.gridx++;
 		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");
+		this.add(l_maxProducableUnits,c);
+		c.gridx=0;
+		c.gridy++;
+		
+		//Neue Zeile
+		this.add(new JLabel("Durchschnittliche Nachfrage pro Spieler: "),c);
+		c.gridx++;
+		l_maxProducableUnits =new JLabel(decformat.format(Server.Application.AppContext.STANDARD_DEMAND_PER_PLAYER) + " Paletten");
+		this.add(l_maxProducableUnits,c);
+		c.gridx=0;
+		c.gridy++;
+		
+		//Neue Zeile
+		this.add(new JLabel("Durchschnittlicher Preis: "),c);
+		c.gridx++;
+		l_maxProducableUnits =new JLabel(curformat.format(Server.Application.AppContext.STANDARD_PRICE_PER_UNIT) + "€ pro Palette");
 		this.add(l_maxProducableUnits,c);
 		c.gridx=0;
 		c.gridy++;
@@ -442,16 +450,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 		l_missingEmployee0.setText(getMissingEmployee(EmployeeType.values()[0]));
 		l_missingEmployee1.setText(getMissingEmployee(EmployeeType.values()[1]));
 		
-		if(priceToSell>PRICEMAX){
-			l_priceRating.setText("Preis ist zu hoch");
-			l_priceRating.setForeground(Color.RED);
-		}else if(priceToSell<PRICEMIN){
-			l_priceRating.setText("Preis ist zu niedrig");
-			l_priceRating.setForeground(Color.BLUE);
-		}else{
-			l_priceRating.setText("Preis liegt im Rahmen");
-			l_priceRating.setForeground(Color.decode("418831"));
-		}
 	}
 
 	private String cutAndValidate(String text) {
