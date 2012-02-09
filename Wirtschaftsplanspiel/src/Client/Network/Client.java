@@ -43,9 +43,7 @@ public class Client {
 		return client;
 	}
 	
-	//public Client(String Name, InetAddress Address, int Port) throws RuntimeException {
 	private Client(String Name, InetAddress Address, int Port) throws RuntimeException {
-		instance = this; // static member for GetInstance
 		try {
 			if (Name.length() > 10) {
 				throw new RuntimeException("Name ist zu lang.");
