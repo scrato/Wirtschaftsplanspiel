@@ -12,6 +12,9 @@ import java.text.DecimalFormat;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import Client.Entities.Period;
+import Client.Entities.PeriodInfo;
 import Client.Entities.ProfitAndLoss;
 import Client.Entities.Balance;
 
@@ -237,37 +240,49 @@ public class ReportingPanel extends TypedPanel {
 		
 		//this.setMaximumSize(new Dimension(500, 300));
 		
-		Balance balance = new Balance();
-		balance.machineValue = 		  254312131.779d;
-		balance.ressourceValue =		 153512.252d;
-		balance.finishedProductsValue =  263242.362d;
-		balance.bank = 				     475152.268d;
+//		Balance balance = new Balance();
+//		balance.machineValue = 		  254312131.779d;
+//		balance.ressourceValue =		 153512.252d;
+//		balance.finishedProductsValue =  263242.362d;
+//		balance.bank = 				     475152.268d;
+//		
+//		balance.credit = 			   151324252.27d;
+//		balance.calculateEquity();
+//		
+//		ProfitAndLoss guv = new ProfitAndLoss();
+//		guv.ressourceCost = 		   52463524.252d;
+//		guv.wages = 				   96342315.643d;
+//		guv.deprecation = 			   36235123.433d; 
+//		guv.rental = 				      50000.000d;
+//		guv.warehouseCosts =			  15226.251d;
+//		guv.changeInStockExpenditures =		  0.0d;
+//		guv.lossDueDisposalOfAssets =     50000.0d;
+//		guv.employeeDismissalCosts = 		  0.0d;
+//		guv.employeeHiringCosts = 		   1000.0d;
+//		guv.interest = 					 743513.256d;
+//		
+//		guv.sales = 				    5648144.787d;
+//		guv.changeInStockEarning = 		 155126.211d;
+//		
+//		guv.calculateResult();
+//		
 		
-		balance.credit = 			   151324252.27d;
-		balance.calculateEquity();
-		
-		ProfitAndLoss guv = new ProfitAndLoss();
-		guv.ressourceCost = 		   52463524.252d;
-		guv.wages = 				   96342315.643d;
-		guv.deprecation = 			   36235123.433d; 
-		guv.rental = 				      50000.000d;
-		guv.warehouseCosts =			  15226.251d;
-		guv.changeInStockExpenditures =		  0.0d;
-		guv.lossDueDisposalOfAssets =     50000.0d;
-		guv.employeeDismissalCosts = 		  0.0d;
-		guv.employeeHiringCosts = 		   1000.0d;
-		guv.interest = 					 743513.256d;
-		
-		guv.sales = 				    5648144.787d;
-		guv.changeInStockEarning = 		 155126.211d;
-		
-		guv.calculateResult();
-		
-		
-		//TODO load balance and guv of last period.
-		//Period reportingPeriod = PeriodInfo.getPeriod(PeriodInfo.getActualPeriodNumber() - 1);
-		//guv = reportingPeriod.getGuV();
-		//balance = reportingPeriod.getBalance();
+		Period reportingPeriod = null;
+		try {
+			reportingPeriod = PeriodInfo.getPeriod(PeriodInfo.getActualPeriodNumber() - 1);
+		} catch (Exception e) {
+			//do nothing.
+		}
+		ProfitAndLoss guv;
+		Balance balance;
+		if (reportingPeriod != null && reportingPeriod.getGuV() != null && reportingPeriod.getBalance() != null) {
+			guv = reportingPeriod.getGuV();
+			balance = reportingPeriod.getBalance();
+		} else {
+			guv = new ProfitAndLoss();
+			balance = new Balance();
+		}
+	
 		
 		balancePanel = new TAccount("Bilanz");
 		guVPanel = new TAccount("Gewinn und Verlust");
