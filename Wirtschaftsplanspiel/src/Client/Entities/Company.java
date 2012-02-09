@@ -134,9 +134,10 @@ public class Company {
 	
 	//Maschinen
 	public List<Machine> getMachines() {
-		List<Machine> retList = new LinkedList<Machine>();
-		retList.addAll(machines);
-		return retList;
+		//List<Machine> retList = new LinkedList<Machine>();
+		//retList.addAll(machines);
+		//return retList;
+		return machines;
 	}
    
 	public double getMoney(){

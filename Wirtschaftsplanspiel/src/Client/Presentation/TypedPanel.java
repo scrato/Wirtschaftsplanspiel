@@ -21,5 +21,9 @@ public class TypedPanel extends JPanel {
 	public TypedPanel(PanelType t){
 		type = t;
 	}
+	
+	public void refreshPanel() {
+		//can be overwritten.
+	}
 
 }
