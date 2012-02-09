@@ -5,15 +5,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import Client.Entities.Company;
 import Client.Entities.Credit;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
 import Client.Entities.Period;
 import Client.Entities.PeriodInfo;
-import Client.Entities.ProductionAndDistribution;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
 import Client.Entities.Employee;

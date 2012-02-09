@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import Client.Application.CreditNotExistsException;
 import Client.Application.EmployeeNotEmployedException;
 import Client.Application.CompanyController;
 import Client.Entities.RessourceType;
