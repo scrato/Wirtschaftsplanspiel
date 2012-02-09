@@ -11,19 +11,14 @@ import java.text.DecimalFormat;
 import java.util.Iterator;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
 import Server.Application.ServerController;
 import Client.Application.ChatController;
 import Client.Entities.Company;
-import Client.Entities.Machine;
 import Client.Entities.Player;
-import Client.Entities.MachineType;
 import Client.Network.Client;
 import java.util.List;
 
 import Client.Application.CannotProduceException;
-import Client.Application.CompanyController;
 import Client.Application.PeriodController;
 
 public class MainWindow extends JFrame{
@@ -47,11 +42,13 @@ public class MainWindow extends JFrame{
 				break;
 			case Credit:
 				showOtherScreen(Pbericht);
+				next.setEnabled(false);
 				break;
 			case Reporting:
 				break;		
 			case Startbildschirm:
 				showOtherScreen(Ppreiskal);
+				prev.setEnabled(false);
 				break;		
 			}
 
@@ -68,6 +65,7 @@ public class MainWindow extends JFrame{
 				break;
 			case Ressource:
 				showOtherScreen(Ppreiskal);
+				prev.setEnabled(false);
 				break;
 			case Machine:
 				showOtherScreen(Pwerkstoffe);
@@ -123,6 +121,10 @@ public class MainWindow extends JFrame{
 	JTextField infoPanel = new JTextField(10);
 
 	private JMenuBar menuBar;
+
+	private JButton prev;
+
+	private JButton next;
 
 	
 
@@ -332,9 +334,10 @@ public class MainWindow extends JFrame{
 	public void startGame(){
 		west.setVisible(true);
 		JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
-		JButton prev = new JButton("Zurück");
+		 prev = new JButton("Zurück");
+		 prev.setEnabled(false);
 		prev.addActionListener(new PrevActionListener());
-		JButton next = new JButton("Weiter");
+		 next = new JButton("Weiter");
 		next.addActionListener(new NextActionListener());
 		JPanel p = new JPanel();
 		mainframe.add(p,BorderLayout.SOUTH);
@@ -538,6 +541,8 @@ public class MainWindow extends JFrame{
 	}
 	
 	void showOtherScreen(TypedPanel t) {
+		next.setEnabled(true);
+		prev.setEnabled(true);
 		mainframe.add(t, BorderLayout.CENTER);
 		mainframe.remove(lastUsed);
 		mainframe.repaint();
