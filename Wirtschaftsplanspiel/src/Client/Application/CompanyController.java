@@ -19,6 +19,7 @@ import Client.Application.UserCanNotPayException;
 import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
 import Client.Entities.RessourceType;
+import Client.Presentation.MainWindow;
 
 public abstract class CompanyController {
 	
@@ -32,6 +33,7 @@ public abstract class CompanyController {
 		if(Company.getInstance().isLiquid(price) == false)
 			throw new UserCanNotPayException();
 		Company.getInstance().decMoney(price);
+		MainWindow.getInstance().updateInfoPanel();
 	}
 	
 	
@@ -89,8 +91,9 @@ public abstract class CompanyController {
 		if (!comp.getMachines().contains(machine)) {
 			throw new MachineNotOwnedException();
 		}
-		comp.incMoney(machine.getValue() / 2);
 		comp.removeMachine(machine);
+		comp.incMoney(machine.getValue() / 2);
+		MainWindow.getInstance().updateInfoPanel();
 	}
 	
 	public static double depcrecateMachines() {
@@ -254,8 +257,10 @@ public abstract class CompanyController {
 		   Company comp = Company.getInstance();
 		   int units = comp.getProdAndDistr().getUnitsToProduce();
 		   
-			if(!(canProduce()))
+			if(!(canProduce())) {
+				// TODO: Spezifizieren, was fehlt, damits im UI angezeigt werden kann.
 				throw new CannotProduceException();
+			}
 			
 			for(RessourceType t: RessourceType.values()) {
 				comp.getRessource(t).decStoredUnits(units*Ressource.getNeed(t));
@@ -324,11 +329,17 @@ public abstract class CompanyController {
 	
 	public static void payInterestAndRepayment() throws UserCanNotPayException{
 		Company comp = Company.getInstance();
-		Credit cred = comp.getCredit();
-		payItem(cred.getAnuity());
-		//Wenn Credit abbezahlt
-		if(cred.payInterestAndRepayment())
-			comp.removeCredit();
+		Credit cred;
+		try {
+			cred = comp.getCredit();
+			payItem(cred.getAnuity());
+			//Wenn Credit abbezahlt
+			if(cred.payInterestAndRepayment())
+				comp.removeCredit();
+		} catch (CreditNotExistsException e) {
+			//Wenn kein Kredit, auch keine Zahlung
+		}
+
 		
 	}
 	
@@ -346,12 +357,12 @@ public abstract class CompanyController {
 	//Verkaufserlöse	
 	public static void receiveSalesRevenue(double Revenue, int SoldProducts) {
 		Company comp = Company.getInstance();
-		comp.incMoney(Revenue);
 		comp.decFinishedProducts(SoldProducts);
+		comp.incMoney(Revenue);
 		
 		Period period = PeriodInfo.getActualPeriod();
 		period.setRevenue(Revenue);
-		
+		MainWindow.getInstance().updateInfoPanel();
 	}
 	
 	//Lagekosten

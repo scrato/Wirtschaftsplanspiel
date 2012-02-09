@@ -45,6 +45,8 @@ public class MachinePanel extends JPanel {
 	Company company = Company.getInstance();
 	JTextField filOutput = new JTextField(5);
 	JTextField verpOutput = new JTextField(5);
+
+	public Integer capacityInt = 200;
 	
 	public MachinePanel(){
 	
@@ -72,7 +74,7 @@ public class MachinePanel extends JPanel {
 			
 		  machineScrollPane = new JScrollPane(machineTable);
 	
-		
+		 refreshCapacity();
 		
 		
 		JButton verkaufen = new JButton("verkaufen");
@@ -176,12 +178,13 @@ public class MachinePanel extends JPanel {
 		c.gridx = 1;
 		c.gridy = 8;
 		add(verpOutput,c);
+		refreshCapacity();
 	}
 			
 		public void refreshMachineTable(){
 			DefaultTableModel tableModel = new DefaultTableModel(machineData, machineColumnNames); //(DefaultTableModel) machineTable.getModel();
 			
-				
+			refreshCapacity();
 			Iterator<Machine> machineItr = company.getMachines().iterator();
 			Machine machine;
 
@@ -198,9 +201,10 @@ public class MachinePanel extends JPanel {
 			machineTable.setModel(tableModel);		
 			}
 		public void refreshCapacity(){
-			filOutput.setText(CompanyController.missingMachines(MachineType.Filitiermaschine, 200) + "");
-			verpOutput.setText(CompanyController.missingMachines(MachineType.Filitiermaschine, 200) + "");
+			filOutput.setText(CompanyController.missingMachines(MachineType.Filitiermaschine, capacityInt) + "");
+			verpOutput.setText(CompanyController.missingMachines(MachineType.Verpackungsmaschine, capacityInt) + "");
 		}
+		
 		
 		private class MachineVerkaufen implements ActionListener{
 				
@@ -283,8 +287,8 @@ public class MachinePanel extends JPanel {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
 				// TODO Auto-generated method stub
-				int capacityInt = Integer.valueOf((String)capacity.getSelectedItem());
-				
+				capacityInt = Integer.valueOf((String)capacity.getSelectedItem());
+				refreshCapacity();
 				if(type.getSelectedItem().equals("Filitiermaschine")){
 					costOutput.setText((capacityInt * 1.5) + "");
 				}else{
@@ -293,7 +297,5 @@ public class MachinePanel extends JPanel {
 				}
 			}
 			
-		}
-
-		
+		}		
 }

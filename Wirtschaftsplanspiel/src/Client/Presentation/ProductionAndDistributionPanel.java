@@ -10,15 +10,14 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Currency;
-import java.util.Locale;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 import Client.Application.CompanyController;
 import Client.Entities.Company;
@@ -61,7 +60,8 @@ public class ProductionAndDistributionPanel extends JPanel {
 	 *
 	 */
 	private class TextListener implements KeyListener {
-
+		//Rücktaste, Pfeiltasten, Komma, Punkt
+		//private Integer[] keysallowed = {110,46,37,39,38,40,8};
 		@Override
 		public void keyPressed(KeyEvent arg0) {			
 		
@@ -70,19 +70,24 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
+			//Wenn es eine Zahl ist
+			if ((arg0.getKeyCode() >= KeyEvent.VK_0 && arg0.getKeyCode() <= KeyEvent.VK_9) || 
+					(arg0.getKeyCode() >= KeyEvent.VK_NUMPAD0 && arg0.getKeyCode() <= KeyEvent.VK_NUMPAD9))	{
+			
 			try
 			{
 					refreshCount();
 			}
 			catch(NumberFormatException ex1)
 			{
-				JTextField c = (JTextField) arg0.getComponent();
+				JTextPane c = (JTextPane) arg0.getComponent();
 				c.setText(String.valueOf(0));
 				return;
 			}
 			catch(ClassCastException ex2)
 			{
 				return;
+			}
 			}
 
 		}
@@ -98,9 +103,9 @@ public class ProductionAndDistributionPanel extends JPanel {
 	
 	private static int capid = 0;
 	private TextListener tl = new TextListener();
-	private JTextField amountproduce;
-	private JTextField pricesell;
-	private JTextField amountsell;
+	private JTextPane amountproduce;
+	private JTextPane pricesell;
+	private JTextPane amountsell;
 	
 	private JLabel l_finishedProducts;
 	private JLabel l_lastPeriodSellingPrice;
@@ -111,12 +116,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private double priceToSell;
 	private int amountToSell;
 	
-	private final double PRICEMIN = 800;
-	private final double PRICEMAX = 10000;
-	DecimalFormat currencyFormat = new DecimalFormat();
-	DecimalFormat unitFormat = new DecimalFormat();
-	
-	
 	private Company comp = Company.getInstance();
 	
 	
@@ -125,8 +124,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private int maxSellableUnits;
 
 	private JComboBox cb_capacities;
-
-	private JLabel l_priceRating;
 
 	private JLabel l_missingRessource1;
 
@@ -139,17 +136,22 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private JLabel l_missingMachine0;
 
 	private JLabel l_missingMachine1;
+	private DecimalFormat decformat;
+	private DecimalFormat curformat;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2375380045275272220L;
 
 	public ProductionAndDistributionPanel(){
-		currencyFormat.setCurrency(Currency.getInstance(Locale.getDefault()));
 		/*public Insets(int top,
       int left,
       int bottom,
       int right)*/
+		decformat = new DecimalFormat();
+		curformat = new DecimalFormat();
+		curformat.setCurrency(Currency.getInstance(getDefaultLocale()));
+		curformat.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(getDefaultLocale()));
 		GridBagConstraints c = new GridBagConstraints();
 
 		c.gridx = 0;
@@ -164,9 +166,9 @@ public class ProductionAndDistributionPanel extends JPanel {
 		createProductionPart(c);
 		
 		//Startwerte gleich dem vorher gespeicherten
-		amountsell.setText(String.valueOf(comp.getProdAndDistr().getUnitsToSell()));
-		amountproduce.setText(String.valueOf(comp.getProdAndDistr().getUnitsToProduce()));
-		pricesell.setText(String.valueOf(comp.getProdAndDistr().getSellingPrice()));
+		amountsell.setText(decformat.format(comp.getProdAndDistr().getUnitsToSell()));
+		amountproduce.setText(decformat.format(comp.getProdAndDistr().getUnitsToProduce()));
+		pricesell.setText(curformat.format(comp.getProdAndDistr().getSellingPrice()));
 		refreshCount();
 		cb_capacities.setSelectedIndex(capid);
 		actualCapacity = Integer.parseInt((String) cb_capacities.getSelectedItem());
@@ -192,7 +194,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 		
 		this.add(new JLabel("Geplante Produktionsmenge: "),c);
 		c.gridx++;		
-		amountproduce = new JTextField();
+		amountproduce = new JTextPane();
 		amountproduce.setSize(100, 500);
 		amountproduce.addKeyListener(tl);
 		//amountproduce.setText(String.valueOf(comp.getProdAndDistr().getUnitsToProduce()));
@@ -300,26 +302,22 @@ public class ProductionAndDistributionPanel extends JPanel {
 		c.gridy++;
 		
 		//Verkaufsmenge
-		this.add(new JLabel("Geplante Verkaufsmenge (pro Palette) "),c);
+		this.add(new JLabel("Geplante Verkaufsmenge: "),c);
 		
 		c.gridx++;
 		c.fill = GridBagConstraints.BOTH;
-		amountsell = new JTextField();
+		amountsell = new JTextPane();
 		amountsell.addKeyListener(tl);
 		this.add(amountsell, c);  
 		c.gridy++;
 		c.gridx = 0;
 		
 		//Verkaufspreis
-		this.add(new JLabel("Geplanter Verkaufspreis (pro Palette): "),c);
+		this.add(new JLabel("Geplanter Verkaufspreis: "),c);
 		c.gridx++;
-		pricesell = new JTextField();
+		pricesell = new JTextPane();
 		pricesell.addKeyListener(tl);
 		this.add(pricesell, c);
-		
-		c.gridx++;
-		l_priceRating = new JLabel();
-		this.add(l_priceRating, c);
 		
 		c.gridx = 0;		
 		c.gridy++;
@@ -357,9 +355,25 @@ public class ProductionAndDistributionPanel extends JPanel {
 		c.gridy++;
 
 		//Neue Zeile
-		this.add(new JLabel("Aktuell produzierbare Fertigprodukte : "),c);
+		this.add(new JLabel("Aktuell produzierbare Fertigprodukte: "),c);
 		c.gridx++;
 		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");
+		this.add(l_maxProducableUnits,c);
+		c.gridx=0;
+		c.gridy++;
+		
+		//Neue Zeile
+		this.add(new JLabel("Durchschnittliche Nachfrage pro Spieler: "),c);
+		c.gridx++;
+		l_maxProducableUnits =new JLabel(decformat.format(Server.Application.AppContext.STANDARD_DEMAND_PER_PLAYER) + " Paletten");
+		this.add(l_maxProducableUnits,c);
+		c.gridx=0;
+		c.gridy++;
+		
+		//Neue Zeile
+		this.add(new JLabel("Durchschnittlicher Preis: "),c);
+		c.gridx++;
+		l_maxProducableUnits =new JLabel(curformat.format(Server.Application.AppContext.STANDARD_PRICE_PER_UNIT) + "€ pro Palette");
 		this.add(l_maxProducableUnits,c);
 		c.gridx=0;
 		c.gridy++;
@@ -367,19 +381,19 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 
 	private String getMissingEmployee(EmployeeType type) {
-		return	String.valueOf(CompanyController.missingEmployees(type));	
+		return	decformat.format(CompanyController.missingEmployees(type));	
 
 	}
 
 
 	private String getMissingMachine(MachineType type) {
-		return String.valueOf(CompanyController.missingMachines(type,actualCapacity));
+		return decformat.format(CompanyController.missingMachines(type,actualCapacity));
 
 	}
 
 
 	private String getMissingRessource(RessourceType type) {
-			return CompanyController.missingRessources(type) + " " + Ressource.getUnit(type);
+			return decformat.format(CompanyController.missingRessources(type)) + " " + Ressource.getUnit(type);
 	}
 
 
@@ -402,19 +416,17 @@ public class ProductionAndDistributionPanel extends JPanel {
 	}*/
 	
 	private void refreshCount() {
-		pricesell.setText(convertToCurrency(pricesell.getText()));
-		amountproduce.setText(convertToUnit(amountproduce.getText()));
-		amountsell.setText(convertToUnit(amountsell.getText()));
+		pricesell.setText(cutAndTrim(pricesell.getText()));
+		amountproduce.setText(cutAndValidate(amountproduce.getText()));
+		amountsell.setText(cutAndValidate(amountsell.getText()));
 		
-		try{unitsToProduce = unitFormat.parse((amountproduce.getText())).intValue();}	
-			catch(NumberFormatException e){} 
-			catch (ParseException e) {}
-		try{priceToSell = currencyFormat.parse(pricesell.getText()).doubleValue();}
-		catch(NumberFormatException e){} 
-		catch (ParseException e) {}
-		try{amountToSell = unitFormat.parse(amountsell.getText()).intValue();}
-		catch(NumberFormatException e){} 
-		catch (ParseException e) {}
+		try{unitsToProduce = decformat.parse(amountproduce.getText()).intValue();}catch(ParseException e){}
+		try{priceToSell = decformat.parse(pricesell.getText()).doubleValue();}catch(ParseException e){}
+		try{amountToSell =  decformat.parse(amountsell.getText()).intValue();}catch(ParseException e){}
+		
+
+		
+		
 		comp.getProdAndDistr().setUnitsToProduce(unitsToProduce);
 		comp.getProdAndDistr().setUnitsToSell(amountToSell);
 		comp.getProdAndDistr().setSellingPrice(priceToSell);
@@ -438,25 +450,27 @@ public class ProductionAndDistributionPanel extends JPanel {
 		l_missingEmployee0.setText(getMissingEmployee(EmployeeType.values()[0]));
 		l_missingEmployee1.setText(getMissingEmployee(EmployeeType.values()[1]));
 		
-		if(priceToSell>PRICEMAX){
-			l_priceRating.setText("Preis ist zu hoch");
-			l_priceRating.setForeground(Color.RED);
-		}else if(priceToSell<PRICEMIN){
-			l_priceRating.setText("Preis ist zu niedrig");
-			l_priceRating.setForeground(Color.BLUE);
-		}else{
-			l_priceRating.setText("Preis liegt im Rahmen");
-			l_priceRating.setForeground(Color.decode("418831"));
+	}
+
+	private String cutAndValidate(String text) {
+		try {
+			return decformat.format(decformat.parse(text).intValue());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
 		}
-	}
-
-	private String convertToUnit(String text) {
-		return unitFormat.format(Integer.valueOf(text));
+		return text;
 	}
 
 
-	private String convertToCurrency(String text) {
-		return currencyFormat.format(Double.valueOf(text));
+	private String cutAndTrim(String text) {
+		try {
+			return curformat.format(curformat.parse(text).doubleValue());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+		return text;
 	}
 
 

@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 
 import javax.swing.*;
@@ -20,6 +21,8 @@ import Client.Entities.Player;
 import Client.Entities.MachineType;
 import Client.Network.Client;
 import java.util.List;
+
+import Client.Application.CannotProduceException;
 import Client.Application.CompanyController;
 import Client.Application.PeriodController;
 
@@ -41,7 +44,7 @@ public class MainWindow extends JFrame{
 	JPanel Pwerkstoffe = new RessourcePanel();
 	JPanel Pmaschinen = new MachinePanel();
 	JPanel Ppersonal = new EmployeePanel();
-	JPanel Pdarlehen = new JPanel();
+	JPanel Pdarlehen = new CreditPanel();
 	JPanel Pbericht = new ReportingPanel();
 	JPanel Ppreiskal = new ProductionAndDistributionPanel();
 	
@@ -57,7 +60,7 @@ public class MainWindow extends JFrame{
 	JTextArea chatOutput = new JTextArea(19,25);
 	
 	Company company;
-	JTextArea infoPanel = new JTextArea();
+	JTextField infoPanel = new JTextField(10);
 
 	private JMenuBar menuBar;
 
@@ -188,7 +191,6 @@ public class MainWindow extends JFrame{
 		Jsend.addActionListener(new sendChatMessage(chatInput));
 						
 		// Übersicht Layout
-		infoPanel.setSize(200,200);
 		infoPanel.setBackground(Color.LIGHT_GRAY);
 		
 		infoPanel.validate();
@@ -213,8 +215,15 @@ public class MainWindow extends JFrame{
 		east.add(infoPanel,c); 
 	}
 	
+	
+	private static DecimalFormat format = new DecimalFormat("###,###,##0.00");
+	private static String getValueString(double Value) {
+		return format.format(Math.round(Value*100.0)/100.0);
+	}
+	
+	
 	public void updateInfoPanel(){
-		infoPanel.setText("Bank: " + Company.getInstance().getMoney() + " \nForderungen \nVerbindlichkeiten \nGebäude");
+		infoPanel.setText("  Bank: " + MainWindow.getValueString(Company.getInstance().getMoney()));
 	}
 	
 	public void buildWest(){
@@ -317,6 +326,7 @@ public class MainWindow extends JFrame{
 			this.frame = frame;
 		}
 		public void actionPerformed(ActionEvent arg0) {
+			((MachinePanel) Pmaschinen).refreshCapacity();
 			frame.add(Pmaschinen, BorderLayout.CENTER);
 			frame.remove(lastUsed);
 			frame.validate();
@@ -512,7 +522,7 @@ public class MainWindow extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			ServerController.StartGame();
-			JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
+			//JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
 		}
 		
 	}
@@ -521,9 +531,13 @@ public class MainWindow extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			PeriodController.SendSupply();
-			
+			try {
+				PeriodController.ClosePeriod();
+			} catch (CannotProduceException e1) {
+				//TODO: Anpassen und spezifieren.
+
+				JOptionPane.showMessageDialog(null, "Es konnte nicht produziert werden.", "Zu wenig Produktionsfaktoren", JOptionPane.CANCEL_OPTION);
+			}
 		}
 		
 	}

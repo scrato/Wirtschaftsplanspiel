@@ -9,9 +9,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
+import java.util.Currency;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -34,9 +39,13 @@ public class RessourcePanel extends JPanel {
 	private static final long serialVersionUID = 253066089188179500L;
 
 	private List<RessourceBuyAmountListener> buyAmountListener = new LinkedList<RessourceBuyAmountListener>();
-
+	private DecimalFormat format;
 	public RessourcePanel(){
 		me = this;
+		format = new DecimalFormat();
+		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(getLocale()));
+		format.setCurrency(Currency.getInstance(getLocale()));
+		
 		GridBagConstraints c = new GridBagConstraints();
 		
 		// Werkstoffe
@@ -178,15 +187,18 @@ public class RessourcePanel extends JPanel {
 			try
 			{			
 				tBuy.setText(tBuy.getText().replaceAll("\\D", ""));
-				int amount = Integer.parseInt(tBuy.getText().trim());
+				int amount = 0;
+				try {amount = format.parse(tBuy.getText().trim()).intValue();} catch (ParseException e) {}
+				
 				if (amount<= 0){
 					tcosts.setText("0€");
 					return;
 				}
+				
 				Ressource res = Company.getInstance().getRessource(tBuy.getType());
 				
 				double costs = (res.getPricePerUnit() * amount) + Ressource.getFixedCosts(tBuy.getType());
-				tcosts.setText(costs + "€");
+				tcosts.setText(format.format(costs) + "€");
 				
 				
 			}
@@ -237,29 +249,35 @@ public class RessourcePanel extends JPanel {
 				
 					//Label der den Güterpreis darstellt
 					case goodPrice:
-						label.setText(getPricePointed(res));
+						label.setText(format.format(res.getPricePerUnit()) + Currency.getInstance(getLocale()).getSymbol());
 						break;
 						
 					//Label der Ressourcen auf Lager
 					case goodsInStock:
-						label.setText(String.valueOf(res.getStoredUnits()) + unitname);
+						label.setText(format.format(res.getStoredUnits()) + unitname);
 						break;
 						
 					//Label der benötigten Ressourcen
 					case goodsNeeded:
 						//TODO: Production-Units: (Lars) FIXED: missingBlaBla methoden umgeschrieben, lesen jetzt aus Company.Production.
 													  // diese wird im Absatz und Prod. Planungs Screen gefüllt.
-						label.setText(String.valueOf(CompanyController.missingUnitsOnRessources().get(type)) + unitname);
+						Map<RessourceType,Integer> missing = CompanyController.missingUnitsOnRessources();
+						
+						if (missing.get(type) == null){
+							label.setText("0 " + unitname);
+							break;
+						}
+						label.setText(format.format(missing.get(type)) + unitname);
 						break;
 						
 					//Label der Ressourcen auf dem Markt
 					case goodsBuyable:
-						label.setText(String.valueOf(res.getBuyableUnits()) + unitname);
+						label.setText(format.format(res.getBuyableUnits()) + unitname);
 						break;
 						
 					//Label der Fixkosten für den Ressourcentyp
 					case fixedPrice:
-						label.setText(String.valueOf(Ressource.getFixedCosts(type)) + "€");
+						label.setText(format.format(Ressource.getFixedCosts(type)) + "€");
 						break;
 				}
 					
