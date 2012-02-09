@@ -11,7 +11,7 @@ public  class TypedPanel extends JPanel {
 		Employee,
 		Credit,
 		Reporting,
-		Startbildschirm
+		Startbildschirm, Wartebildschirm
 	}
 	/**
 	 * 

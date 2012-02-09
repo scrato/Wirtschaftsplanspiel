@@ -138,6 +138,8 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	private JLabel l_missingMachine1;
 	private DecimalFormat decformat;
 	private DecimalFormat curformat;
+	private JLabel l_standardPrice;
+	private JLabel l_standardNeedPerPlayer;
 	/**
 	 * 
 	 */
@@ -364,18 +366,18 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		c.gridy++;
 		
 		//Neue Zeile
-		this.add(new JLabel("Durchschnittliche Nachfrage pro Spieler: "),c);
+		this.add(new JLabel("Mindestnachfrage pro Spieler: "),c);
 		c.gridx++;
-		l_maxProducableUnits =new JLabel(decformat.format(Server.Application.AppContext.STANDARD_DEMAND_PER_PLAYER) + " Paletten");
-		this.add(l_maxProducableUnits,c);
+		l_standardNeedPerPlayer =new JLabel(decformat.format(Server.Application.AppContext.STANDARD_DEMAND_PER_PLAYER) + " Paletten");
+		this.add(l_standardNeedPerPlayer,c);
 		c.gridx=0;
 		c.gridy++;
 		
 		//Neue Zeile
 		this.add(new JLabel("Durchschnittlicher Preis: "),c);
 		c.gridx++;
-		l_maxProducableUnits =new JLabel(curformat.format(Server.Application.AppContext.STANDARD_PRICE_PER_UNIT) + "€ pro Palette");
-		this.add(l_maxProducableUnits,c);
+		l_standardPrice =new JLabel(curformat.format(Server.Application.AppContext.STANDARD_PRICE_PER_UNIT) + "€ pro Palette");
+		this.add(l_standardPrice,c);
 		c.gridx=0;
 		c.gridy++;
 	}
@@ -417,6 +419,7 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	}*/
 	
 	private void refreshCount() {
+		maxProducableUnits = comp.getProdAndDistr().getMaxProducableUnits();
 		pricesell.setText(cutAndTrim(pricesell.getText()));
 		amountproduce.setText(cutAndValidate(amountproduce.getText()));
 		amountsell.setText(cutAndValidate(amountsell.getText()));
@@ -479,14 +482,16 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	@Override
 	public void refreshPanel() {
 		refreshCount();
-		
-		if(PeriodInfo.getNumberOfActPeriod() == 0)
-			l_lastPeriodSellingPrice = new JLabel("Bisher keine Produkte verkauft");
+		int pernum = PeriodInfo.getNumberOfActPeriod();
+		if(pernum == 0)
+			l_lastPeriodSellingPrice.setText("Bisher keine Produkte verkauft");
 		else
-			l_lastPeriodSellingPrice = new JLabel(String.valueOf(PeriodInfo.getActualPeriod().getProductPrice()) + "€");
+			l_lastPeriodSellingPrice.setText(String.valueOf(PeriodInfo.getPeriod(pernum - 1).getProductPrice()) + "€");
 		
-		l_finishedProducts = new JLabel(String.valueOf(comp.getFinishedProducts()) + " Paletten");
-		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");
+		l_finishedProducts.setText(String.valueOf(comp.getFinishedProducts()) + " Paletten");
+		l_maxProducableUnits.setText(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");
+		l_standardNeedPerPlayer.setText(decformat.format(Server.Application.AppContext.STANDARD_DEMAND_PER_PLAYER) + " Paletten");
+		l_standardPrice.setText(curformat.format(Server.Application.AppContext.STANDARD_PRICE_PER_UNIT) + "€ pro Palette");
 	}
 
 

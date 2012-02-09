@@ -96,7 +96,7 @@ public abstract class PeriodController {
 		
 		//MainWindow.getInstance().setAct
 		PeriodInfo.nextPeriod();
-		
+		MainWindow.getInstance().reactiviateAfterPeriod();
 	}
 	
 }
