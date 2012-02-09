@@ -11,6 +11,7 @@ public class Credit {
 	private int leftPeriods;
 	
 	private double anuity;
+	private boolean hasCredit;
 	
 	private double interestPercentage;
 	public final static double INTERESTPERPERIODINPERCENT = 5d;
@@ -18,7 +19,7 @@ public class Credit {
 	
 	public Credit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException{
 		//Dynamische Anpassung des Zinsatzes -> (Laufzeit * 0,5) + Basissatz von 5%... heißt Kredit über 10 Jahre hat 10% Zinsen 
-		this.interestPercentage = ((contractPeriod * INTERESTPERPERIODINPERCENT) + BASEINTERESTINPERCENT) / 100;
+		this.interestPercentage = getPercentageForPeriods(contractPeriod);
 		
 		this.initialCreditHeight = creditHeight;
 		this.leftPeriods = contractPeriod;
@@ -27,6 +28,10 @@ public class Credit {
 		this.contractPeriod = contractPeriod;
 		setAnuity(creditHeight);
 		CanTakeCredit(creditHeight, contractPeriod);
+	}
+
+	public static double getPercentageForPeriods(int contractPeriod) {
+		return ((contractPeriod * INTERESTPERPERIODINPERCENT) + BASEINTERESTINPERCENT) / 100;
 	}
 
 	/**
@@ -105,5 +110,6 @@ public class Credit {
 	public double getLeftPeriods() {
 		return leftPeriods;
 	}
+	
 
 }
