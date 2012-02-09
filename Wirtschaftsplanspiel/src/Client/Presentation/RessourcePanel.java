@@ -30,7 +30,7 @@ import Client.Entities.Company;
 import Client.Entities.Ressource;
 import Client.Entities.RessourceType;
 
-public class RessourcePanel extends JPanel {
+public class RessourcePanel extends TypedPanel {
 	protected static JPanel me;
 	
 	/**
@@ -41,6 +41,7 @@ public class RessourcePanel extends JPanel {
 	private List<RessourceBuyAmountListener> buyAmountListener = new LinkedList<RessourceBuyAmountListener>();
 	private DecimalFormat format;
 	public RessourcePanel(){
+		super(PanelType.Ressource);
 		me = this;
 		format = new DecimalFormat();
 		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(getLocale()));

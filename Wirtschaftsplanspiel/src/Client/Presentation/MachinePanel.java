@@ -32,7 +32,7 @@ import Client.Application.MachineAlreadyBoughtException;
 import Client.Application.MachineNotOwnedException;
 import Client.Application.UserCanNotPayException;
 
-public class MachinePanel extends JPanel {
+public class MachinePanel extends TypedPanel {
 	
 	
 	// MachineScreen
@@ -49,7 +49,7 @@ public class MachinePanel extends JPanel {
 	public Integer capacityInt = 200;
 	
 	public MachinePanel(){
-	
+		super(PanelType.Machine);
 		Border border = BorderFactory.createLineBorder(Color.blue);
 		String[] types = { "Filitiermaschine", "Verpackungsmaschine"};
 		String[] capacites = Machine.capacites;

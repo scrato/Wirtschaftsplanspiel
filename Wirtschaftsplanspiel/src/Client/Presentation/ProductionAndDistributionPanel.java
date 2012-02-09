@@ -33,7 +33,7 @@ import Client.Entities.RessourceType;
  * @author Scrato
  *
  */
-public class ProductionAndDistributionPanel extends JPanel {
+public class ProductionAndDistributionPanel extends TypedPanel {
 	
 	
 	/**
@@ -144,6 +144,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private static final long serialVersionUID = 2375380045275272220L;
 
 	public ProductionAndDistributionPanel(){
+		super(PanelType.ProdAndDistr);
 		/*public Insets(int top,
       int left,
       int bottom,

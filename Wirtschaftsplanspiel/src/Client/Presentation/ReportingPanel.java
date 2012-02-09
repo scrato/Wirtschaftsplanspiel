@@ -2,7 +2,6 @@ package Client.Presentation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -10,24 +9,13 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-
-import NetworkCommunication.StringOperation;
-import Client.Entities.Period;
-import Client.Entities.PeriodInfo;
 import Client.Entities.ProfitAndLoss;
 import Client.Entities.Balance;
 
-public class ReportingPanel extends JPanel {
+public class ReportingPanel extends TypedPanel {
 	
 	public class TAccountEntry extends JPanel {	
 
@@ -244,6 +232,7 @@ public class ReportingPanel extends JPanel {
 	private TAccount guVPanel;
 	
 	public ReportingPanel() {
+		super(PanelType.Reporting);
 		//super(new GridLayout(2,1));
 		
 		//this.setMaximumSize(new Dimension(500, 300));

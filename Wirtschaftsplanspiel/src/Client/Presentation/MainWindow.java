@@ -28,6 +28,64 @@ import Client.Application.PeriodController;
 
 public class MainWindow extends JFrame{
 	
+	private class NextActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			switch(lastUsed.type){
+			case ProdAndDistr:
+				showOtherScreen(Pwerkstoffe);
+				break;
+			case Ressource:
+				showOtherScreen(Pmaschinen);
+				break;
+			case Machine:
+				showOtherScreen(Ppersonal);
+				break;
+			case Employee:
+				showOtherScreen(Pdarlehen);
+				break;
+			case Credit:
+				showOtherScreen(Pbericht);
+				break;
+			case Reporting:
+				break;		
+			case Startbildschirm:
+				showOtherScreen(Ppreiskal);
+				break;		
+			}
+
+		}
+
+	}
+
+	private class PrevActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			switch(lastUsed.type){
+			case ProdAndDistr:
+				break;
+			case Ressource:
+				showOtherScreen(Ppreiskal);
+				break;
+			case Machine:
+				showOtherScreen(Pwerkstoffe);
+				break;
+			case Employee:
+				showOtherScreen(Pmaschinen);
+				break;
+			case Credit:
+				showOtherScreen(Ppersonal);
+				break;
+			case Reporting:
+				showOtherScreen(Pdarlehen);
+				break;				
+			}
+		}
+
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	JFrame mainWindow = this;
@@ -37,19 +95,21 @@ public class MainWindow extends JFrame{
 	JPanel east = new JPanel();
 	JPanel west = new JPanel();
 	JPanel south = new JPanel();
-	JPanel center = new JPanel();
+	JPanel mainframe = new JPanel();
+
 	
 	
 	// Panel für diverse Screens
-	JPanel Pwerkstoffe = new RessourcePanel();
-	JPanel Pmaschinen = new MachinePanel();
-	JPanel Ppersonal = new EmployeePanel();
-	JPanel Pdarlehen = new CreditPanel();
-	JPanel Pbericht = new ReportingPanel();
-	JPanel Ppreiskal = new ProductionAndDistributionPanel();
+	TypedPanel Psplash = new TypedPanel(TypedPanel.PanelType.Startbildschirm);
+	TypedPanel Pwerkstoffe = new RessourcePanel();
+	TypedPanel Pmaschinen = new MachinePanel();
+	TypedPanel Ppersonal = new EmployeePanel();
+	TypedPanel Pdarlehen = new CreditPanel();
+	TypedPanel Pbericht = new ReportingPanel();
+	TypedPanel Ppreiskal = new ProductionAndDistributionPanel();
 	
 	// Panel das sich aktuell im CENTER befindet -> muss aus dem JFrame gelöscht werden, um anderes zu laden.
-	JPanel lastUsed;
+	TypedPanel lastUsed;
 	
 	boolean isServer;// = Player.isHost();
 	
@@ -63,6 +123,8 @@ public class MainWindow extends JFrame{
 	JTextField infoPanel = new JTextField(10);
 
 	private JMenuBar menuBar;
+
+	
 
 	
 	// Singletonreferenz 
@@ -117,11 +179,16 @@ public class MainWindow extends JFrame{
 		this.setMinimumSize(new Dimension(800,680));
 		this.add(east, BorderLayout.EAST);
 		this.add(west, BorderLayout.WEST);
-		this.add(center, BorderLayout.CENTER);
-		lastUsed = center;
+		this.add(mainframe, BorderLayout.CENTER);
+
+		mainframe.setLayout(new BorderLayout());
+		mainframe.add(Psplash, BorderLayout.CENTER);
+		
+		
+		lastUsed = Psplash;
 		
 		// Willkommen Screen
-		center.setLayout(new GridBagLayout());
+		Psplash.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		JLabel welcome = new JLabel("Herzlich willkommen bei Business Basics!");
 		JLabel LabelActivePlayers = new JLabel("Zur Zeit sind folgende Spieler verbunden:");
@@ -132,13 +199,13 @@ public class MainWindow extends JFrame{
 		c.gridx = 0;
 		c.gridy = 0;
 		c.ipady = 30;
-		center.add(welcome,c);
+		Psplash.add(welcome,c);
 		
 		
 		c.gridx = 0;
 		c.gridy = 1;
 		c.ipady = 20;
-		center.add(LabelActivePlayers, c);
+		Psplash.add(LabelActivePlayers, c);
 		
 		
 		ListPlayers.setFont(new Font("Dialog", 0,16));
@@ -147,7 +214,7 @@ public class MainWindow extends JFrame{
 		c.gridy = 2;
 		c.gridx = 0;
 		c.ipady = 0;
-		center.add(ListPlayers,c);
+		Psplash.add(ListPlayers,c);
 	}
 	
  void serverMenuInit(){
@@ -238,12 +305,12 @@ public class MainWindow extends JFrame{
 		JButton periode = new JButton("Periode abschließen");
 					
 		// Action Listener
-		werkstoffe.addActionListener(new showWerkstoffe(this));
-		maschinen.addActionListener(new showMaschinen(this));
-		personal.addActionListener(new showPersonal(this));
-		darlehen.addActionListener(new showDarlehen(this));
-		bericht.addActionListener(new showBericht(this));
-		preiskal.addActionListener(new showPreiskal(this));
+		werkstoffe.addActionListener(new showWerkstoffe());
+		maschinen.addActionListener(new showMaschinen());
+		personal.addActionListener(new showPersonal());
+		darlehen.addActionListener(new showDarlehen());
+		bericht.addActionListener(new showBericht());
+		preiskal.addActionListener(new showPreiskal());
 		periode.addActionListener(new periodeAbschliessen());
 		
 		west.add(lMenue);
@@ -265,6 +332,16 @@ public class MainWindow extends JFrame{
 	public void startGame(){
 		west.setVisible(true);
 		JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
+		JButton prev = new JButton("Zurück");
+		prev.addActionListener(new PrevActionListener());
+		JButton next = new JButton("Weiter");
+		next.addActionListener(new NextActionListener());
+		JPanel p = new JPanel();
+		mainframe.add(p,BorderLayout.SOUTH);
+		p.add(prev, BorderLayout.EAST);
+		p.add(next,BorderLayout.WEST);
+		mainframe.repaint();
+		mainframe.validate();
 	}
 	
 	public void setPlayers(List<Player> players){
@@ -302,110 +379,53 @@ public class MainWindow extends JFrame{
 	
 	private class showWerkstoffe implements ActionListener{
 		
-		JFrame frame;
-		
-		public showWerkstoffe(JFrame frame){
-			this.frame = frame;
-		}
 		public void actionPerformed(ActionEvent arg0) {
 			Pwerkstoffe = new RessourcePanel();
-			frame.add(Pwerkstoffe, BorderLayout.CENTER);
-			frame.remove(lastUsed);
-			frame.repaint();
-			frame.validate();
-			lastUsed = Pwerkstoffe;
+			showOtherScreen(Pwerkstoffe);
 		}
 		
 	}
 	
 	private class showMaschinen implements ActionListener{
-		
-		JFrame frame;
-		
-		public showMaschinen(JFrame frame){
-			this.frame = frame;
-		}
+
+		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			((MachinePanel) Pmaschinen).refreshCapacity();
-			frame.add(Pmaschinen, BorderLayout.CENTER);
-			frame.remove(lastUsed);
-			frame.validate();
-			frame.repaint();
-			lastUsed = Pmaschinen;
+			showOtherScreen(Pmaschinen);
 			
 		}
 		
 	}
 	
 	private class showPersonal implements ActionListener{
-		
-		JFrame frame;
-		
-		public showPersonal(JFrame frame){
-			this.frame = frame;
-		}
 		public void actionPerformed(ActionEvent arg0) {
 			Ppersonal = new EmployeePanel();
-			frame.add(Ppersonal, BorderLayout.CENTER);
-			frame.remove(lastUsed);
-			frame.validate();
-			frame.repaint();
-			lastUsed = Ppersonal;
+			showOtherScreen(Ppersonal);
 			
 		}
 		
 	}
 	
 	private class showDarlehen implements ActionListener{
-		
-		JFrame frame;
-		
-		public showDarlehen(JFrame frame){
-			this.frame = frame;
-		}
 		public void actionPerformed(ActionEvent arg0) {
-			frame.add(Pdarlehen, BorderLayout.CENTER);
-			frame.remove(lastUsed);
-			frame.validate();
-			frame.repaint();
-			lastUsed = Pdarlehen;
+			showOtherScreen(Pdarlehen);
 			
 		}
 		
 	}
 	
 	private class showBericht implements ActionListener{
-		
-		JFrame frame;
-		
-		public showBericht(JFrame frame){
-			this.frame = frame;
-		}
+
 		public void actionPerformed(ActionEvent arg0) {
-			frame.add(Pbericht, BorderLayout.CENTER);
-			frame.remove(lastUsed);
-			frame.validate();
-			frame.repaint();
-			lastUsed = Pbericht;
+			showOtherScreen(Pbericht);
 			
 		}
 		
 	}
 	
 	private class showPreiskal implements ActionListener{
-		
-		JFrame frame;
-		
-		public showPreiskal(JFrame frame){
-			this.frame = frame;
-		}
 		public void actionPerformed(ActionEvent arg0) {
-			Ppreiskal = new ProductionAndDistributionPanel();
-			frame.add(Ppreiskal, BorderLayout.CENTER);
-			frame.remove(lastUsed);
-			frame.validate();
-			frame.repaint();
-			lastUsed = Ppreiskal;
+			showOtherScreen(Ppreiskal);
 			
 		}
 		
@@ -517,6 +537,14 @@ public class MainWindow extends JFrame{
 		System.exit(3);
 	}
 	
+	void showOtherScreen(TypedPanel t) {
+		mainframe.add(t, BorderLayout.CENTER);
+		mainframe.remove(lastUsed);
+		mainframe.repaint();
+		mainframe.validate();
+		lastUsed = t;
+	}
+
 	private class startGame implements ActionListener{
 
 		@Override
