@@ -214,9 +214,9 @@ public class Period {
 		
 		balance.finishedProductsValue = p.finishedProductsValue;
 
-		try {
+		if (comp.getCredit() != null) {
 			balance.credit = comp.getCredit().getCreditLeft();
-		} catch (CreditNotExistsException e) {
+		} else {
 			balance.credit = 0;
 		}
 

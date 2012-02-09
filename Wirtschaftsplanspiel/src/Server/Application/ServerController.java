@@ -210,7 +210,7 @@ public class ServerController {
 				CompanyResult result = new CompanyResult(singleResult, sender.get_ID());
 				Disposal singleDisposal = PeriodBuffer.Disposals.get(sender.get_ID());
 				result.sales = singleDisposal.price * singleDisposal.quantity;
-				result.marketShare = singleDisposal.quantity / PeriodBuffer.getTotalDisposal();
+				result.marketShare = (PeriodBuffer.getTotalDisposal() == 0) ? 0 : singleDisposal.quantity / PeriodBuffer.getTotalDisposal();
 
 				profits.profitList.put(sender.get_ID(),result);
 			}

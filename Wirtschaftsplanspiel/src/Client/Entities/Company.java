@@ -98,10 +98,8 @@ public class Company {
 	 * Achtung: Wenn kein Credit gesetzt wird, kommt null zurück!
 	 * @throws CreditNotExistsException Wird geworfen, wenn kein Kredit existiert
 	 */
-	public Credit getCredit() throws CreditNotExistsException{
-		if(actCredit != null)
-			return actCredit;
-		throw new CreditNotExistsException();
+	public Credit getCredit() {
+		return actCredit;
 	}
 	public int getEmployeeCapacity(EmployeeType type) {
 		int capacity = 0;
