@@ -60,6 +60,8 @@ public abstract class PeriodController {
 			CompanyController.paySallery();
 			CompanyController.depcrecateMachines();
 			CompanyController.payInterestAndRepayment();
+			
+			
 			//CompanyController.payEmployersSalery(); //integrated in paySallery.
 			CompanyController.payRent();
 			
