@@ -88,14 +88,15 @@ public class Client {
 					
 			outputStream.write(sendNameBytes);
 
-			id = inputStream.readInt();
+			id = inputStream.readInt();			
+			
+			new Player(id, name);
 			
 			int playersCount = inputStream.readInt();
 			
 			int playerID;
 			byte[] playerNameBytes = new byte[20];
 			String playerName;
-			
 			for (int i = 0; i < playersCount; i++) {
 				playerID = inputStream.readInt();
 				inputStream.read(playerNameBytes, 0, 20);
