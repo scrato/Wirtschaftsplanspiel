@@ -19,7 +19,7 @@ public abstract class PeriodInfo {
 	      
 
 	public static void initRessources() {
-		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 20.00);
+		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 2.00);
 		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 5.00);
 	}
    

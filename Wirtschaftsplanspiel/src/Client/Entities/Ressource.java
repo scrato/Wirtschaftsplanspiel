@@ -17,7 +17,7 @@ public class Ressource {
 		//TODO: Units aktuell halten
 		switch(type){
 		case Rohfisch:
-			return "t";
+			return "kg";
 		case Verpackungsmaterial:
 			return "kg";
 		default:
@@ -41,7 +41,7 @@ public class Ressource {
 	public static int getNeed(RessourceType type){
 		switch(type){
 		case Rohfisch:
-			return 30;
+			return 300;
 		case Verpackungsmaterial:
 			return 10;
 		default:
