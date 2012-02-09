@@ -352,8 +352,70 @@ public class ReportingPanel extends TypedPanel {
 
 	@Override
 	public void refreshPanel() {
-		// TODO Auto-generated method stub
+		this.removeAll();
+	
 		
+		Period reportingPeriod = null;
+		try {
+			reportingPeriod = PeriodInfo.getPeriod(PeriodInfo.getActualPeriodNumber() - 1);
+		} catch (Exception e) {
+			//do nothing.
+		}
+		ProfitAndLoss guv;
+		Balance balance;
+		if (reportingPeriod != null && reportingPeriod.getGuV() != null && reportingPeriod.getBalance() != null) {
+			guv = reportingPeriod.getGuV();
+			balance = reportingPeriod.getBalance();
+		} else {
+			guv = new ProfitAndLoss();
+			balance = new Balance();
+		}
+	
+		
+		balancePanel = new TAccount("Bilanz");
+		guVPanel = new TAccount("Gewinn und Verlust");
+		
+		this.add(balancePanel);
+		this.add(guVPanel);
+		
+		//DecimalFormat format = new DecimalFormat("###,###,###.##");
+		//NumberFormat format = DecimalFormat.getInstance(Locale.GERMAN);
+		balancePanel.addEntry(new TAccountEntry("Maschinen", balance.machineValue), TAccountSides.left);
+		balancePanel.addEntry(new TAccountEntry("Rohstoffe", balance.ressourceValue), TAccountSides.left);
+		balancePanel.addEntry(new TAccountEntry("Produkte", balance.finishedProductsValue), TAccountSides.left);
+		balancePanel.addEntry(new TAccountEntry("Bank", balance.bank), TAccountSides.left);
+		
+		balancePanel.addEntry(new TAccountEntry("Eigenkapital", balance.equity), TAccountSides.right);
+		balancePanel.addEntry(new TAccountEntry("Kredit", balance.credit), TAccountSides.right);
+		
+		balancePanel.addSum(balance.getTAccountSum());
+		
+		guVPanel.addEntry(new TAccountEntry("Rohstoffaufwand", guv.ressourceCost), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Löhne/Gehälter", guv.wages), TAccountSides.left);
+		if (guv.employeeHiringCosts != 0) 
+			guVPanel.addEntry(new TAccountEntry("Aufwand für Einstellungen", guv.employeeHiringCosts), TAccountSides.left);
+		if (guv.employeeDismissalCosts != 0) 
+			guVPanel.addEntry(new TAccountEntry("Aufwand für Entlassungen", guv.employeeDismissalCosts), TAccountSides.left);
+		
+		guVPanel.addEntry(new TAccountEntry("Abschreibungen", guv.deprecation), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Miete", guv.rental), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Lageraufwand", guv.warehouseCosts), TAccountSides.left);
+		if (guv.changeInStockExpenditures != 0) 
+			guVPanel.addEntry(new TAccountEntry("Minderbestand", guv.changeInStockExpenditures), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Zinsaufwand", guv.interest), TAccountSides.left);
+
+		guVPanel.addEntry(new TAccountEntry("Umsatzerlöse", guv.sales), TAccountSides.right);
+		if (guv.changeInStockEarning != 0) 
+			guVPanel.addEntry(new TAccountEntry("Mehrbestand", guv.changeInStockEarning), TAccountSides.right);
+	
+		
+		if (guv.profit >= 0) {
+			guVPanel.addEntry(new TAccountEntry("Gewinn", guv.profit, Color.green), TAccountSides.left);
+		} else {
+			guVPanel.addEntry(new TAccountEntry("Verlust", -guv.profit, Color.red), TAccountSides.right);
+		}
+		
+		guVPanel.addSum(guv.getTAccountSum());
 	}
 
 }
