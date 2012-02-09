@@ -10,7 +10,9 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -18,6 +20,7 @@ import Client.Entities.Company;
 import Client.Entities.Credit;
 import Client.Entities.Employee;
 import Client.Application.CompanyController;
+import Client.Application.UnableToTakeCreditException;
 
 public class CreditPanel extends TypedPanel {
 	
@@ -28,6 +31,8 @@ public class CreditPanel extends TypedPanel {
 	JTextField interestHigh = new JTextField(4);
 	JTextField creditHigh = new JTextField(7);
 	JComboBox cb_contractPeriod;
+	JButton takeCredit = new JButton ("Aufnehmen");
+
 	
 
 	
@@ -37,7 +42,7 @@ public class CreditPanel extends TypedPanel {
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
-		
+		takeCredit.addActionListener(new takeOutLoan());
 		interestHigh.setEditable(false);
 	//		cb_contractPeriod.addItemListener(new java.awt.event.ItemListener());
 			
@@ -95,28 +100,43 @@ public class CreditPanel extends TypedPanel {
 			c.insets = new Insets(10,20,150,30);
 			c.gridx=3;
 			c.gridy=2;
-			add(new JButton("Aufnehmen"),c);
+			add(takeCredit,c);
 			c.insets = new Insets(0,0,0,0);
 		}
 		else
 		{
-			c.gridx=0;
-			c.gridy=0;
-			add(new JLabel("Sie haben bereits einen Kredit aufgenommen."),c);			
+					
 		}
 		
 		
 	}
 	
-	private class takeOutLoan implements ActionListener {
-
-		JTextField anzahlField;
-		JComboBox typeField;
+	public void refresh(){
+		this.removeAll();
+		revalidate();
+		validate();
+		repaint();
 		
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx=0;
+		c.gridy=0;
+		add(new JLabel("Sie haben bereits einen Kredit aufgenommen."),c);	
+	}
+	
+	private class takeOutLoan implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
+			int periodTime = Integer.valueOf((String) cb_contractPeriod.getSelectedItem());
+			double creditHighN = Double.valueOf((String) creditHigh.getText());
 			
+			try {
+				CompanyController.takeCredit(creditHighN, periodTime);
+				refresh();
+			} catch (UnableToTakeCreditException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(new JFrame(),"Kredit ist zu hoch.");
+			}
 		}
 	}
 	
