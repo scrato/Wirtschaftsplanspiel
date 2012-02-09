@@ -29,11 +29,9 @@ public class MainWindow extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			switch(lastUsed.type){
 			case ProdAndDistr:
-				Pwerkstoffe = new RessourcePanel();
 				showOtherScreen(Pwerkstoffe);
 				break;
 			case Ressource:
-				((MachinePanel) Pmaschinen).refreshCapacity();
 				showOtherScreen(Pmaschinen);
 				break;
 			case Machine:
@@ -70,11 +68,9 @@ public class MainWindow extends JFrame{
 				prev.setEnabled(false);
 				break;
 			case Machine:
-				Pwerkstoffe = new RessourcePanel();
 				showOtherScreen(Pwerkstoffe);
 				break;
 			case Employee:
-				((MachinePanel) Pmaschinen).refreshCapacity();
 				showOtherScreen(Pmaschinen);
 				break;
 			case Credit:
@@ -547,6 +543,7 @@ public class MainWindow extends JFrame{
 	void showOtherScreen(TypedPanel t) {
 		next.setEnabled(true);
 		prev.setEnabled(true);
+		t.refreshPanel();
 		mainframe.add(t, BorderLayout.CENTER);
 		mainframe.remove(lastUsed);
 		mainframe.repaint();

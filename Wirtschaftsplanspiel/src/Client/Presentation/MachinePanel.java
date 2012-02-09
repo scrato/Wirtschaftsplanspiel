@@ -297,5 +297,11 @@ public class MachinePanel extends TypedPanel {
 				}
 			}
 			
+		}
+
+		@Override
+		public void refreshPanel() {
+			refreshMachineTable();
+			refreshCapacity();
 		}		
 }

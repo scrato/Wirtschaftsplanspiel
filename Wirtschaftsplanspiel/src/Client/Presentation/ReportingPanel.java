@@ -350,4 +350,10 @@ public class ReportingPanel extends TypedPanel {
 		frame.setVisible(true);
 	}
 
+	@Override
+	public void refreshPanel() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

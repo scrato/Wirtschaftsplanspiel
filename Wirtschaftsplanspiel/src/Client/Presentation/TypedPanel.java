@@ -2,7 +2,7 @@ package Client.Presentation;
 
 import javax.swing.JPanel;
 
-public class TypedPanel extends JPanel {
+public  class TypedPanel extends JPanel {
 
 	protected enum PanelType {
 		ProdAndDistr,
@@ -20,6 +20,10 @@ public class TypedPanel extends JPanel {
 	public PanelType type;
 	public TypedPanel(PanelType t){
 		type = t;
+	}
+	
+	public  void refreshPanel(){
+		//This method has to be overwritten
 	}
 
 }

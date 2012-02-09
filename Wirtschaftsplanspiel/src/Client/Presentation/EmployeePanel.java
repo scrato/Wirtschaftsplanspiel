@@ -47,9 +47,8 @@ public class EmployeePanel extends TypedPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		String[] types = { "Produktion", "Verwaltung" };
 		// Test
-
-		updateCapacity();
-
+		
+		refreshPanel();
 		employeeAvaPro.setEditable(false);
 		employeeAvaAdm.setEditable(false);
 		employeeNeedPro.setEditable(false);
@@ -216,28 +215,6 @@ public class EmployeePanel extends TypedPanel {
 
 	}
 
-	public void updateCapacity() {
-		int employeePro = 0;
-		int employeeAdm = 0;
-
-		for (Employee e : company.getEmployees()) {
-			if (e.getType() == EmployeeType.Produktion) {
-				employeePro++;
-			}
-
-			if (e.getType() == EmployeeType.Verwaltung) {
-				employeeAdm++;
-			}
-		}
-
-		employeeAvaPro.setText(employeePro + "");
-		employeeAvaAdm.setText(employeeAdm + "");
-		employeeNeedPro.setText(CompanyController
-				.missingEmployees(EmployeeType.Produktion) + "");
-		employeeNeedAdm.setText(CompanyController
-				.missingEmployees(EmployeeType.Verwaltung) + "");
-
-	}
 
 	private class employ implements ActionListener {
 
@@ -289,7 +266,7 @@ public class EmployeePanel extends TypedPanel {
 					}
 				}
 
-				updateCapacity();
+				refreshPanel();
 				anzahlField.setText(0 + "");
 			}
 		}
@@ -363,7 +340,7 @@ public class EmployeePanel extends TypedPanel {
 					}
 				}
 
-				updateCapacity();
+				refreshPanel();
 				anzahlField.setText(0 + "");
 			}
 
@@ -428,5 +405,28 @@ public class EmployeePanel extends TypedPanel {
 			}
 		}
 
+	}
+
+	@Override
+	public void refreshPanel() {
+		int employeePro = 0;
+		int employeeAdm = 0;
+
+		for (Employee e : company.getEmployees()) {
+			if (e.getType() == EmployeeType.Produktion) {
+				employeePro++;
+			}
+
+			if (e.getType() == EmployeeType.Verwaltung) {
+				employeeAdm++;
+			}
+		}
+
+		employeeAvaPro.setText(employeePro + "");
+		employeeAvaAdm.setText(employeeAdm + "");
+		employeeNeedPro.setText(CompanyController
+				.missingEmployees(EmployeeType.Produktion) + "");
+		employeeNeedAdm.setText(CompanyController
+				.missingEmployees(EmployeeType.Verwaltung) + "");		
 	}
 }

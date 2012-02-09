@@ -150,7 +150,7 @@ public class RessourcePanel extends TypedPanel {
 		buy.addActionListener(new buyRessourceListener());
 		c.gridx++;
 		this.add(buy, c);
-		refreshRessources();
+		refreshPanel();
 	}
 	
 	private class RessourceBuyAmountListener implements KeyListener {
@@ -233,7 +233,7 @@ public class RessourcePanel extends TypedPanel {
 
 	}
 
-	public void refreshRessources() {
+	public void refreshPanel() {
 		// Schau dir die Entitäten von Pwerkstoffe an
 		for(Component t : RessourcePanel.me.getComponents()){
 			
@@ -333,7 +333,7 @@ public class RessourcePanel extends TypedPanel {
 						//Setze alles auf 0
 						for(Iterator<RessourceBuyAmountListener> it = buyAmountListener.iterator(); it.hasNext();)
 							it.next().keyReleased(null);
-						refreshRessources();
+						refreshPanel();
 					}
 			}
 		}

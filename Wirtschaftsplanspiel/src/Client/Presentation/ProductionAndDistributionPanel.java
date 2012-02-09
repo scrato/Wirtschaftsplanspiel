@@ -451,6 +451,7 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		l_missingEmployee0.setText(getMissingEmployee(EmployeeType.values()[0]));
 		l_missingEmployee1.setText(getMissingEmployee(EmployeeType.values()[1]));
 		
+		
 	}
 
 	private String cutAndValidate(String text) {
@@ -472,6 +473,20 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 			//e.printStackTrace();
 		}
 		return text;
+	}
+
+
+	@Override
+	public void refreshPanel() {
+		refreshCount();
+		
+		if(PeriodInfo.getNumberOfActPeriod() == 0)
+			l_lastPeriodSellingPrice = new JLabel("Bisher keine Produkte verkauft");
+		else
+			l_lastPeriodSellingPrice = new JLabel(String.valueOf(PeriodInfo.getActualPeriod().getProductPrice()) + "€");
+		
+		l_finishedProducts = new JLabel(String.valueOf(comp.getFinishedProducts()) + " Paletten");
+		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");
 	}
 
 

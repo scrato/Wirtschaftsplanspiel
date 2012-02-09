@@ -153,6 +153,12 @@ public class CreditPanel extends TypedPanel {
 		}
 
 	}
+
+	@Override
+	public void refreshPanel() {
+		refresh();
+		
+	}
 	
 	
 
