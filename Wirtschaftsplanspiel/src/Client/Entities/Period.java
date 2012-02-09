@@ -301,6 +301,10 @@ public class Period {
 
 		// Umsatzerlöse
 		guv.sales = p.getRevenue();
+		
+		//Gewinn berechnen
+		guv.calculateResult();
+		
 		return guv;
 	}
 
