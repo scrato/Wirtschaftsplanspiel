@@ -19,8 +19,8 @@ public abstract class PeriodInfo {
 	      
 
 	public static void initRessources() {
-		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 60.00);
-		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 25.00);
+		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 20.00);
+		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 5.00);
 	}
    
    public static Period getActualPeriod(){
