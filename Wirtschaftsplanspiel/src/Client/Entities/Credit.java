@@ -14,7 +14,7 @@ public class Credit {
 	private boolean hasCredit;
 	
 	private double interestPercentage;
-	public final static double INTERESTPERPERIODINPERCENT = 5d;
+	public final static double INTERESTPERPERIODINPERCENT = 0.5d;
 	public final static double BASEINTERESTINPERCENT = 5d;
 	
 	public Credit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException{

@@ -26,7 +26,7 @@ public class CreditPanel extends TypedPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	JTextField interestHigh = new JTextField(4);
-	JTextField creditHigh = new JTextField(4);
+	JTextField creditHigh = new JTextField(7);
 	JComboBox cb_contractPeriod;
 	
 
@@ -36,8 +36,6 @@ public class CreditPanel extends TypedPanel {
 		super(PanelType.Credit);
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		
-		cb_contractPeriod.addItemListener(new interestsItemListener());
 		
 		
 		interestHigh.setEditable(false);
@@ -53,9 +51,11 @@ public class CreditPanel extends TypedPanel {
 			
 			c.gridx=1;
 			c.gridy=0;
+			c.anchor = GridBagConstraints.LINE_START;
 			c.insets = new Insets(10,10,10,100);
 			add(creditHigh,c);
 			c.insets = new Insets(0,0,0,0);
+			c.anchor = GridBagConstraints.CENTER;
 			
 			c.insets = new Insets(10,10,10,30);
 			c.gridx=0;
@@ -66,8 +66,10 @@ public class CreditPanel extends TypedPanel {
 			c.insets = new Insets(10,10,10,100);
 			c.gridx=1;
 			c.gridy=1;
+			c.anchor = GridBagConstraints.LINE_START;
 			add(interestHigh,c);
 			c.insets = new Insets(0,0,0,0);
+			c.anchor = GridBagConstraints.CENTER;
 			
 			c.insets = new Insets(10,10,150,30);
 			c.gridx=0;
@@ -77,14 +79,18 @@ public class CreditPanel extends TypedPanel {
 			
 			c.insets = new Insets(10,10,150,100);
 			c.gridx++;
+			c.anchor = GridBagConstraints.LINE_START;
 			cb_contractPeriod = new JComboBox();
+			
 			for(int i=1; i<=5; i++){
-				cb_contractPeriod.addItem(i);
+				cb_contractPeriod.addItem(i+"");
 			}
-	//		cb_contractPeriod.addItemListener(new CapacityItemListener());
+			interestHigh.setText((Credit.getPercentageForPeriods(1)*100) +"%");
+			cb_contractPeriod.addItemListener(new interestsItemListener());
 			this.add(cb_contractPeriod,c);
 			cb_contractPeriod.setEditable(false);
 			c.insets = new Insets(0,0,0,0);
+			c.anchor = GridBagConstraints.CENTER;
 			
 			c.insets = new Insets(10,20,150,30);
 			c.gridx=3;
@@ -122,24 +128,17 @@ public class CreditPanel extends TypedPanel {
 			
 			int periodTime = Integer.valueOf((String) cb_contractPeriod.getSelectedItem()); 
 			
-			interestHigh.setText(Credit.getPercentageForPeriods(periodTime) +"");
-		}
-
-	}
-	
-	
-	private class focusItemListener implements ItemListener {
-
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			// TODO Auto-generated method stub
 			
+			interestHigh.setText((Credit.getPercentageForPeriods(periodTime)*100) +"%");
 		}
-		
-		
-		
-		
+
 	}
+	
+	
+
+		
+		
+	
 	
 }
 	
