@@ -333,6 +333,7 @@ public class MainWindow extends JFrame{
 	
 	
 	public void reactiviateAfterPeriod(){
+		Pbericht = new ReportingPanel(); 
 		changeScreen(Pbericht);
 		west.setVisible(true);
 		next.setVisible(true);
@@ -400,6 +401,8 @@ public class MainWindow extends JFrame{
 	private class showBericht implements ActionListener{
 
 		public void actionPerformed(ActionEvent arg0) {
+			Pbericht = new ReportingPanel(); 
+			//TODO: Anpassen
 			changeScreen(Pbericht);
 			
 		}
@@ -570,6 +573,8 @@ public class MainWindow extends JFrame{
 				changeScreen(Pdarlehen);
 				break;
 			case Credit:
+				//TODO: Anpassen!
+				Pbericht = new ReportingPanel(); 
 				changeScreen(Pbericht);
 				next.setEnabled(false);
 				break;
