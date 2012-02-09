@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import Client.Application.CreditNotExistsException;
 import Client.Application.EmployeeNotEmployedException;
 import Client.Application.CompanyController;
 import Client.Entities.RessourceType;
@@ -95,8 +96,9 @@ public class Company {
 	/**
 	 * Gibt den aktuellen Credit zurück.
 	 * Achtung: Wenn kein Credit gesetzt wird, kommt null zurück!
+	 * @throws CreditNotExistsException Wird geworfen, wenn kein Kredit existiert
 	 */
-	public Credit getCredit(){
+	public Credit getCredit() {
 		return actCredit;
 	}
 	public int getEmployeeCapacity(EmployeeType type) {

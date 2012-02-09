@@ -33,7 +33,7 @@ import Client.Entities.RessourceType;
  * @author Scrato
  *
  */
-public class ProductionAndDistributionPanel extends JPanel {
+public class ProductionAndDistributionPanel extends TypedPanel {
 	
 	
 	/**
@@ -60,7 +60,8 @@ public class ProductionAndDistributionPanel extends JPanel {
 	 *
 	 */
 	private class TextListener implements KeyListener {
-
+		//Rücktaste, Pfeiltasten, Komma, Punkt
+		//private Integer[] keysallowed = {110,46,37,39,38,40,8};
 		@Override
 		public void keyPressed(KeyEvent arg0) {			
 		
@@ -69,8 +70,9 @@ public class ProductionAndDistributionPanel extends JPanel {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			if (arg0.getKeyCode() == 110)
-				return;
+			//Wenn es eine Zahl ist
+			if ((arg0.getKeyCode() >= KeyEvent.VK_0 && arg0.getKeyCode() <= KeyEvent.VK_9) || 
+					(arg0.getKeyCode() >= KeyEvent.VK_NUMPAD0 && arg0.getKeyCode() <= KeyEvent.VK_NUMPAD9))	{
 			
 			try
 			{
@@ -85,6 +87,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 			catch(ClassCastException ex2)
 			{
 				return;
+			}
 			}
 
 		}
@@ -113,8 +116,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private double priceToSell;
 	private int amountToSell;
 	
-	private final double PRICEMIN = 80000;
-	private final double PRICEMAX = 90000;
 	private Company comp = Company.getInstance();
 	
 	
@@ -123,8 +124,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private int maxSellableUnits;
 
 	private JComboBox cb_capacities;
-
-	private JLabel l_priceRating;
 
 	private JLabel l_missingRessource1;
 
@@ -145,6 +144,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 	private static final long serialVersionUID = 2375380045275272220L;
 
 	public ProductionAndDistributionPanel(){
+		super(PanelType.ProdAndDistr);
 		/*public Insets(int top,
       int left,
       int bottom,
@@ -169,7 +169,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 		//Startwerte gleich dem vorher gespeicherten
 		amountsell.setText(decformat.format(comp.getProdAndDistr().getUnitsToSell()));
 		amountproduce.setText(decformat.format(comp.getProdAndDistr().getUnitsToProduce()));
-		pricesell.setText(String.valueOf(comp.getProdAndDistr().getSellingPrice()));
+		pricesell.setText(curformat.format(comp.getProdAndDistr().getSellingPrice()));
 		refreshCount();
 		cb_capacities.setSelectedIndex(capid);
 		actualCapacity = Integer.parseInt((String) cb_capacities.getSelectedItem());
@@ -320,10 +320,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 		pricesell.addKeyListener(tl);
 		this.add(pricesell, c);
 		
-		c.gridx++;
-		l_priceRating = new JLabel();
-		this.add(l_priceRating, c);
-		
 		c.gridx = 0;		
 		c.gridy++;
 	}
@@ -360,9 +356,25 @@ public class ProductionAndDistributionPanel extends JPanel {
 		c.gridy++;
 
 		//Neue Zeile
-		this.add(new JLabel("Aktuell produzierbare Fertigprodukte : "),c);
+		this.add(new JLabel("Aktuell produzierbare Fertigprodukte: "),c);
 		c.gridx++;
 		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");
+		this.add(l_maxProducableUnits,c);
+		c.gridx=0;
+		c.gridy++;
+		
+		//Neue Zeile
+		this.add(new JLabel("Durchschnittliche Nachfrage pro Spieler: "),c);
+		c.gridx++;
+		l_maxProducableUnits =new JLabel(decformat.format(Server.Application.AppContext.STANDARD_DEMAND_PER_PLAYER) + " Paletten");
+		this.add(l_maxProducableUnits,c);
+		c.gridx=0;
+		c.gridy++;
+		
+		//Neue Zeile
+		this.add(new JLabel("Durchschnittlicher Preis: "),c);
+		c.gridx++;
+		l_maxProducableUnits =new JLabel(curformat.format(Server.Application.AppContext.STANDARD_PRICE_PER_UNIT) + "€ pro Palette");
 		this.add(l_maxProducableUnits,c);
 		c.gridx=0;
 		c.gridy++;
@@ -439,16 +451,6 @@ public class ProductionAndDistributionPanel extends JPanel {
 		l_missingEmployee0.setText(getMissingEmployee(EmployeeType.values()[0]));
 		l_missingEmployee1.setText(getMissingEmployee(EmployeeType.values()[1]));
 		
-		if(priceToSell>PRICEMAX){
-			l_priceRating.setText("Preis ist zu hoch");
-			l_priceRating.setForeground(Color.RED);
-		}else if(priceToSell<PRICEMIN){
-			l_priceRating.setText("Preis ist zu niedrig");
-			l_priceRating.setForeground(Color.BLUE);
-		}else{
-			l_priceRating.setText("Preis liegt im Rahmen");
-			l_priceRating.setForeground(Color.decode("418831"));
-		}
 	}
 
 	private String cutAndValidate(String text) {
@@ -456,7 +458,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 			return decformat.format(decformat.parse(text).intValue());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return text;
 	}
@@ -467,7 +469,7 @@ public class ProductionAndDistributionPanel extends JPanel {
 			return curformat.format(curformat.parse(text).doubleValue());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return text;
 	}

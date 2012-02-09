@@ -30,7 +30,7 @@ import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
 import Client.Entities.RessourceType;
 
-public class EmployeePanel extends JPanel {
+public class EmployeePanel extends TypedPanel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -42,6 +42,7 @@ public class EmployeePanel extends JPanel {
 	Company company = Company.getInstance();
 
 	public EmployeePanel() {
+		super(PanelType.Employee);
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		String[] types = { "Produktion", "Verwaltung" };

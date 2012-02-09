@@ -19,8 +19,12 @@ import Client.Entities.Credit;
 import Client.Entities.Employee;
 import Client.Application.CompanyController;
 
-public class CreditPanel extends JPanel {
+public class CreditPanel extends TypedPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	JTextField interestHigh = new JTextField(4);
 	JTextField creditHigh = new JTextField(4);
 	JComboBox cb_contractPeriod;
@@ -28,8 +32,8 @@ public class CreditPanel extends JPanel {
 
 	
 	
-	public CreditPanel (){
-		
+	public CreditPanel(){
+		super(PanelType.Credit);
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -137,7 +141,6 @@ public class CreditPanel extends JPanel {
 		
 	}
 	
-
 }
 	
 	

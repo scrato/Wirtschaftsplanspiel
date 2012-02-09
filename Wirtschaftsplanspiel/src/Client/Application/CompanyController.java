@@ -330,11 +330,11 @@ public abstract class CompanyController {
 	public static void payInterestAndRepayment() throws UserCanNotPayException{
 		Company comp = Company.getInstance();
 		Credit cred = comp.getCredit();
+		if (cred == null) return;
 		payItem(cred.getAnuity());
 		//Wenn Credit abbezahlt
 		if(cred.payInterestAndRepayment())
-			comp.removeCredit();
-		
+			comp.removeCredit();	
 	}
 	
 	//end of Darlehensabschnitt
