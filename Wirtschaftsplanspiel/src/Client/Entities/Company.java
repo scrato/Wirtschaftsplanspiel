@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import Client.Application.CreditNotExistsException;
 import Client.Application.EmployeeNotEmployedException;
 import Client.Application.CompanyController;
 import Client.Entities.RessourceType;
@@ -27,8 +26,7 @@ public class Company {
 	}
 	private static void initFirst() {
 		Company.getInstance().incMoney(10000000.00);
-		CompanyController.initRessource(RessourceType.Rohfisch, Integer.MAX_VALUE, 2.00);
-		CompanyController.initRessource(RessourceType.Verpackungsmaterial, Integer.MAX_VALUE, 5.00);
+		PeriodInfo.initRessources();
 	}
 	private Credit actCredit;
 	private List<Employee> employee = new LinkedList<Employee>();

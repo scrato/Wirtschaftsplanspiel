@@ -17,7 +17,7 @@ public class Ressource {
 		//TODO: Units aktuell halten
 		switch(type){
 		case Rohfisch:
-			return "kg";
+			return "t";
 		case Verpackungsmaterial:
 			return "kg";
 		default:
@@ -28,9 +28,9 @@ public class Ressource {
 	public static double getFixedCosts(RessourceType type){
 		switch(type){
 		case Rohfisch:
-			return 2950.00;
+			return 29500.00;
 		case Verpackungsmaterial:
-			return 1400.00;
+			return 14000.00;
 		default:
 			//Typ wurde noch nicht festeglegt;
 			throw new UnsupportedOperationException();
@@ -41,7 +41,7 @@ public class Ressource {
 	public static int getNeed(RessourceType type){
 		switch(type){
 		case Rohfisch:
-			return 300;
+			return 30;
 		case Verpackungsmaterial:
 			return 10;
 		default:
