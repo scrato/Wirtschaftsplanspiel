@@ -213,7 +213,7 @@ public class Period {
 		
 		balance.finishedProductsValue = p.finishedProductsValue;
 
-		if (comp.getCredit() != null) {
+		if (comp.creditExist()) {
 			balance.credit = comp.getCredit().getCreditLeft();
 		} else {
 			balance.credit = 0;
