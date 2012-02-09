@@ -16,8 +16,8 @@ public class Employee
 		}
 	}
 	
-	public static final double EMPLOYCOST = 1000d;
-	public static final double DISMISSCOST = 1500d;
+	public static final double EMPLOYCOST = 10000d;
+	public static final double DISMISSCOST = 15000d;
 	public static final double ADMINISTRATIONWAGE = 1800d;
 	public static final double PRODUCTIONWAGES = 1200d;
 	public static final int ADMINUNITS = 3000;
