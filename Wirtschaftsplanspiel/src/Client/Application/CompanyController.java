@@ -238,7 +238,7 @@ public abstract class CompanyController {
 				return 0;
 			if (missingUnits == 0)
 				return 0;
-				int missMach = (int) ((missingUnits / capacity));
+				int missMach = (int) StrictMath.ceil(missingUnits / (double) capacity);
 
 				return missMach;
 		}
@@ -322,6 +322,7 @@ public abstract class CompanyController {
 		Credit credit = new Credit(height, periods);
 		comp.setCredit(credit);
 		comp.incMoney(height);
+		MainWindow.getInstance().updateInfoPanel();
 	}
 	
 	public static void payInterestAndRepayment() throws UserCanNotPayException{

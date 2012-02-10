@@ -1,6 +1,7 @@
 package Client.Entities;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +86,32 @@ public class Company {
 		money -= amount;
 		//Logging
 		PeriodInfo.getActualPeriod().incPaidMoney(amount);
+	}
+	
+	public double calculateRessourceValue(){
+		double ressourceValue = 0;
+		for (Iterator<Ressource> i = getAllRessources().values()
+				.iterator(); i.hasNext();) {
+			Ressource next = i.next();
+			ressourceValue += next.getStoredUnits()
+					* next.getPricePerUnit();
+		}
+		return ressourceValue;
+	}
+	
+	public double calculateFinishedProductValue(){
+		return calculateFinishedProductValue(finishedproducts);
+	}
+	
+	public double calculateFinishedProductValue(int finProd){
+		double finprodValue = 0;
+		for (Iterator<Ressource> i = getAllRessources().values()
+				.iterator(); i.hasNext();) {
+			Ressource next = i.next();
+			finprodValue += finProd
+					* (next.getPricePerUnit() * Ressource.getNeed(next.getType()));
+		}
+		return finprodValue;
 	}
 	
 	public Map<RessourceType, Ressource> getAllRessources() {
