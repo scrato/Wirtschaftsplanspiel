@@ -16,7 +16,7 @@ public class Machine {
 				price = capacitySize * COST_PER_CAPACITY_FILETIERMASCHINE*(1+((STANDARD_CAPACITY_FILETIERMASCHINE / capacitySize - 1) / 20));
 				break;
 			case Verpackungsmaschine:
-				price = capacitySize * STANDARD_CAPACITY_VERPACKUNGSMASCHINE*(1+((STANDARD_CAPACITY_VERPACKUNGSMASCHINE / capacitySize - 1) / 20));
+				price = capacitySize * COST_PER_CAPACITY_VERPACKUNGSMASCHINE*(1+((STANDARD_CAPACITY_VERPACKUNGSMASCHINE / capacitySize - 1) / 20));
 				break;
 		}
 		DecimalFormat format = new DecimalFormat();
