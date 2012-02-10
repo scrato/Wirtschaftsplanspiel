@@ -256,9 +256,10 @@ public class Period {
 				.hasNext();) {
 			Employee next = it.next();
 			guv.wages += next.getWage();
-			// Unternehmerlohn
-			guv.wages += comp.EMPLOYERSSALLERY;
 		}
+		
+		// Unternehmerlohn
+		guv.wages += comp.EMPLOYERSSALLERY;
 
 		// Sonstige tarifliche oder vertragliche Aufwendungen für Lohnempfäner
 		guv.employeeDismissalCosts = p.getFiredEmployees().size()
