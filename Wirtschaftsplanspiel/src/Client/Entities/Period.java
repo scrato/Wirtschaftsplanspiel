@@ -193,12 +193,12 @@ public class Period {
 	public Balance makeBalance() {
 		Period p = this;
 		balance = new Balance();
-
+		
 		balance.totallypaid = p.getPaidMoney();
 		balance.totallyearned = p.getEarnedMoney();
 
 		Company comp = Company.getInstance();
-
+		p.setFinishedProductsValue(comp.getFinishedProducts() * comp.getProdAndDistr().sellingPrice);
 		for (Iterator<Machine> i = comp.getMachines().iterator(); i.hasNext();) {
 			Machine next = i.next();
 			balance.machineValue += next.getValue();
