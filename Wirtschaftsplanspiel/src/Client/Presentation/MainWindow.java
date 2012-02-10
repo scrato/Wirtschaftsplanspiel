@@ -315,8 +315,9 @@ public class MainWindow extends JFrame{
 		mainframe.add(p,BorderLayout.SOUTH);
 		p.add(prev, BorderLayout.EAST);
 		p.add(next,BorderLayout.WEST);
-		mainframe.repaint();
-		mainframe.validate();
+//		mainframe.repaint();
+//		mainframe.validate();
+		changeScreen(Ppreiskal);
 	}
 	
 	public void setPlayers(List<Player> players){
