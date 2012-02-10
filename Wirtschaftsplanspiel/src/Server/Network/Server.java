@@ -49,7 +49,6 @@ public class Server {
 	}
 	
 	private Server(int port, int maxPeriods) throws RuntimeException {
-		instance = this;
 		PeriodInfo.maxPeriods = maxPeriods;
 		try {
 			listener = new ServerSocket(port);

@@ -98,12 +98,20 @@ public abstract class PeriodController {
 		BroadcastCompanyResultMessage Message) {
 		CompanyResultList crl = Message.getCompanyResults();
 		
-		for(Iterator<CompanyResult> it = crl.profitList.values().iterator(); it.hasNext();){
-			CompanyResult result = it.next();
-			Player.getPlayer(result.clientid).addCompanyResult(result);
+		try {
+			for(Iterator<CompanyResult> it = crl.profitList.values().iterator(); it.hasNext();){
+				CompanyResult result = it.next();
+				try {
+					Player.getPlayer(result.clientid).addCompanyResult(result);
+				} catch (Exception e2) {
+					// Player not found. Do nothing.
+				}
+			}
+		} catch (Exception e1) {
+			// list is buggy.
+			throw new RuntimeException("Ergebnisliste nicht valide.");
 		}
 		
-		//MainWindow.getInstance().setAct
 		PeriodInfo.nextPeriod();
 		MainWindow.getInstance().reactiviateAfterPeriod();
 	}
