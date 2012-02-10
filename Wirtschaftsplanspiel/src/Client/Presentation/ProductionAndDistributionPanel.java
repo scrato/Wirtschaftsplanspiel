@@ -1,6 +1,7 @@
 package Client.Presentation;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,6 +22,7 @@ import javax.swing.JTextPane;
 
 import Client.Application.CompanyController;
 import Client.Entities.Company;
+import Client.Entities.Employee;
 import Client.Entities.EmployeeType;
 import Client.Entities.Machine;
 import Client.Entities.MachineType;
@@ -36,23 +38,6 @@ import Client.Entities.RessourceType;
 public class ProductionAndDistributionPanel extends TypedPanel {
 	
 	
-	/**
-	 * Aktualisiert die fehlenden Maschinen
-	 * aufgrund der neugewählten Kapazität
-	 * @author Scrato
-	 *
-	 */
-	private class CapacityItemListener implements ItemListener {
-
-		@Override
-		public void itemStateChanged(ItemEvent arg0) {
-			actualCapacity = Integer.parseInt((String) cb_capacities.getSelectedItem());
-			capid = cb_capacities.getSelectedIndex();
-			refreshCount();
-		}
-
-	}
-
 
 	/**
 	 * Aktualisiert die Daten nach dem Verändern der Produktions/Preisdaten
@@ -72,7 +57,8 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		public void keyReleased(KeyEvent arg0) {
 			//Wenn es eine Zahl ist
 			if ((arg0.getKeyCode() >= KeyEvent.VK_0 && arg0.getKeyCode() <= KeyEvent.VK_9) || 
-					(arg0.getKeyCode() >= KeyEvent.VK_NUMPAD0 && arg0.getKeyCode() <= KeyEvent.VK_NUMPAD9))	{
+					(arg0.getKeyCode() >= KeyEvent.VK_NUMPAD0 && arg0.getKeyCode() <= KeyEvent.VK_NUMPAD9)	||
+					(arg0.getKeyCode() == KeyEvent.VK_SPACE)){
 			
 			try
 			{
@@ -111,7 +97,6 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	private JLabel l_lastPeriodSellingPrice;
 	private JLabel l_maxProducableUnits;
 	
-	private int actualCapacity = 1;
 	private int unitsToProduce;
 	private double priceToSell;
 	private int amountToSell;
@@ -123,7 +108,6 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	private int maxProducableUnits;
 	private int maxSellableUnits;
 
-	private JComboBox cb_capacities;
 
 	private JLabel l_missingRessource1;
 
@@ -133,13 +117,20 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 
 	private JLabel l_missingEmployee1;
 
-	private JLabel l_missingMachine0;
-
-	private JLabel l_missingMachine1;
 	private DecimalFormat decformat;
 	private DecimalFormat curformat;
 	private JLabel l_standardPrice;
 	private JLabel l_standardNeedPerPlayer;
+	private JLabel l_missingRessourceCapital1;
+	private JLabel l_missingRessourceCapital0;
+	private JLabel l_missingEmployeeCapital0;
+	private JLabel l_missingEmployeeCapital1;
+	private JLabel l_missingMachine0;
+	private JLabel l_missingMachineCapital0;
+	private JLabel l_missingMachine1;
+	private JLabel l_missingMachineCapital1;
+	private JLabel l_sum;
+	private JLabel l_lastPeriodSellingAmount;
 	/**
 	 * 
 	 */
@@ -173,8 +164,6 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		amountproduce.setText(decformat.format(comp.getProdAndDistr().getUnitsToProduce()));
 		pricesell.setText(curformat.format(comp.getProdAndDistr().getSellingPrice()));
 		refreshCount();
-		cb_capacities.setSelectedIndex(capid);
-		actualCapacity = Integer.parseInt((String) cb_capacities.getSelectedItem());
 	}
 
 
@@ -222,6 +211,10 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		c.gridx++;
 		l_missingRessource0 =new JLabel(getMissingRessource(t0));
 		this.add(l_missingRessource0,c);
+		c.gridx++;
+		l_missingRessourceCapital0 = new JLabel(getMissingRessourceCapital(t0));
+		this.add(l_missingRessourceCapital0,c);
+		
 		c.gridx=0;
 		c.gridy ++;
 		
@@ -230,6 +223,11 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		c.gridx++;
 		l_missingRessource1 =new JLabel(getMissingRessource(t1));
 		this.add(l_missingRessource1,c);
+		
+		c.gridx++;
+		l_missingRessourceCapital1 = new JLabel(getMissingRessourceCapital(t1));
+		this.add(l_missingRessourceCapital1,c);
+		
 		c.gridx=0;
 		c.gridy ++;
 		
@@ -246,6 +244,10 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		c.gridx++;
 		l_missingEmployee0 =new JLabel(getMissingEmployee(e0));
 		this.add(l_missingEmployee0,c);
+		c.gridx++;
+		l_missingEmployeeCapital0 = new JLabel(getMissingEmployeeCapital(e0));
+		this.add(l_missingEmployeeCapital0,c);
+		
 		c.gridx=0;
 		c.gridy ++;
 		
@@ -254,44 +256,93 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		c.gridx++;
 		l_missingEmployee1 =new JLabel(getMissingEmployee(e1));
 		this.add(l_missingEmployee1,c);
+		c.gridx++;
+		l_missingEmployeeCapital1 = new JLabel(getMissingEmployeeCapital(e1));
+		this.add(l_missingEmployeeCapital1,c);
+		
 		c.gridx=0;
 		c.gridy ++;
 
 		
 		//Neue Zeile
 		c.insets = newLine;
-		this.add(new JLabel("Fehlende Maschinen : "),c);
+		this.add(new JLabel("Fehlende Maschinenkapazität: "),c);
 		c.gridy++;
 		c.insets = standard;
-		
+
 		MachineType m0 = MachineType.values()[0];
 		this.add(new JLabel(m0.name() + ": "),c);
 		c.gridx++;
-		l_missingMachine0 =new JLabel(getMissingMachine(m0));
+		l_missingMachine0 =new JLabel(getMissingMachineCapacity(m0));
 		this.add(l_missingMachine0,c);
+		c.gridx++;
+		l_missingMachineCapital0 = new JLabel(getMissingMachineCapacityCapital(m0));
+		this.add(l_missingMachineCapital0,c);
+		
 		c.gridx=0;
 		c.gridy ++;
 		
 		MachineType m1 = MachineType.values()[1];
 		this.add(new JLabel(m1.name() + ": "),c);
 		c.gridx++;
-		l_missingMachine1 =new JLabel(getMissingMachine(m1));
+		l_missingMachine1 =new JLabel(getMissingMachineCapacity(m1));
 		this.add(l_missingMachine1,c);
+		c.gridx++;
+		l_missingMachineCapital1 = new JLabel(getMissingMachineCapacityCapital(m1));
+		this.add(l_missingMachineCapital1,c);
+		
 		c.gridx=0;
 		c.gridy ++;
+
 		
-		this.add(new JLabel("Maschinenkapazität: "),c);
+		//Neue Zeile
+		c.gridx = 1;
+		this.add(new JLabel("Kapitalbedarf gesamt: "),c);
 		c.gridx++;
-		cb_capacities = new JComboBox();
-		for(String capa: Machine.capacites){
-			cb_capacities.addItem(capa);
-		}
-		cb_capacities.addItemListener(new CapacityItemListener());
-		this.add(cb_capacities,c);
-		cb_capacities.setEditable(false);
+		l_sum = new JLabel(calcNeed());
+		this.add(l_sum,c);
 	}
 
 
+	private String calcNeed() {
+		double calc = 0;
+		try {calc += curformat.parse(l_missingRessourceCapital0.getText()).doubleValue();
+		calc += curformat.parse(l_missingRessourceCapital1.getText()).doubleValue();
+		calc += curformat.parse(l_missingMachineCapital0.getText()).doubleValue();
+		calc += curformat.parse(l_missingMachineCapital1.getText()).doubleValue();
+		calc += curformat.parse(l_missingEmployeeCapital0.getText()).doubleValue();
+		calc += curformat.parse(l_missingEmployeeCapital1.getText()).doubleValue();
+		} catch (ParseException e) {}
+		return curformat.format(calc);
+	}
+
+
+	private String getMissingMachineCapacity(MachineType m0) {
+		double capa = comp.getProdAndDistr().getUnitsToProduce() - comp.getMachineCapacity(m0);
+		return decformat.format(capa);
+	}
+
+
+	private String getMissingMachineCapacityCapital(MachineType m0) {
+		double capa = 0;
+		switch(m0){
+		case Verpackungsmaschine:
+			capa = comp.getProdAndDistr().getUnitsToProduce() - comp.getMachineCapacity(m0);
+			capa = (capa * Machine.COST_PER_CAPACITY_VERPACKUNGSMASCHINE) * 5; //Anzahl Perioden
+			break;
+		case Filitiermaschine:
+			capa = comp.getProdAndDistr().getUnitsToProduce() - comp.getMachineCapacity(m0);
+			capa = capa * Machine.COST_PER_CAPACITY_FILETIERMASCHINE * 5; //Anzahl Perioden
+			break;
+		}
+		
+		
+		
+		String erg = curformat.format(capa) +  "€";
+		return erg;
+	}
+
+	
 	/**
 	 * @param c
 	 */
@@ -351,9 +402,21 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		if(PeriodInfo.getNumberOfActPeriod() == 0)
 			l_lastPeriodSellingPrice = new JLabel("Bisher keine Produkte verkauft");
 		else
-			l_lastPeriodSellingPrice = new JLabel(String.valueOf(PeriodInfo.getActualPeriod().getProductPrice()) + "€");
+			l_lastPeriodSellingPrice = new JLabel();
 		
 		this.add(l_lastPeriodSellingPrice , c);
+		c.gridx=0;
+		c.gridy++;
+		
+		//Neue Zeile
+		this.add(new JLabel("Absatz der letzen Periode: "),c);
+		c.gridx++;
+		if(PeriodInfo.getNumberOfActPeriod() == 0)
+			l_lastPeriodSellingAmount = new JLabel("Bisher keine Produkte verkauft");
+		else
+			l_lastPeriodSellingAmount = new JLabel();
+		
+		this.add(l_lastPeriodSellingAmount , c);
 		c.gridx=0;
 		c.gridy++;
 
@@ -389,14 +452,24 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	}
 
 
-	private String getMissingMachine(MachineType type) {
-		return decformat.format(CompanyController.missingMachines(type,actualCapacity));
-
-	}
 
 
 	private String getMissingRessource(RessourceType type) {
 			return decformat.format(CompanyController.missingRessources(type)) + " " + Ressource.getUnit(type);
+	}
+	
+	private String getMissingEmployeeCapital(EmployeeType type) {		
+		return	curformat.format(CompanyController.missingEmployees(type) * Employee.EMPLOYCOST) + "€";	
+
+	}
+
+
+	private String getMissingRessourceCapital(RessourceType type) {
+		int missRes = CompanyController.missingRessources(type);
+		if (missRes==0){
+			return "0€";
+		}	
+		return curformat.format((missRes * comp.getRessource(type).getPricePerUnit()) + Ressource.getFixedCosts(type)) + "€";
 	}
 
 
@@ -449,14 +522,24 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		
 		l_missingRessource0.setText(getMissingRessource(RessourceType.values()[0]));
 		l_missingRessource1.setText(getMissingRessource(RessourceType.values()[1]));
-		l_missingMachine0.setText(getMissingMachine(MachineType.values()[0]));
-		l_missingMachine1.setText(getMissingMachine(MachineType.values()[1]));
+		l_missingMachine0.setText(getMissingMachineCapacity(MachineType.values()[0]));
+		l_missingMachine1.setText(getMissingMachineCapacity(MachineType.values()[1]));
 		l_missingEmployee0.setText(getMissingEmployee(EmployeeType.values()[0]));
 		l_missingEmployee1.setText(getMissingEmployee(EmployeeType.values()[1]));
 		
 		
-	}
+	
+		l_missingRessourceCapital0.setText(getMissingRessourceCapital(RessourceType.values()[0]));
+		l_missingRessourceCapital1.setText(getMissingRessourceCapital(RessourceType.values()[1]));
+		
+		l_missingEmployeeCapital0.setText(getMissingEmployeeCapital(EmployeeType.values()[0]));
+		l_missingEmployeeCapital1.setText(getMissingEmployeeCapital(EmployeeType.values()[1]));
 
+		l_missingMachineCapital0.setText(getMissingMachineCapacityCapital(MachineType.values()[0]));
+		l_missingMachineCapital1.setText(getMissingMachineCapacityCapital(MachineType.values()[1]));
+		l_sum.setText(calcNeed());
+	}
+	
 	private String cutAndValidate(String text) {
 		try {
 			return decformat.format(decformat.parse(text).intValue());
@@ -483,10 +566,15 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	public void refreshPanel() {
 		refreshCount();
 		int pernum = PeriodInfo.getNumberOfActPeriod();
-		if(pernum == 0)
+		if(pernum == 0){
+			l_lastPeriodSellingAmount.setText("Bisher keine Produkte verkauft");
 			l_lastPeriodSellingPrice.setText("Bisher keine Produkte verkauft");
-		else
+		}else{
+			l_lastPeriodSellingAmount.setText(String.valueOf(PeriodInfo.getPeriod(pernum - 1).getSoldProducts())+ " Paletten");
 			l_lastPeriodSellingPrice.setText(String.valueOf(PeriodInfo.getPeriod(pernum - 1).getProductPrice()) + "€");
+		}
+		
+		
 		
 		l_finishedProducts.setText(String.valueOf(comp.getFinishedProducts()) + " Paletten");
 		l_maxProducableUnits.setText(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");

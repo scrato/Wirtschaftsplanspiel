@@ -30,6 +30,7 @@ public class Period {
 	private double ressourceDelta;
 	private double revenue;
 
+
 	private List<Machine> soldMachines = new LinkedList<Machine>();
 
 	private Credit takenCredit;
@@ -40,6 +41,9 @@ public class Period {
 		finishedProductsValue = Value;
 	}
 
+	public int getSoldProducts(){
+		return  (int) ( revenue / productPrice);
+	}
 	public void addBoughtMachine(Machine mach) {
 		this.boughtMachines.add(mach);
 	}
