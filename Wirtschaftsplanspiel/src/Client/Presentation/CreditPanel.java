@@ -32,23 +32,62 @@ public class CreditPanel extends TypedPanel {
 	JTextField creditHigh = new JTextField(7);
 	JComboBox cb_contractPeriod;
 	JButton takeCredit = new JButton ("Aufnehmen");
-
-	
-
-	
 	
 	public CreditPanel(){
 		super(PanelType.Credit);
 		setLayout(new GridBagLayout());
+	}
+	
+	public void refresh(){
+		this.removeAll();
+		if(Company.getInstance().getCredit() == null){
+			buildWantCredit();
+		}else{
+			buildhasCredit();
+		}
+		repaint();
+		revalidate();
+		validate();
+		
+	}
+	
+	public void buildhasCredit(){
+		GridBagConstraints c = new GridBagConstraints();
+		JTextField creditLeft = new JTextField (7);
+		creditLeft.setEditable(false);
+		
+		JTextField periodLeft = new JTextField (3);
+		periodLeft.setEditable(false);
+		
+		c.gridx=0;
+		c.gridy=0;
+		add(new JLabel("Sie haben bereits einen Kredit aufgenommen."),c); //company.getcredit
+		
+		c.gridx=0;
+		c.gridy=1;
+		add(new JLabel("Höhe des noch zu bezahlenden Kredits:"),c);
+		
+		c.gridx=1;
+		c.gridy=1;
+		add(creditLeft,c);
+		creditLeft.setText(Company.getInstance().getCredit().getCreditLeft()+"");
+		
+		c.gridx=0;
+		c.gridy=2;
+		add(new JLabel("Perioden verbleibend:"),c);
+		
+		c.gridx=1;
+		c.gridy=2;
+		add(periodLeft,c);
+		periodLeft.setText((int)Company.getInstance().getCredit().getLeftPeriods()+"");
+	}
+	
+	public void buildWantCredit(){
 		GridBagConstraints c = new GridBagConstraints();
 		
 		takeCredit.addActionListener(new takeOutLoan());
 		interestHigh.setEditable(false);
-	//		cb_contractPeriod.addItemListener(new java.awt.event.ItemListener());
-			
-		if (Company.getInstance().getCredit()==null)
-		{
-			c.gridx=0;		
+		c.gridx=0;		
 			c.gridy=0;
 			c.insets = new Insets(10,10,10,30);	//top,left,bottom,right
 			add(new JLabel("Höhe des Kredits:	"),c);
@@ -102,25 +141,8 @@ public class CreditPanel extends TypedPanel {
 			c.gridy=2;
 			add(takeCredit,c);
 			c.insets = new Insets(0,0,0,0);
-		}
-		else
-		{
-					
-		}
+
 		
-		
-	}
-	
-	public void refresh(){
-		this.removeAll();
-		revalidate();
-		validate();
-		repaint();
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx=0;
-		c.gridy=0;
-		add(new JLabel("Sie haben bereits einen Kredit aufgenommen."),c);	
 	}
 	
 	private class takeOutLoan implements ActionListener {
@@ -147,9 +169,11 @@ public class CreditPanel extends TypedPanel {
 			// TODO Auto-generated method stub
 			
 			int periodTime = Integer.valueOf((String) cb_contractPeriod.getSelectedItem()); 
+			double interestHighValue = Credit.getPercentageForPeriods(periodTime)*100;
 			
+			interestHighValue = (Math.round(interestHighValue * 100.0))/100.0;
 			
-			interestHigh.setText((Credit.getPercentageForPeriods(periodTime)*100) +"%");
+			interestHigh.setText(interestHighValue +"%");
 		}
 
 	}
@@ -159,12 +183,6 @@ public class CreditPanel extends TypedPanel {
 		refresh();
 		
 	}
-	
-	
-
-		
-		
-	
 	
 }
 	
