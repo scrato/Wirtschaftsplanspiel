@@ -322,6 +322,7 @@ public abstract class CompanyController {
 		Credit credit = new Credit(height, periods);
 		comp.setCredit(credit);
 		comp.incMoney(height);
+		MainWindow.getInstance().updateInfoPanel();
 	}
 	
 	public static void payInterestAndRepayment() throws UserCanNotPayException{

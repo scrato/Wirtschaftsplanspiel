@@ -70,7 +70,10 @@ public class CreditPanel extends TypedPanel {
 		c.gridx=1;
 		c.gridy=1;
 		add(creditLeft,c);
-		creditLeft.setText(Company.getInstance().getCredit().getCreditLeft()+"");
+		double creditLeftValue = Company.getInstance().getCredit().getCreditLeft();
+		creditLeftValue = (Math.round(creditLeftValue * 100.0))/100.0;
+		
+		creditLeft.setText(creditLeftValue+"");
 		
 		c.gridx=0;
 		c.gridy=2;
