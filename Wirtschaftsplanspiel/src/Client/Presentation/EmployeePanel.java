@@ -398,10 +398,14 @@ public class EmployeePanel extends TypedPanel {
 		public void itemStateChanged(ItemEvent arg0) {
 			// TODO Auto-generated method stub
 			double cost = 0;
-			int anzahl = Integer.valueOf(anzahlField.getText());
-			if (anzahl > 0) {
-				cost = anzahl * Employee.EMPLOYCOST;
-				kostenOutput.setText(cost + "");
+			try {
+				int anzahl = Integer.valueOf(anzahlField.getText());
+				if (anzahl > 0) {
+					cost = anzahl * Employee.EMPLOYCOST;
+					kostenOutput.setText(cost + "");
+				}
+			} catch (Exception e) {
+				anzahlField.setText("0");
 			}
 		}
 
