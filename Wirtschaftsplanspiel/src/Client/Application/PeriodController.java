@@ -7,8 +7,6 @@ import common.entities.CompanyResultList;
 import common.entities.Supply;
 
 import Client.Entities.Company;
-import Client.Entities.EmployeeType;
-import Client.Entities.MachineType;
 import Client.Entities.Period;
 import Client.Entities.ProductionAndDistribution;
 import Client.Entities.ProfitAndLoss;
@@ -75,14 +73,6 @@ public abstract class PeriodController {
 			CompanyController.payWarehouseCosts();
 			
 			ProfitAndLoss guv = actPeriod.makeGuV();	
-			
-			Period actP = PeriodInfo.getActualPeriod();
-			Company comp = Company.getInstance();
-			double respr = 0;
-			for(RessourceType t: RessourceType.values()){
-			respr += comp.getFinishedProducts() * (Ressource.getNeed(t) *  comp.getRessource(t).getPricePerUnit());
-			}
-			actP.setFinishedProductsValue(respr);
 			
 			SendCompanyResultMessage message = new SendCompanyResultMessage(guv.profit);
 			Client.getInstance().SendMessage(message);

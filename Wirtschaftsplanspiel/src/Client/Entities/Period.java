@@ -14,10 +14,8 @@ public class Period {
 	private Balance balance;
 	private List<Machine> boughtMachines = new LinkedList<Machine>();
 	private Map<Ressource, Integer> boughtRessources = new HashMap<Ressource, Integer>();
-	private double changeInStockRessources;
 	private double deprecationValue;
 	private double earnedMoney;
-	private double finishedProductsValue;
 	private int finishedProductDelta;
 	private List<Employee> firedEmployees = new LinkedList<Employee>();
 	
@@ -37,9 +35,6 @@ public class Period {
 
 	private Map<Ressource, Integer> usedRessources = new HashMap<Ressource, Integer>();
 	
-	public void setFinishedProductsValue(Double Value) {
-		finishedProductsValue = Value;
-	}
 
 	public int getSoldProducts(){
 		return  (int) ( revenue / productPrice);
@@ -83,7 +78,7 @@ public class Period {
 	}
 
 	public void decFinishedProductCountDelta(int finishedProductsLeft) {
-		this.finishedProductDelta += finishedProductDelta;
+		this.finishedProductDelta -= finishedProductsLeft;
 	}
 
 	public void decRessourcePriceDelta(double ressourceDelta) {
@@ -104,9 +99,7 @@ public class Period {
 		return boughtRessources;
 	}
 
-	public double getChangeInStockRessources() {
-		return changeInStockRessources;
-	}
+
 
 	public double getDeprecation() {
 		return deprecationValue;
@@ -202,20 +195,14 @@ public class Period {
 		balance.totallyearned = p.getEarnedMoney();
 
 		Company comp = Company.getInstance();
-		p.setFinishedProductsValue(comp.getFinishedProducts() * comp.getProdAndDistr().sellingPrice);
 		for (Iterator<Machine> i = comp.getMachines().iterator(); i.hasNext();) {
 			Machine next = i.next();
 			balance.machineValue += next.getValue();
 		}
 
-		for (Iterator<Ressource> i = comp.getAllRessources().values()
-				.iterator(); i.hasNext();) {
-			Ressource next = i.next();
-			balance.ressourceValue += next.getStoredUnits()
-					* next.getPricePerUnit();
-		}
+		balance.ressourceValue = comp.calculateRessourceValue();
 		
-		balance.finishedProductsValue = p.finishedProductsValue;
+		balance.finishedProductsValue = comp.calculateFinishedProductValue();
 
 		if (comp.creditExist()) {
 			balance.credit = comp.getCredit().getCreditLeft();
@@ -224,7 +211,9 @@ public class Period {
 		}
 
 		balance.bank = comp.getMoney();
-
+		
+		balance.ressourceValue = ressourceDelta;
+		
 		balance.calculateEquity();
 		return balance;
 	}
@@ -298,7 +287,7 @@ public class Period {
 //
 //		// Bestandsveränderungen Ressourcen
 //		guv.changeInStockRessources = p.getRessourcePriceDelta();
-		guv.changeInStock = p.getFinishedProductCountDelta() * productionPrice + p.getRessourcePriceDelta();
+		guv.changeInStock = comp.calculateFinishedProductValue(p.getFinishedProductCountDelta()) + p.getRessourcePriceDelta();
 
 		guv.warehouseCosts = comp.getWarehouseCosts();
 
@@ -311,10 +300,6 @@ public class Period {
 		return guv;
 	}
 
-	// Bestandsveränderungen
-	public void setChangeInStockRessources(double changeInStockRessources) {
-		this.changeInStockRessources = changeInStockRessources;
-	}
 
 	public void setDeprecation(double value) {
 		deprecationValue = value;
