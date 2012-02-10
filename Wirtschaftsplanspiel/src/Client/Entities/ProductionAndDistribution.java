@@ -61,4 +61,11 @@ public class ProductionAndDistribution {
 	public void setUnitsToSell(int unitsToSell) {
 		this.unitsToSell = unitsToSell;
 	}
+	
+	public double costsForProduction(){
+		double prodcost = 0;
+		
+		
+		return prodcost;
+	}
 }
