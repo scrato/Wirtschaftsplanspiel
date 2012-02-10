@@ -13,10 +13,10 @@ public class Machine {
 		double price = 0;
 		switch(t){
 			case Filitiermaschine:
-				price = capacitySize * COST_PER_CAPACITY_FILETIERMASCHINE*(1+((STANDARD_CAPACITY_FILETIERMASCHINE / capacitySize - 1) / 20));
+				price = capacitySize * COST_PER_CAPACITY_FILETIERMASCHINE * (1+((STANDARD_CAPACITY_FILETIERMASCHINE / capacitySize - 1) / 20)) * 5; // 5 = Nutzungsdauer
 				break;
 			case Verpackungsmaschine:
-				price = capacitySize * COST_PER_CAPACITY_VERPACKUNGSMASCHINE*(1+((STANDARD_CAPACITY_VERPACKUNGSMASCHINE / capacitySize - 1) / 20));
+				price = capacitySize * COST_PER_CAPACITY_VERPACKUNGSMASCHINE * (1+((STANDARD_CAPACITY_VERPACKUNGSMASCHINE / capacitySize - 1) / 20)) * 5; // 5 = Nutzungsdauer
 				break;
 		}
 		DecimalFormat format = new DecimalFormat();
