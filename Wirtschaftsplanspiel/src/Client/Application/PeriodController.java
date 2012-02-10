@@ -74,7 +74,16 @@ public abstract class PeriodController {
 			//comp.setWarehouseCostPerProduct(produceCostPerProdukt);
 			CompanyController.payWarehouseCosts();
 			
-			ProfitAndLoss guv = actPeriod.makeGuV();			
+			ProfitAndLoss guv = actPeriod.makeGuV();	
+			
+			Period actP = PeriodInfo.getActualPeriod();
+			Company comp = Company.getInstance();
+			double respr = 0;
+			for(RessourceType t: RessourceType.values()){
+			respr += comp.getFinishedProducts() * (Ressource.getNeed(t) *  comp.getRessource(t).getPricePerUnit());
+			}
+			actP.setFinishedProductsValue(respr);
+			
 			SendCompanyResultMessage message = new SendCompanyResultMessage(guv.profit);
 			Client.getInstance().SendMessage(message);
 			

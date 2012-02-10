@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 
 import javax.swing.BorderFactory;
@@ -37,7 +38,6 @@ public class MachinePanel extends TypedPanel {
 	
 	// MachineScreen
 	String[] machineColumnNames = {"Typ", "Kapazität", "Anschaffungswert", "Restlaufzeit", "Restwert"};
-	
 	DefaultTableModel machineTabModel = new DefaultTableModel();
 	JTable machineTable = new JTable();
 	Object[][] machineData = null;
@@ -243,10 +243,10 @@ public class MachinePanel extends TypedPanel {
 				
 				
 				int capacitySize = Integer.valueOf((String)capacity.getSelectedItem());
-				
+
 				if(((String)type.getSelectedItem()).equals("Filitiermaschine")){
 					try {
-						CompanyController.buyMachine(new Machine(MachineType.Filitiermaschine, capacitySize, capacitySize*1.5));
+						CompanyController.buyMachine(new Machine(MachineType.Filitiermaschine, capacitySize, Machine.calculatePrice(MachineType.Filitiermaschine, capacitySize)));
 					} catch (MachineAlreadyBoughtException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -257,7 +257,8 @@ public class MachinePanel extends TypedPanel {
 				}else{
 					// Verpackungsmaschine
 					try {
-						CompanyController.buyMachine(new Machine(MachineType.Verpackungsmaschine, capacitySize, capacitySize*2));
+						
+						CompanyController.buyMachine(new Machine(MachineType.Verpackungsmaschine, capacitySize, Machine.calculatePrice(MachineType.Verpackungsmaschine, capacitySize)));
 					} catch (MachineAlreadyBoughtException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -290,10 +291,10 @@ public class MachinePanel extends TypedPanel {
 				capacityInt = Integer.valueOf((String)capacity.getSelectedItem());
 				refreshCapacity();
 				if(type.getSelectedItem().equals("Filitiermaschine")){
-					costOutput.setText((capacityInt * 1.5) + "");
+					costOutput.setText(Machine.calculatePrice(MachineType.Filitiermaschine, capacityInt) + "");
 				}else{
 					// Verpackungsmaschine
-					costOutput.setText((capacityInt * 2) + "");
+					costOutput.setText((Machine.calculatePrice(MachineType.Verpackungsmaschine, capacityInt)) + "");
 				}
 			}
 			

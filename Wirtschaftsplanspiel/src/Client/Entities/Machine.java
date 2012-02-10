@@ -1,7 +1,35 @@
 package Client.Entities;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+
 public class Machine {
-	public static String[] capacites = { "200", "400", "600", "800", "1000"};
+	public static String[] capacites = { "300", "500", "1000", "2000", "3000"};
+	public static final double STANDARD_CAPACITY_FILETIERMASCHINE = 3000;
+	public static final double STANDARD_CAPACITY_VERPACKUNGSMASCHINE = 2000;
+	public static final double COST_PER_CAPACITY_FILETIERMASCHINE = 50;
+	public static final double COST_PER_CAPACITY_VERPACKUNGSMASCHINE = 50;
+	public static double calculatePrice(MachineType t, int capacitySize){
+		double price = 0;
+		switch(t){
+			case Filitiermaschine:
+				price = capacitySize * COST_PER_CAPACITY_FILETIERMASCHINE*(1+(STANDARD_CAPACITY_FILETIERMASCHINE / (capacitySize * 30)));
+				break;
+			case Verpackungsmaschine:
+				price = capacitySize * STANDARD_CAPACITY_VERPACKUNGSMASCHINE*(1+(STANDARD_CAPACITY_VERPACKUNGSMASCHINE / (capacitySize * 30)));
+				break;
+		}
+		DecimalFormat format = new DecimalFormat();
+		format.setMaximumFractionDigits(2);
+		
+		try {
+			return format.parse(format.format(price)).doubleValue();
+		} catch (ParseException e) {
+			return price;
+		}
+		
+		
+	}
 	public Machine(MachineType Type, int Capacity, double Value) { //, int Lifetime) {
 		type = Type;
 		capacity = Capacity;
