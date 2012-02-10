@@ -398,6 +398,7 @@ public class ReportingPanel extends TypedPanel {
 			guVPanel.addEntry(new TAccountEntry("Aufwand für Entlassungen", guv.employeeDismissalCosts), TAccountSides.left);
 		
 		guVPanel.addEntry(new TAccountEntry("Abschreibungen", guv.deprecation), TAccountSides.left);
+		guVPanel.addEntry(new TAccountEntry("Verl. aus AV-Abgang", guv.lossDueDisposalOfAssets), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Miete", guv.rental), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Lageraufwand", guv.warehouseCosts), TAccountSides.left);
 		if (guv.changeInStockExpenditures != 0) 
