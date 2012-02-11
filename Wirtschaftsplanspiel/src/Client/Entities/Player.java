@@ -1,12 +1,13 @@
 package Client.Entities;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
 import common.entities.CompanyResult;
 
-public class Player {
+public class Player implements Comparable<Player> {
 
 	private int id;
 	private String name;
@@ -61,5 +62,19 @@ public class Player {
 	
 	public static boolean isHost(){
 		return isHost;
+	}
+
+	@Override
+	public int compareTo(Player arg0) {
+		double res1 = 0;
+		for(Iterator<CompanyResult> resit = resultList.iterator(); resit.hasNext();){
+			res1 += resit.next().profit;
+		}
+		
+		double res2 = 0;
+		for(Iterator<CompanyResult> resit2 = arg0.resultList.iterator(); resit2.hasNext();){
+			res2 += resit2.next().profit;
+		}
+		return Double.compare(res1, res2);
 	}
 }
