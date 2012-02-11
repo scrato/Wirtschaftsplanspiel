@@ -66,10 +66,10 @@ public class ResultPanel extends TypedPanel {
 		c.insets = inset_newLine_top;
 		switch(reason){
 			case EndOfRoundsReached:
-				this.add(new JLabel("Das Spiel wurde beendet, da die maximale Anzahl an Runden erreicht wurde"));
+				this.add(new JLabel("Das Spiel wurde beendet, da die maximale Anzahl an Runden erreicht wurde"),c);
 				break;
 			case OnePlayerLeft:
-				this.add(new JLabel("Das Spiel wurde beendet, da nur noch ein Spieler spielbereit ist."));
+				this.add(new JLabel("Das Spiel wurde beendet, da nur noch ein Spieler spielbereit ist."),c);
 				break;
 		}
 		
