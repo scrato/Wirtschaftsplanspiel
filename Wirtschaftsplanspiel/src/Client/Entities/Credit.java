@@ -19,6 +19,7 @@ public class Credit {
 	
 	public Credit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException{
 		//Dynamische Anpassung des Zinsatzes -> (Laufzeit * 0,5) + Basissatz von 5%... heißt Kredit über 10 Jahre hat 10% Zinsen 
+		CanTakeCredit(creditHeight, contractPeriod);
 		this.interestPercentage = getPercentageForPeriods(contractPeriod);
 		
 		this.initialCreditHeight = creditHeight;
@@ -27,7 +28,7 @@ public class Credit {
 		this.creditLeft = creditHeight;
 		this.contractPeriod = contractPeriod;
 		setAnuity(creditHeight);
-		CanTakeCredit(creditHeight, contractPeriod);
+
 	}
 
 	public static double getPercentageForPeriods(int contractPeriod) {
@@ -50,14 +51,10 @@ public class Credit {
 	}
 
 	private void CanTakeCredit(double creditHeight, int contractPeriod) throws UnableToTakeCreditException {
-		//TODO: Sind Kreditvorraussetzungen so ok?
 		//comment(lars): über nen maximalwert müsste man sich nochmal gedanken machen.
-		//comment(lars): ich würde sagen man kann auch 2 runden vor schluss nen kredit über 10 runden aufnehmen, sonst muss man ja in der 2. periode die hälfte zurückzahlen wenn man ne maschine für 5 jahre finanzieren will.
-		if (creditHeight > 9000000)
+		if (creditHeight > 5000000) //5 Millionen maximalwert
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.CreditTooHigh);
-		//if (contractPeriod > (PeriodInfo.getMaxPeriods()- PeriodInfo.getNumberOfActPeriod()))
-			//throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.PeriodLongerThanPlaytime);
-		if (contractPeriod > 10)
+		if (contractPeriod > 5)
 			throw new UnableToTakeCreditException(UnableToTakeCreditException.TakeCreditReason.PeriodTooLong);
 		
 	}
