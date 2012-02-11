@@ -296,9 +296,10 @@ public class ReportingPanel extends TypedPanel {
 		for (int o = 0; o<9; o++) {
 			navigationPanel.add(new JPanel());
 		}
-		JLabel reportingLabel = new JLabel("Berichterstattung");
-		reportingLabel.setFont(reportingLabel.getFont().deriveFont(Font.BOLD));
-		navigationPanel.add(reportingLabel);
+		//JLabel reportingLabel = new JLabel("Berichterstattung");
+		//reportingLabel.setFont(reportingLabel.getFont().deriveFont(Font.BOLD));
+		//navigationPanel.add(reportingLabel);
+		navigationPanel.add(new JPanel());
 		navigationPanel.add(new JPanel());
 		navigationPanel.add(new JPanel());
 		if (period == 0) {
@@ -429,6 +430,14 @@ public class ReportingPanel extends TypedPanel {
 		//c.insets = new Insets(0,0,0,0);
 		 * 
 		 */
+		
+		//resultScrollPane.set
+		JPanel pufferLeft = new JPanel();
+		pufferLeft.setSize(15, 10);
+		this.add(pufferLeft, BorderLayout.WEST);
+		JPanel pufferRight = new JPanel();
+		pufferRight.setSize(15, 10);
+		this.add(pufferRight, BorderLayout.EAST);
 		
 		this.add(resultScrollPane, BorderLayout.CENTER);
 		
