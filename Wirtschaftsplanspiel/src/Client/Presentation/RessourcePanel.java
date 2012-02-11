@@ -146,9 +146,12 @@ public class RessourcePanel extends TypedPanel {
 		}
 		c.gridy = rowy;
 		c.gridx = 0;
+		JButton buyAll = new JButton("Alle benötigten Rohstoffe kaufen");
+		buyAll.addActionListener(new buyRessourceListener(true));
+		this.add(buyAll, c);
+		c.gridx++;
 		JButton buy = new JButton("Kaufen");
 		buy.addActionListener(new buyRessourceListener());
-		c.gridx++;
 		this.add(buy, c);
 		refreshPanel();
 	}
@@ -182,7 +185,7 @@ public class RessourcePanel extends TypedPanel {
 				return;
 			}
 			if (arg0.getKeyCode() == KeyEvent.VK_ENTER){
-				buy();
+				buy(false);
 				return;
 			}
 			try
@@ -223,16 +226,30 @@ public class RessourcePanel extends TypedPanel {
 	}
 
 	private class buyRessourceListener implements ActionListener {
+		private boolean all;
+		public buyRessourceListener(boolean all){
+			super();
+			this.all = all;
+		}
+		
 
+
+		public buyRessourceListener(){
+			super();
+			this.all = false;
+		}
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
-			buy();
+			if(all)
+				buy(true);
+			else
+				buy(false);
 		}
 
-	}
 
+	}
+	
 	public void refreshPanel() {
 		// Schau dir die Entitäten von Pwerkstoffe an
 		for(Component t : RessourcePanel.me.getComponents()){
@@ -293,7 +310,7 @@ public class RessourcePanel extends TypedPanel {
 		return (String.valueOf(res.getPricePerUnit()) + "€");
 	}
 	
-	public void buy() {
+	public void buy(boolean all) {
 		for(Component c: RessourcePanel.me.getComponents()){
 			//Die Klassen, die vom Typ "Type-Label" sind...
 			if(c.getClass().equals(TypeTextbox.class)){
@@ -304,7 +321,12 @@ public class RessourcePanel extends TypedPanel {
 				String text = tb.getText().trim();
 				//Kaufe für jede Ressource die angegebene Anzahl ein
 				try {
-				int amount = Integer.parseInt(text);
+					int amount;
+				if(all)
+					amount = CompanyController.missingRessources(t);
+				else
+					 amount = Integer.parseInt(text);
+				
 				if(amount>0)
 						CompanyController.buyRessources(t, amount);
 						//Kein Geld -> Mit Messagebox warnen

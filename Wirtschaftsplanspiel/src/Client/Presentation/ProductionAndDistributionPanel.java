@@ -42,8 +42,6 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	 *
 	 */
 	private class TextListener implements KeyListener {
-		//Rücktaste, Pfeiltasten, Komma, Punkt
-		//private Integer[] keysallowed = {110,46,37,39,38,40,8};
 		@Override
 		public void keyPressed(KeyEvent arg0) {			
 		
@@ -476,7 +474,9 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 
 	
 	private void refreshCount() {
+		
 		maxProducableUnits = comp.getProdAndDistr().getMaxProducableUnits();
+		maxSellableUnits = comp.getFinishedProducts() + unitsToProduce;
 		pricesell.setText(cutAndTrim(pricesell.getText()));
 		amountproduce.setText(cutAndValidate(amountproduce.getText()));
 		amountsell.setText(cutAndValidate(amountsell.getText()));
@@ -492,7 +492,7 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		comp.getProdAndDistr().setUnitsToSell(amountToSell);
 		comp.getProdAndDistr().setSellingPrice(priceToSell);
 		
-		if(amountToSell > (maxSellableUnits + unitsToProduce))
+		if(amountToSell > (maxSellableUnits))
 			amountsell.setForeground(Color.RED);
 		else
 			amountsell.setForeground(Color.BLACK);
