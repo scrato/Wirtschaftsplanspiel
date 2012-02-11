@@ -79,10 +79,6 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		}
 
 	}
-
-
-	
-	private static int capid = 0;
 	private TextListener tl = new TextListener();
 	private JTextField amountproduce;
 	private JTextField pricesell;
