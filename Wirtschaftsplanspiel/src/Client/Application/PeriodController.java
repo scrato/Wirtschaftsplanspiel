@@ -104,11 +104,11 @@ public abstract class PeriodController {
 			throw new RuntimeException("Ergebnisliste nicht valide.");
 		}
 		
-		if(PeriodInfo.getNumberOfActPeriod() + 1 == PeriodInfo.getMaxPeriods()){
+
+		if(PeriodInfo.getNumberOfActPeriod() == PeriodInfo.getMaxPeriods()){
 			MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.EndOfRoundsReached));
 			return;
-		}
-				
+		}	
 		PeriodInfo.nextPeriod();
 		MainWindow.getInstance().reactiviateAfterPeriod();
 	}

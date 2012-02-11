@@ -1,5 +1,6 @@
 package Client.Presentation;
 
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,7 +11,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import Client.Entities.PeriodInfo;
 
@@ -42,7 +45,14 @@ public class ResultPanel extends TypedPanel {
 		this.add(title1,c);
 		c.gridy++;
 		c.insets = inset_standard;
-		MainWindow.getInstance().west.setVisible(false);
+
+		MainWindow mw = MainWindow.getInstance();
+		mw.west.setVisible(true);
+		for(Component comp : mw.west.getComponents()){
+			if(comp.getClass() == JButton.class)	
+				comp.setVisible(false);
+		}
+		mw.berichtButton.setVisible(true);
 		
 		//Results ausrechnen
 		Map<Player,Double> resultMap = new TreeMap<Player,Double>();
@@ -61,6 +71,8 @@ public class ResultPanel extends TypedPanel {
 			c.gridx++;
 			this.add(new JLabel(format.format(res.getValue()) + "€"),c);
 			c.gridy++;
+			
+			c.gridx = 0;
 		}
 		
 		c.insets = inset_newLine_top;
