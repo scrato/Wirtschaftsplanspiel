@@ -12,8 +12,11 @@ import java.util.Iterator;
 
 import javax.swing.*;
 import Server.Application.ServerController;
+//import Server.Entities.PeriodInfo;
 import Client.Application.ChatController;
 import Client.Entities.Company;
+import Client.Entities.Period;
+import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
 import Client.Network.Client;
 import java.util.List;
@@ -267,6 +270,7 @@ public class MainWindow extends JFrame{
 		infoPanel.setText("  Bank: " + MainWindow.getValueString(Company.getInstance().getMoney()));
 	}
 	
+	JButton berichtButton;	
 	public void buildWest(){
 		west.setLayout(new GridLayout(18,1));
 		JLabel lMenue = new JLabel("Menü");
@@ -274,7 +278,8 @@ public class MainWindow extends JFrame{
 		JButton maschinen = new JButton("Maschinenverwaltung");
 		JButton personal = new JButton("Personalverwaltung");
 		JButton darlehen = new JButton("Darlehen");
-		JButton bericht = new JButton("Berichtserstattung");
+		berichtButton = new JButton("Berichtserstattung");
+		berichtButton.setEnabled(false); // wird erst nach erstem periodenabschluss erlaubt.
 		JButton preiskal = new JButton("Produktionsplanung");
 		JButton periode = new JButton("Periode abschließen");
 					
@@ -283,7 +288,7 @@ public class MainWindow extends JFrame{
 		maschinen.addActionListener(new showMaschinen());
 		personal.addActionListener(new showPersonal());
 		darlehen.addActionListener(new showDarlehen());
-		bericht.addActionListener(new showBericht());
+		berichtButton.addActionListener(new showBericht());
 		preiskal.addActionListener(new showPreiskal());
 		periode.addActionListener(new periodeAbschliessen());
 		
@@ -293,7 +298,7 @@ public class MainWindow extends JFrame{
 		west.add(maschinen);
 		west.add(personal);
 		west.add(darlehen);
-		west.add(bericht);
+		west.add(berichtButton);
 		west.add(new JSeparator());
 		west.add(periode);
 			
@@ -335,6 +340,8 @@ public class MainWindow extends JFrame{
 	
 	public void reactiviateAfterPeriod(){
 		//Pbericht = new ReportingPanel(); 
+		( (ReportingPanel)Pbericht ).setPeriod(PeriodInfo.getActualPeriodNumber() - 1);
+		berichtButton.setEnabled(true);
 		changeScreen(Pbericht);
 		west.setVisible(true);
 		next.setVisible(true);
@@ -535,16 +542,15 @@ public class MainWindow extends JFrame{
 	}
 	
 	private class periodeAbschliessen implements ActionListener{
-				
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				changeScreen(Pwaiting);
 				PeriodController.ClosePeriod();
 				west.setVisible(false);
 				next.setVisible(false);
 				prev.setVisible(false);
-				
+				changeScreen(Pwaiting);
 			} catch (CannotProduceException e1) {
 				//TODO: Anpassen und spezifieren.
 

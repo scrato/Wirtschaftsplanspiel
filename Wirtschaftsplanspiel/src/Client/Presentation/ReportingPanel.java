@@ -6,17 +6,27 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import javax.swing.JFrame;
+
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import Client.Entities.Period;
 import Client.Entities.PeriodInfo;
+import Client.Entities.Player;
 import Client.Entities.ProfitAndLoss;
 import Client.Entities.Balance;
+import common.entities.CompanyResult;
 
 public class ReportingPanel extends TypedPanel {
 	
@@ -146,7 +156,6 @@ public class ReportingPanel extends TypedPanel {
 	public class TAccount extends JPanel {
 				
 		private static final long serialVersionUID = 1L;
-		//private List<TAccountEntry> entries = new LinkedList<TAccountEntry>();
 		private String name;
 		
 		private JPanel headerPanel;
@@ -209,6 +218,10 @@ public class ReportingPanel extends TypedPanel {
 			}
 		}
 		
+		public String getName() {
+			return name;
+		}
+		
 		@Override
 		public void paint(Graphics g) {
 			super.paint(g);
@@ -231,133 +244,85 @@ public class ReportingPanel extends TypedPanel {
 	}
 
 	private static final long serialVersionUID = 1L;
+	
+	private int period = 0;
+	
+	private JPanel bodyPanel;
+	private JPanel navigationPanel;
+	
+	//private JPanel resultPanel;
+	JTable resultTable;
+	private JScrollPane resultScrollPane;
+	
+	private JButton nextPeriodButton;
+	private JButton prevPeriodButton;
+	
 	private TAccount balancePanel;
 	private TAccount guVPanel;
 	
 	public ReportingPanel() {
 		super(PanelType.Reporting);
-		//super(new GridLayout(2,1));
 		
-		//this.setMaximumSize(new Dimension(500, 300));
+		this.setLayout(new BorderLayout());
 		
-//		Balance balance = new Balance();
-//		balance.machineValue = 		  254312131.779d;
-//		balance.ressourceValue =		 153512.252d;
-//		balance.finishedProductsValue =  263242.362d;
-//		balance.bank = 				     475152.268d;
-//		
-//		balance.credit = 			   151324252.27d;
-//		balance.calculateEquity();
-//		
-//		ProfitAndLoss guv = new ProfitAndLoss();
-//		guv.ressourceCost = 		   52463524.252d;
-//		guv.wages = 				   96342315.643d;
-//		guv.deprecation = 			   36235123.433d; 
-//		guv.rental = 				      50000.000d;
-//		guv.warehouseCosts =			  15226.251d;
-//		guv.changeInStockExpenditures =		  0.0d;
-//		guv.lossDueDisposalOfAssets =     50000.0d;
-//		guv.employeeDismissalCosts = 		  0.0d;
-//		guv.employeeHiringCosts = 		   1000.0d;
-//		guv.interest = 					 743513.256d;
-//		
-//		guv.sales = 				    5648144.787d;
-//		guv.changeInStockEarning = 		 155126.211d;
-//		
-//		guv.calculateResult();
-//		
-		
-		Period reportingPeriod = null;
-		try {
-			reportingPeriod = PeriodInfo.getPeriod(PeriodInfo.getActualPeriodNumber() - 1);
-		} catch (Exception e) {
-			//do nothing.
-		}
-		ProfitAndLoss guv;
-		Balance balance;
-		if (reportingPeriod != null && reportingPeriod.getGuV() != null && reportingPeriod.getBalance() != null) {
-			guv = reportingPeriod.getGuV();
-			balance = reportingPeriod.getBalance();
-		} else {
-			guv = new ProfitAndLoss();
-			balance = new Balance();
-		}
-	
-		
-		balancePanel = new TAccount("Bilanz");
-		guVPanel = new TAccount("Gewinn und Verlust");
-		
-		this.add(balancePanel);
-		this.add(guVPanel);
-		
-		//DecimalFormat format = new DecimalFormat("###,###,###.##");
-		//NumberFormat format = DecimalFormat.getInstance(Locale.GERMAN);
-		balancePanel.addEntry(new TAccountEntry("Maschinen", balance.machineValue), TAccountSides.left);
-		balancePanel.addEntry(new TAccountEntry("Rohstoffe", balance.ressourceValue), TAccountSides.left);
-		balancePanel.addEntry(new TAccountEntry("Produkte", balance.finishedProductsValue), TAccountSides.left);
-		balancePanel.addEntry(new TAccountEntry("Bank", balance.bank), TAccountSides.left);
-		
-		balancePanel.addEntry(new TAccountEntry("Eigenkapital", balance.equity), TAccountSides.right);
-		balancePanel.addEntry(new TAccountEntry("Kredit", balance.credit), TAccountSides.right);
-		
-		balancePanel.addSum(balance.getTAccountSum());
-		
-		guVPanel.addEntry(new TAccountEntry("Rohstoffaufwand", guv.ressourceCost), TAccountSides.left);
-		guVPanel.addEntry(new TAccountEntry("Löhne/Gehälter", guv.wages), TAccountSides.left);
-		if (guv.employeeHiringCosts != 0) 
-			guVPanel.addEntry(new TAccountEntry("Aufwand für Einstellungen", guv.employeeHiringCosts), TAccountSides.left);
-		if (guv.employeeDismissalCosts != 0) 
-			guVPanel.addEntry(new TAccountEntry("Aufwand für Entlassungen", guv.employeeDismissalCosts), TAccountSides.left);
-		
-		guVPanel.addEntry(new TAccountEntry("Abschreibungen", guv.deprecation), TAccountSides.left);
-		guVPanel.addEntry(new TAccountEntry("Miete", guv.rental), TAccountSides.left);
-		guVPanel.addEntry(new TAccountEntry("Lageraufwand", guv.warehouseCosts), TAccountSides.left);
-		if (guv.changeInStockExpenditures != 0) 
-			guVPanel.addEntry(new TAccountEntry("Minderbestand", guv.changeInStockExpenditures), TAccountSides.left);
-		guVPanel.addEntry(new TAccountEntry("Zinsaufwand", guv.interest), TAccountSides.left);
-
-		guVPanel.addEntry(new TAccountEntry("Umsatzerlöse", guv.sales), TAccountSides.right);
-		if (guv.changeInStockEarning != 0) 
-			guVPanel.addEntry(new TAccountEntry("Mehrbestand", guv.changeInStockEarning), TAccountSides.right);
-	
-		
-		if (guv.profit >= 0) {
-			guVPanel.addEntry(new TAccountEntry("Gewinn", guv.profit, Color.green), TAccountSides.left);
-		} else {
-			guVPanel.addEntry(new TAccountEntry("Verlust", -guv.profit, Color.red), TAccountSides.right);
-		}
-		
-		guVPanel.addSum(guv.getTAccountSum());
-		
-		
+		prevPeriodButton = new JButton("<<");
+		prevPeriodButton.addActionListener(new PrevPeriodListener(this));
+		nextPeriodButton = new JButton(">>");
+		nextPeriodButton.addActionListener(new NextPeriodListener(this));
 		
 	}
 	
-//	public void addBilanzEntry(String name, String value, boolean side) {
-//		Bilanz.addEntry(new TAccountEntry(name, value, side));
-//	}
-//	
-//	public void addGuvEntry(String name, String value, boolean side) {
-//		ProfitAndLoss.addEntry(new TAccountEntry(name, value, side));
-//	}
-	
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		
-		ReportingPanel repPanel = new ReportingPanel();
-		frame.add(repPanel);
-		
-		frame.setVisible(true);
+	public void setPeriod(int Period) {
+		this.period = Period;
+		this.refreshPanel();
 	}
-
+	
 	@Override
 	public void refreshPanel() {
 		this.removeAll();
 	
+		bodyPanel = new JPanel();
+		GridBagLayout gbLay = new GridBagLayout();
+		bodyPanel.setLayout(gbLay);
+		GridBagConstraints c = new GridBagConstraints();		
+		c.fill = GridBagConstraints.HORIZONTAL;
 		
+		navigationPanel = new JPanel(new GridLayout(2, 9));
+		for (int o = 0; o<10; o++) {
+			navigationPanel.add(new JPanel());
+		}
+		navigationPanel.add(new JPanel());
+		navigationPanel.add(new JPanel());
+		navigationPanel.add(new JPanel());
+		if (period == 0) {
+			prevPeriodButton.setEnabled(false);
+		}
+		else {
+			prevPeriodButton.setEnabled(true);
+		}
+		navigationPanel.add(prevPeriodButton);
+		JLabel perLabel = new JLabel("  Periode " + period);
+		navigationPanel.add(perLabel);
+		if (period > PeriodInfo.getActualPeriodNumber() - 2) {
+			nextPeriodButton.setEnabled(false);
+		}
+		else {
+			nextPeriodButton.setEnabled(true);
+		}
+		navigationPanel.add(nextPeriodButton);
+		navigationPanel.add(new JPanel());
+		navigationPanel.add(new JPanel());
+		navigationPanel.add(new JPanel());
+	
+		this.add(navigationPanel, BorderLayout.NORTH);
+		
+		balancePanel = new TAccount("Bilanz");
+		guVPanel = new TAccount("Gewinn und Verlust");
+		
+		//fill TAccounts with Data.
 		Period reportingPeriod = null;
 		try {
-			reportingPeriod = PeriodInfo.getPeriod(PeriodInfo.getActualPeriodNumber() - 1);
+			reportingPeriod = PeriodInfo.getPeriod(period); //PeriodInfo.getActualPeriodNumber() - 1);
 		} catch (Exception e) {
 			//do nothing.
 		}
@@ -371,15 +336,6 @@ public class ReportingPanel extends TypedPanel {
 			balance = new Balance();
 		}
 	
-		
-		balancePanel = new TAccount("Bilanz");
-		guVPanel = new TAccount("Gewinn und Verlust");
-		
-		this.add(balancePanel);
-		this.add(guVPanel);
-		
-		//DecimalFormat format = new DecimalFormat("###,###,###.##");
-		//NumberFormat format = DecimalFormat.getInstance(Locale.GERMAN);
 		balancePanel.addEntry(new TAccountEntry("Maschinen", balance.machineValue), TAccountSides.left);
 		balancePanel.addEntry(new TAccountEntry("Rohstoffe", balance.ressourceValue), TAccountSides.left);
 		balancePanel.addEntry(new TAccountEntry("Produkte", balance.finishedProductsValue), TAccountSides.left);
@@ -398,7 +354,6 @@ public class ReportingPanel extends TypedPanel {
 			guVPanel.addEntry(new TAccountEntry("Aufwand für Entlassungen", guv.employeeDismissalCosts), TAccountSides.left);
 		
 		guVPanel.addEntry(new TAccountEntry("Abschreibungen", guv.deprecation), TAccountSides.left);
-		guVPanel.addEntry(new TAccountEntry("Verl. aus AV-Abgang", guv.lossDueDisposalOfAssets), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Miete", guv.rental), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Lageraufwand", guv.warehouseCosts), TAccountSides.left);
 		if (guv.changeInStockExpenditures != 0) 
@@ -417,6 +372,151 @@ public class ReportingPanel extends TypedPanel {
 		}
 		
 		guVPanel.addSum(guv.getTAccountSum());
+
+		String[][] tableValues = new String[Player.getPlayers().size()][4];
+		int i = 0;
+		for (Player player : Player.getPlayers()) {
+			try{
+				CompanyResult result = player.getCompanyResult(period);
+				tableValues[i][0] = player.getName();
+				tableValues[i][1] = getValueString(result.sales);
+				tableValues[i][2] = getValueString(result.profit);
+				tableValues[i][3] = getValueString(result.marketShare);
+				i++;
+			} catch (Exception e) {
+				//do nothing.
+			}
+		}
+		if (i == 0) {
+			tableValues[0][0] = "Keine Daten verfügbar.";
+		}
+		
+		String[] columnNames = { "Spieler", "Umsatz", "Gewinn", "Marktanteil" };
+		
+		DefaultTableModel tabModel = new DefaultTableModel(tableValues, columnNames);
+		
+		resultTable = new JTable(tabModel);
+		//resultTable.setEnabled(false);
+	
+		resultScrollPane = new JScrollPane(resultTable);
+		
+		
+		
+//		JLabel addLabel;
+//		
+//		addLabel = new JLabel("Spieler");
+//		addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
+//		resultPanel.add(addLabel);
+//		addLabel = new JLabel("Umsatz");
+//		addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
+//		resultPanel.add(addLabel);
+//		addLabel = new JLabel("Gewinn");
+//		addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
+//		resultPanel.add(addLabel);
+//		addLabel = new JLabel("Marktanteil");
+//		addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
+//		resultPanel.add(addLabel);
+//		
+//		List<CompanyResult> results = new LinkedList<CompanyResult>();
+//		try {
+//			for (Player player : Player.getPlayers()) {
+//				try {
+//					results.add(player.getCompanyResult(period));
+//				} catch (Exception e2) {
+//					//do nothing.
+//				}
+//			}
+//		}catch (Exception e) {
+//			// do nothing.
+//		}
+//		if (results.isEmpty()) {
+//			//resultPanel.add(new JLabel("Keine Ergebnisse verfügbar."));
+//		} else {
+//			for (CompanyResult result : results) {
+//				if (result.clientid == Client.Network.Client.getInstance().get_ID()) {					
+//					addLabel = new JLabel(Player.getPlayer(result.clientid).getName());
+//					addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
+//					resultPanel.add(addLabel);
+//					addLabel = new JLabel(getValueString(result.sales));
+//					addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
+//					resultPanel.add(addLabel);
+//					addLabel = new JLabel(getValueString(result.profit));
+//					addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
+//					resultPanel.add(addLabel);
+//					addLabel = new JLabel(getValueString(result.marketShare));
+//					addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
+//					resultPanel.add(addLabel);
+//				} else {
+//					addLabel = new JLabel(Player.getPlayer(result.clientid).getName());
+//					resultPanel.add(addLabel);
+//					addLabel = new JLabel(getValueString(result.sales));
+//					resultPanel.add(addLabel);
+//					addLabel = new JLabel(getValueString(result.profit));
+//					resultPanel.add(addLabel);
+//					addLabel = new JLabel(getValueString(result.marketShare));
+//					resultPanel.add(addLabel);	
+//				}
+//
+//			}
+//		}
+		
+		//Add panels to bodyPanel
+		
+		c.gridx = 0;
+		c.gridy = 3;
+		c.gridwidth = 10;
+		c.gridheight = 5;
+		//c.fill = GridBagConstraints.BOTH;
+		resultScrollPane.setPreferredSize(new Dimension(600, 400));
+		bodyPanel.add(resultScrollPane, c);		
+		
+		c.gridx = 1;
+		c.gridy = 8;
+		c.gridwidth = 8;
+		c.gridheight = 4;
+		//c.fill = GridBagConstraints.HORIZONTAL;
+		bodyPanel.add(balancePanel, c);
+		
+		c.gridx = 1;
+		c.gridy = 12;
+		c.gridwidth = 8;
+		c.gridheight = 6;
+		bodyPanel.add(guVPanel, c);
+		
+		this.add(bodyPanel, BorderLayout.CENTER);
+	}
+	
+	public class PrevPeriodListener implements ActionListener {
+		public PrevPeriodListener(ReportingPanel panel) {
+			repPanel = panel;
+		}
+
+		private ReportingPanel repPanel;
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			repPanel.period--;
+			repPanel.refreshPanel();
+			repPanel.repaint();
+			repPanel.validate();
+		}
+	}
+	
+	public class NextPeriodListener implements ActionListener {
+		public NextPeriodListener(ReportingPanel panel) {
+			repPanel = panel;
+		}
+
+		private ReportingPanel repPanel;
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			repPanel.period++;
+			repPanel.refreshPanel();
+			repPanel.repaint();
+			repPanel.validate();
+		}
+		
 	}
 
 }
