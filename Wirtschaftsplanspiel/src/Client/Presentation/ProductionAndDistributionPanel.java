@@ -42,8 +42,6 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	 *
 	 */
 	private class TextListener implements KeyListener {
-		//Rücktaste, Pfeiltasten, Komma, Punkt
-		//private Integer[] keysallowed = {110,46,37,39,38,40,8};
 		@Override
 		public void keyPressed(KeyEvent arg0) {			
 		
@@ -81,10 +79,6 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		}
 
 	}
-
-
-	
-	private static int capid = 0;
 	private TextListener tl = new TextListener();
 	private JTextField amountproduce;
 	private JTextField pricesell;
@@ -113,7 +107,10 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	private JLabel l_missingRessource0;
 
 	private JLabel l_missingEmployee1;
-
+	
+	private Insets inset_standard = new Insets(0,0,0,0);
+	private Insets inset_newLine = new Insets(15,0,5,0);
+	
 	private DecimalFormat decformat;
 	private DecimalFormat curformat;
 	private JLabel l_standardPrice;
@@ -167,12 +164,11 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	/**
 	 * @param c
 	 * @param hjl
-	 * @param newLine
+	 * @param inset_newLine
 	 */
 	private void createProductionPart(GridBagConstraints c) {
 		//ProductionScreen
-		Insets standard = new Insets(0,0,0,0);
-		Insets newLine = new Insets(15,0,5,0);
+
 		
 		c.ipady = 30;
 		JLabel title2 = new JLabel("Produktionsplanung");
@@ -198,10 +194,10 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		
 		c.anchor = GridBagConstraints.NORTHWEST;
 		//Neue Zeile
-		c.insets = newLine;
+		c.insets = inset_newLine;
 		this.add(new JLabel("Fehlende Ressourcen : "),c);
 		c.gridy++;
-		c.insets = standard;
+		c.insets = inset_standard;
 
 		RessourceType t0 = RessourceType.values()[0];
 		this.add(new JLabel(t0.name() + ": "),c);
@@ -231,10 +227,10 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 
 		
 		//Neue Zeile
-		c.insets = newLine;
+		c.insets = inset_newLine;
 		this.add(new JLabel("Fehlende Mitarbeiter : "),c);
 		c.gridy++;
-		c.insets = standard;
+		c.insets = inset_standard;
 		EmployeeType e0 = EmployeeType.values()[0];
 		JLabel le0 = new JLabel(e0.name() + ": ");
 		this.add(le0,c);
@@ -262,10 +258,10 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 
 		
 		//Neue Zeile
-		c.insets = newLine;
+		c.insets = inset_newLine;
 		this.add(new JLabel("Fehlende Maschinenkapazität: "),c);
 		c.gridy++;
-		c.insets = standard;
+		c.insets = inset_standard;
 
 		MachineType m0 = MachineType.values()[0];
 		this.add(new JLabel(m0.name() + ": "),c);
@@ -354,9 +350,19 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		this.add(l_finishedProducts ,c);
 		c.gridx=0;
 		c.gridy++;
+		
+		//Neue Zeile
+		this.add(new JLabel("Aktuell produzierbare Fertigprodukte: "),c);
+		c.gridx++;
+		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");
+		this.add(l_maxProducableUnits,c);
+		c.gridx=0;
+		c.gridy++;
 
 		//Neue Zeile
+		c.insets = inset_newLine;
 		this.add(new JLabel("Verkaufspreis der letzen Periode: "),c);
+
 		c.gridx++;
 		if(PeriodInfo.getNumberOfActPeriod() == 0)
 			l_lastPeriodSellingPrice = new JLabel("Bisher keine Produkte verkauft");
@@ -364,6 +370,7 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 			l_lastPeriodSellingPrice = new JLabel();
 		
 		this.add(l_lastPeriodSellingPrice , c);
+		c.insets = inset_standard;
 		c.gridx=0;
 		c.gridy++;
 		
@@ -379,19 +386,14 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		c.gridx=0;
 		c.gridy++;
 
-		//Neue Zeile
-		this.add(new JLabel("Aktuell produzierbare Fertigprodukte: "),c);
-		c.gridx++;
-		l_maxProducableUnits =new JLabel(String.valueOf(comp.getProdAndDistr().getMaxProducableUnits()) + " Paletten");
-		this.add(l_maxProducableUnits,c);
-		c.gridx=0;
-		c.gridy++;
 		
 		//Neue Zeile
+		c.insets = inset_newLine;
 		this.add(new JLabel("Mindestnachfrage pro Spieler: "),c);
 		c.gridx++;
 		l_standardNeedPerPlayer =new JLabel(decformat.format(Server.Application.AppContext.STANDARD_DEMAND_PER_PLAYER) + " Paletten");
 		this.add(l_standardNeedPerPlayer,c);
+		c.insets = inset_standard;
 		c.gridx=0;
 		c.gridy++;
 		
@@ -476,7 +478,9 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 
 	
 	private void refreshCount() {
+		
 		maxProducableUnits = comp.getProdAndDistr().getMaxProducableUnits();
+		maxSellableUnits = comp.getFinishedProducts() + unitsToProduce;
 		pricesell.setText(cutAndTrim(pricesell.getText()));
 		amountproduce.setText(cutAndValidate(amountproduce.getText()));
 		amountsell.setText(cutAndValidate(amountsell.getText()));
@@ -492,7 +496,7 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		comp.getProdAndDistr().setUnitsToSell(amountToSell);
 		comp.getProdAndDistr().setSellingPrice(priceToSell);
 		
-		if(amountToSell > (maxSellableUnits + unitsToProduce))
+		if(amountToSell > (maxSellableUnits))
 			amountsell.setForeground(Color.RED);
 		else
 			amountsell.setForeground(Color.BLACK);

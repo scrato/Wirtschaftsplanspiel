@@ -19,6 +19,8 @@ import Client.Entities.Period;
 import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
 import Client.Network.Client;
+import Client.Presentation.TypedPanel.PanelType;
+
 import java.util.List;
 
 import Client.Application.CannotProduceException;
@@ -73,12 +75,20 @@ public class MainWindow extends JFrame{
 
 
 	void changeScreen(TypedPanel t) {
+		
+
 		if (lastUsed == t){
 			t.refreshPanel();
 			return;
 		}
 		next.setEnabled(true);
 		prev.setEnabled(true);
+		if (t.type == PanelType.Startbildschirm || t.type == PanelType.ProdAndDistr)
+			prev.setEnabled(false);
+		if (t.type == PanelType.Reporting)
+			next.setEnabled(false);
+		
+		
 		t.refreshPanel();
 		mainframe.add(t, BorderLayout.CENTER);
 		mainframe.remove(lastUsed);
@@ -418,7 +428,6 @@ public class MainWindow extends JFrame{
 	private class showPreiskal implements ActionListener{
 		public void actionPerformed(ActionEvent arg0) {
 			changeScreen(Ppreiskal);
-			
 		}
 		
 	}
@@ -585,7 +594,6 @@ public class MainWindow extends JFrame{
 				break;		
 			case Startbildschirm:
 				changeScreen(Ppreiskal);
-				prev.setEnabled(false);
 				break;		
 			}
 
@@ -602,7 +610,6 @@ public class MainWindow extends JFrame{
 				break;
 			case Ressource:
 				changeScreen(Ppreiskal);
-				prev.setEnabled(false);
 				break;
 			case Machine:
 				changeScreen(Pwerkstoffe);
