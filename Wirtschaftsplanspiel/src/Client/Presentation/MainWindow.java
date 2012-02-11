@@ -182,8 +182,7 @@ public class MainWindow extends JFrame{
 		Pwaiting.setLayout(new BorderLayout());
 		JLabel wait = new JLabel("Die Periode ist abgeschlossen. Bitte warten sie, bis alle anderen Spieler fertig sind.");
 		wait.setAlignmentX(CENTER_ALIGNMENT);
-		Pwaiting.add(wait, BorderLayout.CENTER);
-		
+		Pwaiting.add(wait, BorderLayout.CENTER);	
 	}
 
 	/**

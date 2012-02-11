@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -253,6 +254,7 @@ public class ReportingPanel extends TypedPanel {
 	//private JPanel resultPanel;
 	JTable resultTable;
 	private JScrollPane resultScrollPane;
+	//private JPanel resultPanel;
 	
 	private JButton nextPeriodButton;
 	private JButton prevPeriodButton;
@@ -287,8 +289,10 @@ public class ReportingPanel extends TypedPanel {
 		GridBagConstraints c = new GridBagConstraints();		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		navigationPanel = new JPanel(new GridLayout(2, 9));
-		for (int o = 0; o<10; o++) {
+		//create navigation panel
+		
+		navigationPanel = new JPanel(new GridLayout(3, 9));
+		for (int o = 0; o<9; o++) {
 			navigationPanel.add(new JPanel());
 		}
 		navigationPanel.add(new JPanel());
@@ -314,12 +318,50 @@ public class ReportingPanel extends TypedPanel {
 		navigationPanel.add(new JPanel());
 		navigationPanel.add(new JPanel());
 	
+		for (int o = 0; o<9; o++) {
+			navigationPanel.add(new JPanel());
+		}
+		
 		this.add(navigationPanel, BorderLayout.NORTH);
 		
+		//fill ResultList with Data.
+		String[][] tableValues = new String[Player.getPlayers().size()][4];
+		int i = 0;
+		for (Player player : Player.getPlayers()) {
+			try{
+				CompanyResult result = player.getCompanyResult(period);
+				tableValues[i][0] = player.getName();
+				tableValues[i][1] = getValueString(result.sales);
+				tableValues[i][2] = getValueString(result.profit);
+				tableValues[i][3] = getValueString(result.marketShare);
+				i++;
+			} catch (Exception e) {
+				//do nothing.
+			}
+		}
+		if (i == 0) {
+			tableValues[0][0] = "Keine Daten verfügbar.";
+		}
+		
+		String[] columnNames = { "Spieler", "Umsatz", "Gewinn", "Marktanteil" };
+		
+		DefaultTableModel tabModel = new DefaultTableModel(tableValues, columnNames);
+		
+//		resultPanel = new JPanel();
+//		resultPanel.setSize(500, 500);
+		
+		resultTable = new JTable(tabModel);
+		//resultTable.setFillsViewportHeight(true);
+		resultTable.setEnabled(false);
+		
+		resultScrollPane = new JScrollPane(resultTable);
+		//resultScrollPane.setSize(400,400);
+		//resultPanel.add(resultScrollPane);
+		
+		//fill TAccounts with Data.
 		balancePanel = new TAccount("Bilanz");
 		guVPanel = new TAccount("Gewinn und Verlust");
 		
-		//fill TAccounts with Data.
 		Period reportingPeriod = null;
 		try {
 			reportingPeriod = PeriodInfo.getPeriod(period); //PeriodInfo.getActualPeriodNumber() - 1);
@@ -373,117 +415,40 @@ public class ReportingPanel extends TypedPanel {
 		
 		guVPanel.addSum(guv.getTAccountSum());
 
-		String[][] tableValues = new String[Player.getPlayers().size()][4];
-		int i = 0;
-		for (Player player : Player.getPlayers()) {
-			try{
-				CompanyResult result = player.getCompanyResult(period);
-				tableValues[i][0] = player.getName();
-				tableValues[i][1] = getValueString(result.sales);
-				tableValues[i][2] = getValueString(result.profit);
-				tableValues[i][3] = getValueString(result.marketShare);
-				i++;
-			} catch (Exception e) {
-				//do nothing.
-			}
-		}
-		if (i == 0) {
-			tableValues[0][0] = "Keine Daten verfügbar.";
-		}
 		
-		String[] columnNames = { "Spieler", "Umsatz", "Gewinn", "Marktanteil" };
-		
-		DefaultTableModel tabModel = new DefaultTableModel(tableValues, columnNames);
-		
-		resultTable = new JTable(tabModel);
-		//resultTable.setEnabled(false);
-	
-		resultScrollPane = new JScrollPane(resultTable);
-		
-		
-		
-//		JLabel addLabel;
-//		
-//		addLabel = new JLabel("Spieler");
-//		addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
-//		resultPanel.add(addLabel);
-//		addLabel = new JLabel("Umsatz");
-//		addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
-//		resultPanel.add(addLabel);
-//		addLabel = new JLabel("Gewinn");
-//		addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
-//		resultPanel.add(addLabel);
-//		addLabel = new JLabel("Marktanteil");
-//		addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
-//		resultPanel.add(addLabel);
-//		
-//		List<CompanyResult> results = new LinkedList<CompanyResult>();
-//		try {
-//			for (Player player : Player.getPlayers()) {
-//				try {
-//					results.add(player.getCompanyResult(period));
-//				} catch (Exception e2) {
-//					//do nothing.
-//				}
-//			}
-//		}catch (Exception e) {
-//			// do nothing.
-//		}
-//		if (results.isEmpty()) {
-//			//resultPanel.add(new JLabel("Keine Ergebnisse verfügbar."));
-//		} else {
-//			for (CompanyResult result : results) {
-//				if (result.clientid == Client.Network.Client.getInstance().get_ID()) {					
-//					addLabel = new JLabel(Player.getPlayer(result.clientid).getName());
-//					addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
-//					resultPanel.add(addLabel);
-//					addLabel = new JLabel(getValueString(result.sales));
-//					addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
-//					resultPanel.add(addLabel);
-//					addLabel = new JLabel(getValueString(result.profit));
-//					addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
-//					resultPanel.add(addLabel);
-//					addLabel = new JLabel(getValueString(result.marketShare));
-//					addLabel.setFont(addLabel.getFont().deriveFont(Font.BOLD));
-//					resultPanel.add(addLabel);
-//				} else {
-//					addLabel = new JLabel(Player.getPlayer(result.clientid).getName());
-//					resultPanel.add(addLabel);
-//					addLabel = new JLabel(getValueString(result.sales));
-//					resultPanel.add(addLabel);
-//					addLabel = new JLabel(getValueString(result.profit));
-//					resultPanel.add(addLabel);
-//					addLabel = new JLabel(getValueString(result.marketShare));
-//					resultPanel.add(addLabel);	
-//				}
-//
-//			}
-//		}
 		
 		//Add panels to bodyPanel
+		
+		/*
+		//c.anchor = GridBagConstraints.LINE_END;
 		
 		c.gridx = 0;
 		c.gridy = 3;
 		c.gridwidth = 10;
 		c.gridheight = 5;
-		//c.fill = GridBagConstraints.BOTH;
-		resultScrollPane.setPreferredSize(new Dimension(600, 400));
-		bodyPanel.add(resultScrollPane, c);		
+		//c.insets = new Insets(400,400,400,400);
+		//resultScrollPane.setPreferredSize(new Dimension(600, 400));
+		bodyPanel.add(resultScrollPane, c);	
+		//bodyPanel.add(resultPanel);
+		//c.insets = new Insets(0,0,0,0);
+		 * 
+		 */
+		
+		this.add(resultScrollPane, BorderLayout.CENTER);
 		
 		c.gridx = 1;
-		c.gridy = 8;
+		c.gridy = 1;
 		c.gridwidth = 8;
 		c.gridheight = 4;
-		//c.fill = GridBagConstraints.HORIZONTAL;
 		bodyPanel.add(balancePanel, c);
-		
+
 		c.gridx = 1;
-		c.gridy = 12;
+		c.gridy = 5;
 		c.gridwidth = 8;
 		c.gridheight = 6;
 		bodyPanel.add(guVPanel, c);
 		
-		this.add(bodyPanel, BorderLayout.CENTER);
+		this.add(bodyPanel, BorderLayout.SOUTH);
 	}
 	
 	public class PrevPeriodListener implements ActionListener {

@@ -33,6 +33,7 @@ public class ConnectionView extends JFrame{
 		
 		//Layout
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setTitle("Business Basics - Verbinden");
 		setSize(500,300);
 		setLayout(new GridLayout(8,2));
 	
