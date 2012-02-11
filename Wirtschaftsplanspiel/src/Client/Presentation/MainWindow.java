@@ -56,6 +56,7 @@ public class MainWindow extends JFrame{
 	TypedPanel lastUsed;
 	
 	boolean isServer;// = Player.isHost();
+	boolean isPlayerInsolvent;
 	
 	// Playerliste
 	DefaultListModel listModel = new DefaultListModel();
@@ -346,12 +347,21 @@ public class MainWindow extends JFrame{
 		ListPlayers.repaint();
 	}
 	
+	public void showInsolvency() {
+		isPlayerInsolvent = true;
+		this.west.setVisible(false);
+		infoPanel.setVisible(false);
+		JOptionPane.showMessageDialog(null, "Sie konnten Ihre Rechnungen nicht bezahlen.", "Insolvenz", JOptionPane.OK_OPTION);
+	}
 	
 	public void reactiviateAfterPeriod(){
 		//Pbericht = new ReportingPanel(); 
 		( (ReportingPanel)Pbericht ).setPeriod(PeriodInfo.getActualPeriodNumber() - 1);
 		berichtButton.setEnabled(true);
 		changeScreen(Pbericht);
+		if (isPlayerInsolvent) {
+			return;
+		}
 		west.setVisible(true);
 		next.setVisible(true);
 		prev.setVisible(true);

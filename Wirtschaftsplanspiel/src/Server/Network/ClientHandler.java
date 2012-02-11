@@ -18,6 +18,9 @@ public class ClientHandler implements Comparable<ClientHandler> {
 	
 	private Integer id;
 	private String name;
+	
+	private boolean insolvent;
+	
 	private Socket socket;
 	
 	private Thread listenerThread;
@@ -151,6 +154,14 @@ public class ClientHandler implements Comparable<ClientHandler> {
 		return id;
 	}
 
+	public boolean isInsolvent() {
+		return insolvent;
+	}
+	
+	public void becameInsolvent() {
+		insolvent = true;
+	}
+	
 	@Override
 	public int compareTo(ClientHandler handler) {
 		try {

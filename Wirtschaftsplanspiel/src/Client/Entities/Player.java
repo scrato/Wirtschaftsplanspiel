@@ -11,6 +11,7 @@ public class Player {
 	private int id;
 	private String name;
 	private List<CompanyResult> resultList = new LinkedList<CompanyResult>();
+	private boolean insolvent;
 	
 	public Player(int ID, String Name) {
 		id = ID;
@@ -25,6 +26,14 @@ public class Player {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void becameInsolvent() {
+		insolvent = true;
+	}
+	
+	public boolean isInsolvent() {
+		return insolvent;
 	}
 	
 	

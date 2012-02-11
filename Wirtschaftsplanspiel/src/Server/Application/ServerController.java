@@ -199,6 +199,21 @@ public class ServerController {
 		
 		return disposals;
 	}
+	
+	public static void playerBecameInsolvent(ClientHandler player) {
+		profitlocker.acquireUninterruptibly();
+		try {
+			CompanyResult result = new CompanyResult(0, player.get_ID());
+			result.sales = -1;
+			profits.profitList.put(player.get_ID(), result);
+			
+			player.becameInsolvent();
+		} catch (Exception e) {			
+		} finally {
+			profitlocker.release();
+		}
+		checkResultsCollected();
+	}
 
 	private static Semaphore profitlocker = new Semaphore(1);
 	private static CompanyResultList profits = new CompanyResultList();
@@ -229,7 +244,7 @@ public class ServerController {
 		profitlocker.acquireUninterruptibly();
 		try {
 			for (ClientHandler client : clients) {
-				if (!profits.profitList.containsKey(client.get_ID())) {
+				if (!client.isInsolvent() && !profits.profitList.containsKey(client.get_ID())) {
 					return;
 				}
 			}

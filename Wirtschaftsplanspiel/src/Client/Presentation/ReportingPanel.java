@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -15,6 +14,8 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -332,8 +333,18 @@ public class ReportingPanel extends TypedPanel {
 		String[][] tableValues = new String[Player.getPlayers().size()][4];
 		int i = 0;
 		for (Player player : Player.getPlayers()) {
-			try{
+			try{				
 				CompanyResult result = player.getCompanyResult(period);
+				tableValues[i][0] = player.getName();
+				
+				if (result.sales == -1) {
+					tableValues[i][1] = "  Insolvent";
+					tableValues[i][2] = "  Insolvent";
+					tableValues[i][3] = "  Insolvent";
+					i++;
+					continue;
+				}
+				
 				tableValues[i][0] = player.getName();
 				tableValues[i][1] = getValueString(result.sales);
 				tableValues[i][2] = getValueString(result.profit);

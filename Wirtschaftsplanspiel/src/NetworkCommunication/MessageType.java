@@ -12,6 +12,7 @@ public abstract class MessageType {
 	public final static int GAME_STARTED	   	    = 220;	
 	public final static int SEND_SUPPLY 		    = 230;	
 	public final static int SEND_COMPANYRESULT	    = 240;	
+	public final static int SEND_INSOLVENCY			= 241;
 
 	
 }

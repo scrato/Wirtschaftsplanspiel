@@ -1,5 +1,7 @@
 package Client.Application;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import common.entities.CompanyResult;
@@ -16,13 +18,14 @@ import Client.Entities.Ressource;
 import Client.Entities.RessourceType;
 import Client.Network.Client;
 import NetworkCommunication.BroadcastCompanyResultMessage;
+import NetworkCommunication.MessageType;
+import NetworkCommunication.NetMessage;
 import NetworkCommunication.SendAssignedDisposalMessage;
 import NetworkCommunication.SendCompanyResultMessage;
 import NetworkCommunication.SendSupplyMessage;
 import Client.Presentation.MainWindow;
 
 public abstract class PeriodController {
-
 	
 	public static void ClosePeriod() throws CannotProduceException {
 		CompanyController.produce();
@@ -78,21 +81,31 @@ public abstract class PeriodController {
 			Client.getInstance().SendMessage(message);
 			
 		} catch (UserCanNotPayException e) {
-			// TODO reagieren auf zahlungsunfähigkeit.
-				// Nachricht an Server senden "Ich bin pleite".
+			
+			NetMessage insolvencyMessage = new NetMessage(MessageType.SEND_INSOLVENCY, new byte[0]);
+			Client.getInstance().SendMessage(insolvencyMessage);
+			
+			MainWindow.getInstance().showInsolvency();
 		}
 	}
 
-	
 	public static void RecieveCompanyResult(
 		BroadcastCompanyResultMessage Message) {
 		CompanyResultList crl = Message.getCompanyResults();
-		
+
 		try {
 			for(Iterator<CompanyResult> it = crl.profitList.values().iterator(); it.hasNext();){
 				CompanyResult result = it.next();
 				try {
-					Player.getPlayer(result.clientid).addCompanyResult(result);
+					
+					Player player = Player.getPlayer(result.clientid);
+					player.addCompanyResult(result);
+					if (result.sales == -1) {
+						SimpleDateFormat format = new SimpleDateFormat("kk:mm");
+						String time = format.format(new Date());
+						
+						MainWindow.getInstance().addChatMessage(time + "\n" + player.getName() + " ist insolvent.");
+					}
 				} catch (Exception e2) {
 					// Player not found. Do nothing.
 				}

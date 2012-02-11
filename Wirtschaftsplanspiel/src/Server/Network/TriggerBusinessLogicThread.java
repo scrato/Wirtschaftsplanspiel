@@ -27,8 +27,12 @@ public class TriggerBusinessLogicThread extends Thread {
 				ServerController.receiveSupply(sender, new SendSupplyMessage(message.get_Content()));
 				break;
 			}
-			case MessageType.SEND_COMPANYRESULT:{
+			case MessageType.SEND_COMPANYRESULT: {
 				ServerController.collectResults(sender, new SendCompanyResultMessage(message.get_Content()));
+				break;
+			}
+			case MessageType.SEND_INSOLVENCY: {
+				ServerController.playerBecameInsolvent(sender);
 				break;
 			}
 		}
