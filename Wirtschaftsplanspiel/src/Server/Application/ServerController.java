@@ -240,8 +240,8 @@ public class ServerController {
 					client.SendMessage(new BroadcastCompanyResultMessage(profits));
 				} catch (Exception e) { }
 			}
-			// Absätze wurden an Clients verschickt, Angebote werden zurückgesetzt.
-			supplies.clear();
+			//Ergebnisse wurden verschickt. Alte Ergebnisse löschen.
+			profits.profitList.clear();
 			
 		} catch (Exception e) {
 		} finally {

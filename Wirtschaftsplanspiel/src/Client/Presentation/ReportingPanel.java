@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -295,7 +296,9 @@ public class ReportingPanel extends TypedPanel {
 		for (int o = 0; o<9; o++) {
 			navigationPanel.add(new JPanel());
 		}
-		navigationPanel.add(new JPanel());
+		JLabel reportingLabel = new JLabel("Berichterstattung");
+		reportingLabel.setFont(reportingLabel.getFont().deriveFont(Font.BOLD));
+		navigationPanel.add(reportingLabel);
 		navigationPanel.add(new JPanel());
 		navigationPanel.add(new JPanel());
 		if (period == 0) {
@@ -347,16 +350,9 @@ public class ReportingPanel extends TypedPanel {
 		
 		DefaultTableModel tabModel = new DefaultTableModel(tableValues, columnNames);
 		
-//		resultPanel = new JPanel();
-//		resultPanel.setSize(500, 500);
-		
 		resultTable = new JTable(tabModel);
-		//resultTable.setFillsViewportHeight(true);
 		resultTable.setEnabled(false);
-		
 		resultScrollPane = new JScrollPane(resultTable);
-		//resultScrollPane.setSize(400,400);
-		//resultPanel.add(resultScrollPane);
 		
 		//fill TAccounts with Data.
 		balancePanel = new TAccount("Bilanz");
@@ -440,12 +436,14 @@ public class ReportingPanel extends TypedPanel {
 		c.gridy = 1;
 		c.gridwidth = 8;
 		c.gridheight = 4;
+		c.insets = new Insets(15,0,0,0);
 		bodyPanel.add(balancePanel, c);
 
 		c.gridx = 1;
 		c.gridy = 5;
 		c.gridwidth = 8;
 		c.gridheight = 6;
+		c.insets = new Insets(0,0,20,0);
 		bodyPanel.add(guVPanel, c);
 		
 		this.add(bodyPanel, BorderLayout.SOUTH);
