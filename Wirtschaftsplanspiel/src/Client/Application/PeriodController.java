@@ -16,10 +16,13 @@ import Client.Entities.Ressource;
 import Client.Entities.RessourceType;
 import Client.Network.Client;
 import NetworkCommunication.BroadcastCompanyResultMessage;
+import NetworkCommunication.MessageType;
+import NetworkCommunication.NetMessage;
 import NetworkCommunication.SendAssignedDisposalMessage;
 import NetworkCommunication.SendCompanyResultMessage;
 import NetworkCommunication.SendSupplyMessage;
 import Client.Presentation.MainWindow;
+import Client.Presentation.ResultPanel;
 
 public abstract class PeriodController {
 
@@ -78,8 +81,7 @@ public abstract class PeriodController {
 			Client.getInstance().SendMessage(message);
 			
 		} catch (UserCanNotPayException e) {
-			// TODO reagieren auf zahlungsunfähigkeit.
-				// Nachricht an Server senden "Ich bin pleite".
+			//TODO: Bescheid sagen
 		}
 	}
 
@@ -102,6 +104,11 @@ public abstract class PeriodController {
 			throw new RuntimeException("Ergebnisliste nicht valide.");
 		}
 		
+		if(PeriodInfo.getNumberOfActPeriod() + 1 == PeriodInfo.getMaxPeriods()){
+			MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.EndOfRoundsReached));
+			return;
+		}
+				
 		PeriodInfo.nextPeriod();
 		MainWindow.getInstance().reactiviateAfterPeriod();
 	}

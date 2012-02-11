@@ -3,9 +3,11 @@ package Client.Application;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 
+import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
 import Client.Network.Client;
 import Client.Presentation.MainWindow;
+import Client.Presentation.ResultPanel;
 import NetworkCommunication.ByteConverter;
 import NetworkCommunication.NetMessage;
 
@@ -52,6 +54,9 @@ public abstract class ClientController {
 		int ID = ByteConverter.toInt(message.get_Content());
 		Player leftPlayer = Player.getPlayer(ID);		
 		Player.removePlayer(ID);
+		if (Player.getPlayers().isEmpty())
+			MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.OnePlayerLeft));
+			
 		
 		MainWindow wind = MainWindow.getInstance();
 		wind.setPlayers(Player.getPlayers());

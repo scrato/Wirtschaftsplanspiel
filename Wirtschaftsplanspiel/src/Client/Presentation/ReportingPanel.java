@@ -311,7 +311,7 @@ public class ReportingPanel extends TypedPanel {
 		navigationPanel.add(prevPeriodButton);
 		JLabel perLabel = new JLabel("  Periode " + period);
 		navigationPanel.add(perLabel);
-		if (period > PeriodInfo.getActualPeriodNumber() - 2) {
+		if (period > PeriodInfo.getNumberOfActPeriod() - 2) {
 			nextPeriodButton.setEnabled(false);
 		}
 		else {

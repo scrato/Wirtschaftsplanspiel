@@ -251,6 +251,7 @@ public class ServerController {
 			profitlocker.release();
 		}
 	}
+
 	
 	// END OF Pediodenabschluss.
 }
