@@ -24,6 +24,7 @@ import NetworkCommunication.SendAssignedDisposalMessage;
 import NetworkCommunication.SendCompanyResultMessage;
 import NetworkCommunication.SendSupplyMessage;
 import Client.Presentation.MainWindow;
+import Client.Presentation.ResultPanel;
 
 public abstract class PeriodController {
 	
@@ -81,7 +82,6 @@ public abstract class PeriodController {
 			Client.getInstance().SendMessage(message);
 			
 		} catch (UserCanNotPayException e) {
-			
 			NetMessage insolvencyMessage = new NetMessage(MessageType.SEND_INSOLVENCY, new byte[0]);
 			Client.getInstance().SendMessage(insolvencyMessage);
 			
@@ -115,6 +115,11 @@ public abstract class PeriodController {
 			throw new RuntimeException("Ergebnisliste nicht valide.");
 		}
 		
+
+		if(PeriodInfo.getNumberOfActPeriod() == PeriodInfo.getMaxPeriods()){
+			MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.EndOfRoundsReached));
+			return;
+		}	
 		PeriodInfo.nextPeriod();
 		MainWindow.getInstance().reactiviateAfterPeriod();
 	}

@@ -1,5 +1,6 @@
 package Client.Presentation;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -32,6 +33,7 @@ public class CreditPanel extends TypedPanel {
 	JTextField creditHigh = new JTextField(7);
 	JComboBox cb_contractPeriod;
 	JButton takeCredit = new JButton ("Aufnehmen");
+	JLabel title1 = new JLabel("Darlehen aufnehmen");
 	
 	public CreditPanel(){
 		super(PanelType.Credit);
@@ -89,65 +91,82 @@ public class CreditPanel extends TypedPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		
 		takeCredit.addActionListener(new takeOutLoan());
-		interestHigh.setEditable(false);
+		interestHigh.setEditable(false);		
+		
+		c.insets = new Insets(0,0,40,0);
+		title1.setFont(new Font("Serif", Font.BOLD, 14));
+		c.gridx=0;
+		c.gridy=0;
+		add(title1,c);
+		c.insets = new Insets(0,0,0,0);
+		
 		c.gridx=0;		
-			c.gridy=0;
-			c.insets = new Insets(10,10,10,30);	//top,left,bottom,right
-			add(new JLabel("Höhe des Kredits:	"),c);
-			c.insets = new Insets(0,0,0,0);
-			
-			c.gridx=1;
-			c.gridy=0;
-			c.anchor = GridBagConstraints.LINE_START;
-			c.insets = new Insets(10,10,10,100);
-			add(creditHigh,c);
-			c.insets = new Insets(0,0,0,0);
-			c.anchor = GridBagConstraints.CENTER;
-			
-			c.insets = new Insets(10,10,10,30);
-			c.gridx=0;
-			c.gridy=1;
-			add(new JLabel("Höhe des Zinssatzes:	"),c);
-			c.insets = new Insets(0,0,0,0);
-			
-			c.insets = new Insets(10,10,10,100);
-			c.gridx=1;
-			c.gridy=1;
-			c.anchor = GridBagConstraints.LINE_START;
-			add(interestHigh,c);
-			c.insets = new Insets(0,0,0,0);
-			c.anchor = GridBagConstraints.CENTER;
-			
-			c.insets = new Insets(10,10,150,30);
-			c.gridx=0;
-			c.gridy=2;
-			add(new JLabel("Laufzeit"),c);
-			c.insets = new Insets(0,0,0,0);
-			
-			c.insets = new Insets(10,10,150,100);
-			c.gridx++;
-			c.anchor = GridBagConstraints.LINE_START;
-			cb_contractPeriod = new JComboBox();
-			
-			for(int i=1; i<=5; i++){
-				cb_contractPeriod.addItem(i+"");
-			}
-			interestHigh.setText((Credit.getPercentageForPeriods(1)*100) +"%");
-			cb_contractPeriod.addItemListener(new interestsItemListener());
-			this.add(cb_contractPeriod,c);
-			cb_contractPeriod.setEditable(false);
-			c.insets = new Insets(0,0,0,0);
-			c.anchor = GridBagConstraints.CENTER;
-			
-			c.insets = new Insets(10,20,150,30);
-			c.gridx=3;
-			c.gridy=2;
-			add(takeCredit,c);
-			c.insets = new Insets(0,0,0,0);
-
+		c.gridy=1;
+		c.insets = new Insets(10,10,10,30);	//top,left,bottom,right
+		add(new JLabel("Höhe des Kredits:	"),c);
+		c.insets = new Insets(0,0,0,0);
+		
+		c.gridx=1;
+		c.gridy=1;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.insets = new Insets(10,10,10,0);
+		add(creditHigh,c);
+		c.insets = new Insets(0,0,0,0);
+		c.anchor = GridBagConstraints.CENTER;
+		
+		c.gridx=2;
+		c.gridy=1;
+		add(new JLabel("*"),c);
+		
+		c.insets = new Insets(10,10,10,30);
+		c.gridx=0;
+		c.gridy=2;
+		add(new JLabel("Höhe des Zinssatzes:	"),c);
+		c.insets = new Insets(0,0,0,0);
+		
+		c.insets = new Insets(10,10,10,100);
+		c.gridx=1;
+		c.gridy=2;
+		c.anchor = GridBagConstraints.LINE_START;
+		add(interestHigh,c);
+		c.insets = new Insets(0,0,0,0);
+		c.anchor = GridBagConstraints.CENTER;
+		
+		c.insets = new Insets(10,10,150,30);
+		c.gridx=0;
+		c.gridy=3;
+		add(new JLabel("Laufzeit"),c);
+		c.insets = new Insets(0,0,0,0);
+		
+		c.insets = new Insets(10,10,150,100);
+		c.gridx++;
+		c.anchor = GridBagConstraints.LINE_START;
+		cb_contractPeriod = new JComboBox();
+		
+		for(int i=1; i<=5; i++){
+			cb_contractPeriod.addItem(i+"");
+		}
+		interestHigh.setText((Credit.getPercentageForPeriods(1)*100) +"%");
+		cb_contractPeriod.addItemListener(new interestsItemListener());
+		this.add(cb_contractPeriod,c);
+		cb_contractPeriod.setEditable(false);
+		c.insets = new Insets(0,0,0,0);
+		c.anchor = GridBagConstraints.CENTER;
+		
+		c.insets = new Insets(10,20,20,30);
+		c.gridx=2;
+		c.gridy=3;
+		add(takeCredit,c);
+		c.insets = new Insets(0,0,0,0);
+		
+		c.insets = new Insets(10,20,0,30);
+		c.gridx=0;
+		c.gridy=4;
+		add(new JLabel ("* Es ist nur möglich einen Kredit gleichzeitig aufzunehmen."),c);
+		c.insets = new Insets(0,0,0,0);
 		
 	}
-	
+
 	private class takeOutLoan implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {

@@ -56,8 +56,6 @@ public class Company {
 			ressources.put(t, new Ressource(t, Ressource.getUnit(t)));
 		}
 		
-		//TODO: Dynamische Lösung finden
-		PeriodInfo.setMaxPeriods(15);
 	}
 	
 	//Mitarbeiter	

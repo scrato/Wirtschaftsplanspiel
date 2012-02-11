@@ -75,7 +75,7 @@ public class MainWindow extends JFrame{
 
 
 
-	void changeScreen(TypedPanel t) {
+	public void changeScreen(TypedPanel t) {
 		
 
 		if (lastUsed == t){
@@ -356,7 +356,7 @@ public class MainWindow extends JFrame{
 	
 	public void reactiviateAfterPeriod(){
 		//Pbericht = new ReportingPanel(); 
-		( (ReportingPanel)Pbericht ).setPeriod(PeriodInfo.getActualPeriodNumber() - 1);
+		( (ReportingPanel)Pbericht ).setPeriod(PeriodInfo.getNumberOfActPeriod() - 1);
 		berichtButton.setEnabled(true);
 		changeScreen(Pbericht);
 		if (isPlayerInsolvent) {

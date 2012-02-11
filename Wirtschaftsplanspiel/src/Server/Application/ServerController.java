@@ -225,8 +225,11 @@ public class ServerController {
 				CompanyResult result = new CompanyResult(singleResult, sender.get_ID());
 				Disposal singleDisposal = PeriodBuffer.Disposals.get(sender.get_ID());
 				result.sales = singleDisposal.price * singleDisposal.quantity;
-				result.marketShare = (PeriodBuffer.getTotalDisposal() == 0) ? 0 : singleDisposal.quantity / PeriodBuffer.getTotalDisposal();
-
+				//result.marketShare = (PeriodBuffer.getTotalDisposal() == 0) ? 0 : singleDisposal.quantity / PeriodBuffer.getTotalDisposal();
+				if(PeriodBuffer.getTotalDisposal() == 0)
+					result.marketShare = 1;
+				else
+					result.marketShare = singleDisposal.quantity / (double) PeriodBuffer.getTotalDisposal();
 				profits.profitList.put(sender.get_ID(),result);
 			}
 			finally
@@ -263,6 +266,7 @@ public class ServerController {
 			profitlocker.release();
 		}
 	}
+
 	
 	// END OF Pediodenabschluss.
 }
