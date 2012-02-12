@@ -61,7 +61,6 @@ public abstract class ClientController {
 		for (Player player : players) {
 			if (!player.hasLeftGame()) {
 				activePlayers++;
-				break;
 			}
 		}
 		if (activePlayers <= 1 ) {
