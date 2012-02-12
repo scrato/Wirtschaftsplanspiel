@@ -57,6 +57,7 @@ public class MainWindow extends JFrame{
 	
 	boolean isServer;// = Player.isHost();
 	boolean isPlayerInsolvent;
+	boolean gameOver;
 	
 	// Playerliste
 	DefaultListModel listModel = new DefaultListModel();
@@ -76,11 +77,19 @@ public class MainWindow extends JFrame{
 
 	public void changeScreen(TypedPanel t) {
 		
-
 		if (lastUsed == t){
 			t.refreshPanel();
 			return;
 		}
+		
+		if (t.type == PanelType.Endbildschirm && gameOver) {
+			return;
+		}
+		
+		if (t.type == PanelType.Endbildschirm) {
+			gameOver = true;
+		}
+		
 		next.setEnabled(true);
 		prev.setEnabled(true);
 		if (t.type == PanelType.Startbildschirm || t.type == PanelType.ProdAndDistr)
