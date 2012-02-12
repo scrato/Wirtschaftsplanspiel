@@ -135,13 +135,13 @@ public class ServerController {
 		int leftDemand = AppContext.standardDemand;
 		
 		double priceSum = 0;
+		double quantSum = 0;
 		for (Supply sup : supplies.values()) {
-			priceSum += sup.price;
-			//double perc = sup.price / AppContext.STANDARD_PRICE_PER_UNIT;
-			//int diff = (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * ( 1 - ( 1 / perc ) ));
-			//leftDemand -= diff;
+			priceSum += sup.price * sup.quantity;
+			quantSum += sup.quantity;
 		}
-		double perc = ( AppContext.STANDARD_PRICE_PER_UNIT * supplies.size() ) / priceSum;
+		priceSum /= quantSum;
+		double perc = AppContext.STANDARD_PRICE_PER_UNIT / priceSum;
 		leftDemand = (int) ( AppContext.STANDARD_DEMAND_PER_PLAYER * supplies.size() * perc );
 		
 		// initialize assignedDemand
