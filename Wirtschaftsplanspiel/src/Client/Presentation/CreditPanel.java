@@ -38,6 +38,7 @@ public class CreditPanel extends TypedPanel {
 	public CreditPanel(){
 		super(PanelType.Credit);
 		setLayout(new GridBagLayout());
+		takeCredit.addActionListener(new takeOutLoan());
 	}
 	
 	public void refresh(){
@@ -90,7 +91,6 @@ public class CreditPanel extends TypedPanel {
 	public void buildWantCredit(){
 		GridBagConstraints c = new GridBagConstraints();
 		
-		takeCredit.addActionListener(new takeOutLoan());
 		interestHigh.setEditable(false);		
 		
 		c.insets = new Insets(0,0,40,0);
@@ -106,9 +106,9 @@ public class CreditPanel extends TypedPanel {
 		c.gridy=1;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.insets = new Insets(10,10,10,30);	//top,left,bottom,right
-		add(new JLabel("Höhe des Kredits:	"),c);
+		add(new JLabel("Höhe des Kredits:"),c);
 		c.insets = new Insets(0,0,0,0);
-		c.anchor = GridBagConstraints.CENTER;
+		c.anchor = GridBagConstraints.CENTER; 
 		
 		c.gridx=1;
 		c.gridy=1;
@@ -161,7 +161,7 @@ public class CreditPanel extends TypedPanel {
 		c.insets = new Insets(0,0,0,0);
 		c.anchor = GridBagConstraints.CENTER;
 		
-		c.insets = new Insets(10,20,20,30);
+		c.insets = new Insets(10,0,20,30);
 		c.gridx=2;
 		c.gridy=3;
 		add(takeCredit,c);
