@@ -147,6 +147,11 @@ public class ConnectionView extends JFrame{
 			InetAddress inetAddress = null;
 			boolean error = false;
 			
+			if(username.getText().isEmpty()){
+				JOptionPane.showMessageDialog(null, "Bitte geben Sie einen Usernamen ein!", "Fehler beim Start des Servers.", JOptionPane.OK_OPTION);
+				return;
+			}
+			
 			try{
 				inetAddress = InetAddress.getByName(ip.getText());
 				try{
@@ -198,7 +203,10 @@ public class ConnectionView extends JFrame{
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
+			if(username.getText().isEmpty()){
+				JOptionPane.showMessageDialog(null, "Bitte geben Sie einen Usernamen ein!", "Fehler beim Start des Servers.", JOptionPane.OK_OPTION);
+				return;
+			}
 			try{
 				if(Integer.parseInt(anzahlRunden.getText()) > 0){
 					
@@ -211,6 +219,7 @@ public class ConnectionView extends JFrame{
 					}
 					
 					//new Server.Network.Server(51515, 12);
+
 					try {
 						ServerController.StartServer(51515, Integer.parseInt(anzahlRunden.getText()));
 					} catch (RuntimeException exc) {
