@@ -89,6 +89,8 @@ public class MainWindow extends JFrame{
 		
 		if (t.type == PanelType.Endbildschirm) {
 			gameOver = true;
+			( (ReportingPanel)Pbericht ).setPeriod(PeriodInfo.getNumberOfActPeriod() - 1);
+			berichtButton.setEnabled(true);
 		}
 		
 		next.setEnabled(true);

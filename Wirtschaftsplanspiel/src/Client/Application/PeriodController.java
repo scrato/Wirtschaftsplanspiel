@@ -119,10 +119,10 @@ public abstract class PeriodController {
 		
 
 		if(PeriodInfo.getNumberOfActPeriod() == PeriodInfo.getMaxPeriods()){
+			PeriodInfo.nextPeriod();
 			MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.EndOfRoundsReached));
 			return;
 		}	
-		PeriodInfo.nextPeriod();
 		MainWindow.getInstance().reactiviateAfterPeriod();
 	}
 	
