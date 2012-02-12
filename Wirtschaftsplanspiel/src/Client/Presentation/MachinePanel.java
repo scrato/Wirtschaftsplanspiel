@@ -16,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -252,7 +253,7 @@ public class MachinePanel extends TypedPanel {
 						e.printStackTrace();
 					} catch (UserCanNotPayException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Sie verfügen nicht über genügend liquide Mittel.", "nicht genügend liquide Mittel", JOptionPane.OK_OPTION);
 					}
 				}else{
 					// Verpackungsmaschine
