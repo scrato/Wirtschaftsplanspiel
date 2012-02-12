@@ -116,7 +116,9 @@ public class CreditPanel extends TypedPanel {
 		
 		c.gridx=2;
 		c.gridy=1;
+		c.anchor = GridBagConstraints.LINE_START;
 		add(new JLabel("*"),c);
+		c.anchor = GridBagConstraints.CENTER;
 		
 		c.insets = new Insets(10,10,10,30);
 		c.gridx=0;
@@ -162,8 +164,10 @@ public class CreditPanel extends TypedPanel {
 		c.insets = new Insets(10,20,0,30);
 		c.gridx=0;
 		c.gridy=4;
+		c.gridwidth =3;
 		add(new JLabel ("* Es ist nur möglich einen Kredit gleichzeitig aufzunehmen."),c);
 		c.insets = new Insets(0,0,0,0);
+		c.gridwidth =1;
 		
 	}
 
