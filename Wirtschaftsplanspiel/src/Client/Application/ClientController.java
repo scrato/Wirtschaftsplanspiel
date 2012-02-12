@@ -63,7 +63,7 @@ public abstract class ClientController {
 			int activePlayers = 0;
 			List<Player> players = Player.getPlayers();
 			for (Player player : players) {
-				if (!player.hasLeftGame()) {
+				if (!player.hasLeftGame() && !player.isInsolvent()) {
 					activePlayers++;
 				}
 			}

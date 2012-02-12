@@ -3,6 +3,7 @@ package Client.Application;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import common.entities.CompanyResult;
 import common.entities.CompanyResultList;
@@ -106,6 +107,17 @@ public abstract class PeriodController {
 						SimpleDateFormat format = new SimpleDateFormat("kk:mm");
 						String time = format.format(new Date());
 						MainWindow.getInstance().addChatMessage(time + "\n" + player.getName() + " ist insolvent.");
+						
+						int activePlayers = 0;
+						List<Player> players = Player.getPlayers();
+						for (Player checkPlayer : players) {
+							if (!checkPlayer.hasLeftGame() && !checkPlayer.isInsolvent()) {
+								activePlayers++;
+							}
+						}
+						if (activePlayers <= 1 ) {
+							MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.OnePlayerLeft));
+						}
 					} else {
 						player.addCompanyResult(result);
 					}
