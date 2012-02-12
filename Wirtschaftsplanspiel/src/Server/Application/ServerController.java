@@ -141,7 +141,9 @@ public class ServerController {
 			priceSum += sup.price * sup.quantity;
 			quantSum += sup.quantity;
 		}
-		priceSum /= quantSum;
+		if (quantSum == 0) { priceSum = 0.0d; } else { 
+			priceSum /= quantSum;
+		}
 		double perc = AppContext.STANDARD_PRICE_PER_UNIT / priceSum;
 		leftDemand = (int) ( AppContext.STANDARD_DEMAND_PER_PLAYER * supplies.size() * perc );
 		
