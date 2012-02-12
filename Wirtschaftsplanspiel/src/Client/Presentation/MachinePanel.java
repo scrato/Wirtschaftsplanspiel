@@ -160,7 +160,7 @@ public class MachinePanel extends TypedPanel {
 		c.gridy = 6;
 		c.insets = new Insets(10,0,0,0);
 		c.anchor = GridBagConstraints.LINE_START;
-		add(new JLabel("benötigt laut Prodktionsplanung:"),c);
+		add(new JLabel("benötigt laut Produktionsplanung:"),c);
 		c.insets = new Insets(0,0,0,0);
 		
 		c.gridx = 0;
