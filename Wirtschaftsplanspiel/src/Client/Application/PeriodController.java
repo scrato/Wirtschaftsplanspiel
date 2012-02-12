@@ -99,9 +99,10 @@ public abstract class PeriodController {
 				try {
 					
 					Player player = Player.getPlayer(result.clientid);
-					player.addCompanyResult(result);
+					//player.addCompanyResult(result);
 					if (result.sales == -1) {
-						player.becameInsolvent();
+						//player.becameInsolvent();
+						Player.getPlayer(player.getID()).becameInsolvent();
 						
 						SimpleDateFormat format = new SimpleDateFormat("kk:mm");
 						String time = format.format(new Date());
