@@ -356,7 +356,7 @@ public class ReportingPanel extends TypedPanel {
 				tableValues[i][0] = player.getName();
 				tableValues[i][1] = getValueString(result.sales);
 				tableValues[i][2] = getValueString(result.profit);
-				tableValues[i][3] = getValueString(result.marketShare);
+				tableValues[i][3] = getValueString(result.marketShare * 100) + " %";
 				i++;
 			} catch (Exception e) {
 				//do nothing.
