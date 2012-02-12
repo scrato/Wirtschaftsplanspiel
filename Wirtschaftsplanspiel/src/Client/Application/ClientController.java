@@ -53,33 +53,34 @@ public abstract class ClientController {
 	
 	public static void PlayerLeft(NetMessage message) {
 		int ID = ByteConverter.toInt(message.get_Content());
-		Player leftPlayer = Player.getPlayer(ID);		
-		//Player.removePlayer(ID);
-		leftPlayer.leaveGame();
-		int activePlayers = 0;
-		List<Player> players = Player.getPlayers();
-		for (Player player : players) {
-			if (!player.hasLeftGame()) {
-				activePlayers++;
+		Player leftPlayer = Player.getPlayer(ID);	
+		if (PeriodInfo.gameStarted == false) {
+			Player.removePlayer(ID);
+			
+			MainWindow.getInstance().setPlayers(Player.getPlayers());
+		} else {
+			leftPlayer.leaveGame();
+			int activePlayers = 0;
+			List<Player> players = Player.getPlayers();
+			for (Player player : players) {
+				if (!player.hasLeftGame()) {
+					activePlayers++;
+				}
 			}
-		}
-		if (activePlayers <= 1 ) {
-			MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.OnePlayerLeft));
+			if (activePlayers <= 1 ) {
+				MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.OnePlayerLeft));
+			}
 		}
 		//if (Player.getPlayers().isEmpty()) //TODO sinnvoll? müsste sein: Players.getPlayers().size <= 1. doof zum testen.
 		//	MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.OnePlayerLeft));
-			
-		
-		MainWindow wind = MainWindow.getInstance();
-		wind.setPlayers(Player.getPlayers());
 		
 		String displayString = leftPlayer.getName() + " hat das Spiel verlassen.";
-		wind.addChatMessage(displayString);
+		MainWindow.getInstance().addChatMessage(displayString);
 	}
 	
 	public static void GameStarted() {
-		MainWindow wind = MainWindow.getInstance();
-		wind.startGame();
+		PeriodInfo.gameStarted = true;
+		MainWindow.getInstance().startGame();
 	}
 	
 }

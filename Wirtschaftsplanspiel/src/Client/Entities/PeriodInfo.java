@@ -10,7 +10,7 @@ public abstract class PeriodInfo {
    private static int maxPeriods;
    private static int actPeriod = 0;
    private static List<Period> periods;
-   
+   public static boolean gameStarted;
    
     static {
        periods = new LinkedList<Period>();
@@ -54,8 +54,6 @@ public abstract class PeriodInfo {
    private static void incNumberOfActPeriod(){
 	actPeriod++;
    }
-
-   
 
 }
 
