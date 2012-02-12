@@ -42,6 +42,7 @@ public abstract class PeriodController {
 		ProductionAndDistribution pad = Company.getInstance().getProdAndDistr();
 		period.setProductPrice(pad.getSellingPrice());
 		Supply s = new Supply(pad.getUnitsToSell(), pad.getSellingPrice());
+		//s.quantity = 20000;
 		
 		Client client = Client.getInstance();
 		client.SendMessage(new SendSupplyMessage(s));
