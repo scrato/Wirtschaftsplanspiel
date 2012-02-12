@@ -60,7 +60,7 @@ public class ResultPanel extends TypedPanel {
 			Player p = player_it.next();
 			if (p.isInsolvent()) continue;
 			double maxresult = 0;
-			for(int i = 0; i<=PeriodInfo.getNumberOfActPeriod(); i++){
+			for(int i = 0; i<PeriodInfo.getNumberOfActPeriod(); i++){
 				maxresult += p.getCompanyResult(i).profit;
 			}
 			resultMap.put(p, maxresult);

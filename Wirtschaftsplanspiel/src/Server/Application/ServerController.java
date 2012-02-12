@@ -83,6 +83,7 @@ public class ServerController {
 	 * Prüft, ob alle Spieler ihre Angebote abgegeben haben, führt die Verteilung aus und übermittelt die zugewiesene Nachfrage an die Spieler.
 	 */
 	public static void checkSupplies() {
+		if (Server.getInstance() != null) return; // server wurde geschlossen.
 		List<ClientHandler> clients = Server.getInstance().getClients();		
 		if (clients.isEmpty()) return;
 		
@@ -241,6 +242,7 @@ public class ServerController {
 	}
 
 	public static void checkResultsCollected() {
+		if (Server.getInstance() != null) return; // server wurde geschlossen.
 		List<ClientHandler> clients = Server.getInstance().getClients();		
 		if (clients.isEmpty()) return;
 		
