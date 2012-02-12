@@ -11,8 +11,6 @@ public class Credit {
 	private int leftPeriods;
 	
 	private double anuity;
-	private boolean hasCredit;
-	
 	private double interestPercentage;
 	public final static double INTERESTPERPERIODINPERCENT = 0.5d;
 	public final static double BASEINTERESTINPERCENT = 5d;

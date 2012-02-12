@@ -12,10 +12,8 @@ import java.util.Iterator;
 
 import javax.swing.*;
 import Server.Application.ServerController;
-//import Server.Entities.PeriodInfo;
 import Client.Application.ChatController;
 import Client.Entities.Company;
-import Client.Entities.Period;
 import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
 import Client.Network.Client;
@@ -93,7 +91,6 @@ public class MainWindow extends JFrame{
 			( (ReportingPanel)Pbericht ).setPeriod(PeriodInfo.getNumberOfActPeriod() - 1);
 			berichtButton.setEnabled(true);
 		}
-		
 		
 		
 		next.setEnabled(true);

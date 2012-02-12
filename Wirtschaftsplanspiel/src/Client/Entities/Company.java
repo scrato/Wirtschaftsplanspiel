@@ -8,7 +8,6 @@ import java.util.Map;
 
 
 import Client.Application.EmployeeNotEmployedException;
-import Client.Application.CompanyController;
 import Client.Entities.RessourceType;
 
 
