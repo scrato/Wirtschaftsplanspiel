@@ -256,10 +256,8 @@ public class EmployeePanel extends TypedPanel {
 						try {
 							CompanyController.employSb(production);
 						} catch (UserCanNotPayException e) {
-							// TODO Auto-generated catch block
 							JOptionPane.showMessageDialog(new JFrame(),
 									"Nicht genügend liquide Mittel.");
-							e.printStackTrace();
 							break;
 						}
 						i++;
