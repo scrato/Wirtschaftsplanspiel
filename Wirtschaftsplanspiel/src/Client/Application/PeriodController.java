@@ -99,14 +99,15 @@ public abstract class PeriodController {
 				try {
 					
 					Player player = Player.getPlayer(result.clientid);
-					//player.addCompanyResult(result);
 					if (result.sales == -1) {
-						//player.becameInsolvent();
+						//Spieler ist Insolvent.
 						Player.getPlayer(player.getID()).becameInsolvent();
 						
 						SimpleDateFormat format = new SimpleDateFormat("kk:mm");
 						String time = format.format(new Date());
 						MainWindow.getInstance().addChatMessage(time + "\n" + player.getName() + " ist insolvent.");
+					} else {
+						player.addCompanyResult(result);
 					}
 				} catch (Exception e2) {
 					// Player not found. Do nothing.
