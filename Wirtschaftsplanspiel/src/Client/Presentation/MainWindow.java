@@ -69,9 +69,8 @@ public class MainWindow extends JFrame{
 
 	private JMenuBar menuBar;
 
-	private JButton prev;
-
-	private JButton next;
+	 JButton prev = new JButton("Zurück");
+	 JButton next = new JButton("Weiter");
 
 
 
@@ -321,10 +320,9 @@ public class MainWindow extends JFrame{
 	public void startGame(){
 		west.setVisible(true);
 		JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
-		 prev = new JButton("Zurück");
-		 prev.setEnabled(false);
+
+		prev.setEnabled(false);
 		prev.addActionListener(new PrevActionListener());
-		 next = new JButton("Weiter");
 		next.addActionListener(new NextActionListener());
 		JPanel p = new JPanel();
 		mainframe.add(p,BorderLayout.SOUTH);
