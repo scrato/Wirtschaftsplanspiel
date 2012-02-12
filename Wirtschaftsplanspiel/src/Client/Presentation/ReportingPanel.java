@@ -333,34 +333,34 @@ public class ReportingPanel extends TypedPanel {
 		String[][] tableValues = new String[Player.getPlayers().size()][4];
 		int i = 0;
 		for (Player player : Player.getPlayers()) {
+			CompanyResult result = null;
 			try{				
-				CompanyResult result = player.getCompanyResult(period);
-				tableValues[i][0] = player.getName();
-				
-				if (result == null || result.sales < 0) {
-					if (player.isInsolvent()) {
-						tableValues[i][1] = "  Insolvent";
-						tableValues[i][2] = "  Insolvent";
-						tableValues[i][3] = "  Insolvent";
-						i++;
-					}
-					if (player.hasLeftGame()) {
-						tableValues[i][1] = " Ausgeschieden";
-						tableValues[i][2] = " Ausgeschieden";
-						tableValues[i][3] = " Ausgeschieden";
-						i++;
-					}
-					continue;
-				}
-				
-				tableValues[i][0] = player.getName();
-				tableValues[i][1] = getValueString(result.sales);
-				tableValues[i][2] = getValueString(result.profit);
-				tableValues[i][3] = getValueString(result.marketShare * 100) + " %";
-				i++;
+				result = player.getCompanyResult(period);
 			} catch (Exception e) {
 				//do nothing.
 			}
+			tableValues[i][0] = player.getName();
+			
+			if (result == null) {
+				if (player.isInsolvent()) {
+					tableValues[i][1] = "  Insolvent";
+					tableValues[i][2] = "  Insolvent";
+					tableValues[i][3] = "  Insolvent";
+					i++;
+				} else if (player.hasLeftGame()) {
+					tableValues[i][1] = " Ausgeschieden";
+					tableValues[i][2] = " Ausgeschieden";
+					tableValues[i][3] = " Ausgeschieden";
+					i++;
+				}
+				continue;
+			}
+			
+			tableValues[i][0] = player.getName();
+			tableValues[i][1] = getValueString(result.sales);
+			tableValues[i][2] = getValueString(result.profit);
+			tableValues[i][3] = getValueString(result.marketShare * 100) + " %";
+			i++;
 		}
 		if (i == 0) {
 			tableValues[0][0] = "Keine Daten verfügbar.";
