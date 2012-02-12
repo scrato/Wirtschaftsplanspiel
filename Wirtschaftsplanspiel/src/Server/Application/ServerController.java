@@ -137,7 +137,7 @@ public class ServerController {
 			//int diff = (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * ( 1 - ( 1 / perc ) ));
 			//leftDemand -= diff;
 		}
-		double perc = priceSum / AppContext.STANDARD_PRICE_PER_UNIT / supplies.size();
+		double perc = ( AppContext.STANDARD_PRICE_PER_UNIT * supplies.size() ) / priceSum;
 		leftDemand = (int) ( AppContext.STANDARD_DEMAND_PER_PLAYER * supplies.size() * perc );
 		
 		// initialize assignedDemand
