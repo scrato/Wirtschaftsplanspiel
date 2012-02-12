@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -14,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
@@ -35,7 +37,7 @@ public class ConnectionView extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setTitle("Business Basics - Verbinden");
 		setSize(500,300);
-		setLayout(new GridLayout(8,2));
+		setLayout(new GridLayout(9,2));
 	
 		
 		// UI Elemente
@@ -62,6 +64,14 @@ public class ConnectionView extends JFrame{
 		add(anzahlRunden);
 		add(abbruch);
 		add(serverErstellen);
+		JLabel IpLabel = new JLabel("Eigene IP-Adresse: ");
+		IpLabel.setHorizontalAlignment(JLabel.RIGHT);
+		add(IpLabel);
+		try {
+			add(new JLabel(Inet4Address.getLocalHost().getHostAddress().toString()));
+		} catch (UnknownHostException e) {
+			// do nothgin.
+		}
 		
 		ip.addMouseListener(new SpecialMouseListener(ip));
 		ip.addFocusListener(new SpecialFocusListener(ip));
