@@ -479,8 +479,7 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	
 	private void refreshCount() {
 		
-		maxProducableUnits = comp.getProdAndDistr().getMaxProducableUnits();
-		maxSellableUnits = comp.getFinishedProducts() + unitsToProduce;
+
 		pricesell.setText(cutAndTrim(pricesell.getText()));
 		amountproduce.setText(cutAndValidate(amountproduce.getText()));
 		amountsell.setText(cutAndValidate(amountsell.getText()));
@@ -488,13 +487,13 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		try{unitsToProduce = decformat.parse(amountproduce.getText()).intValue();}catch(ParseException e){}
 		try{priceToSell = decformat.parse(pricesell.getText()).doubleValue();}catch(ParseException e){}
 		try{amountToSell =  decformat.parse(amountsell.getText()).intValue();}catch(ParseException e){}
-		
-
-		
-		
+				
 		comp.getProdAndDistr().setUnitsToProduce(unitsToProduce);
 		comp.getProdAndDistr().setUnitsToSell(amountToSell);
 		comp.getProdAndDistr().setSellingPrice(priceToSell);
+		
+		maxProducableUnits = comp.getProdAndDistr().getMaxProducableUnits();
+		maxSellableUnits = comp.getFinishedProducts() + unitsToProduce;
 		
 		if(amountToSell > (maxSellableUnits))
 			amountsell.setForeground(Color.RED);
