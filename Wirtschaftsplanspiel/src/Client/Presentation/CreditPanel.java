@@ -97,14 +97,18 @@ public class CreditPanel extends TypedPanel {
 		title1.setFont(new Font("Serif", Font.BOLD, 14));
 		c.gridx=0;
 		c.gridy=0;
+		c.gridwidth=3;
 		add(title1,c);
 		c.insets = new Insets(0,0,0,0);
+		c.gridwidth=1;
 		
 		c.gridx=0;		
 		c.gridy=1;
+		c.anchor = GridBagConstraints.LINE_START;
 		c.insets = new Insets(10,10,10,30);	//top,left,bottom,right
 		add(new JLabel("Höhe des Kredits:	"),c);
 		c.insets = new Insets(0,0,0,0);
+		c.anchor = GridBagConstraints.CENTER;
 		
 		c.gridx=1;
 		c.gridy=1;
@@ -137,7 +141,9 @@ public class CreditPanel extends TypedPanel {
 		c.insets = new Insets(10,10,150,30);
 		c.gridx=0;
 		c.gridy=3;
+		c.anchor = GridBagConstraints.LINE_START;
 		add(new JLabel("Laufzeit"),c);
+		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(0,0,0,0);
 		
 		c.insets = new Insets(10,10,150,100);
