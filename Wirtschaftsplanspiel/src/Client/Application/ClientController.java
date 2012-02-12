@@ -54,7 +54,7 @@ public abstract class ClientController {
 		int ID = ByteConverter.toInt(message.get_Content());
 		Player leftPlayer = Player.getPlayer(ID);		
 		Player.removePlayer(ID);
-		if (Player.getPlayers().isEmpty())
+		if (Player.getPlayers().isEmpty()) //TODO sinnvoll? müsste sein: Players.getPlayers().size <= 1. doof zum testen.
 			MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.OnePlayerLeft));
 			
 		
@@ -63,7 +63,6 @@ public abstract class ClientController {
 		
 		String displayString = leftPlayer.getName() + " hat das Spiel verlassen.";
 		wind.addChatMessage(displayString);
-		//TODO Weitergabe UI.
 	}
 	
 	public static void GameStarted() {

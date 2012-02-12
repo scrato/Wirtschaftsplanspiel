@@ -58,6 +58,7 @@ public class ResultPanel extends TypedPanel {
 		Map<Player,Double> resultMap = new TreeMap<Player,Double>();
 		for(Iterator<Player> player_it = Player.getPlayers().iterator(); player_it.hasNext();){
 			Player p = player_it.next();
+			if (p.isInsolvent()) continue;
 			double maxresult = 0;
 			for(int i = 0; i<=PeriodInfo.getNumberOfActPeriod(); i++){
 				maxresult += p.getCompanyResult(i).profit;
