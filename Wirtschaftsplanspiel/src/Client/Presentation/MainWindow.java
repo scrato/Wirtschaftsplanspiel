@@ -191,7 +191,7 @@ public class MainWindow extends JFrame{
 	 */
 	private void createAndShowSplashScreen() {
 		this.setLayout(new BorderLayout() );
-		this.setSize(1200,768);
+		setExtendedState(Frame.MAXIMIZED_BOTH);
 		this.setMinimumSize(new Dimension(800,680));
 		this.add(east, BorderLayout.EAST);
 		this.add(west, BorderLayout.WEST);
