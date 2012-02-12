@@ -152,6 +152,8 @@ public class ServerController {
 		}
 		
 		while (leftDemand > 0 && supplies.size() > 0) {
+			List<Integer> removedKeys = new LinkedList<Integer>();
+			
 			// calculate average price
 			double averagePrice = 0d;
 			for (Entry<Integer, Supply> sup : supplies.entrySet()) {
@@ -163,6 +165,10 @@ public class ServerController {
 			double factorsSum = 0d;
 			// calculate factor: Relation between average price and supplied price, powered by 1,5.
 			for (Entry<Integer, Supply> sup : supplies.entrySet()) {
+				if (sup.getValue().price == 0) {
+					factors.put(sup.getKey(), Double.MAX_VALUE);
+					continue;
+				}
 				Double factor = Math.pow(averagePrice / sup.getValue().price, 1.5);
 				factors.put(sup.getKey(), factor);
 				factorsSum += factor;
@@ -175,8 +181,6 @@ public class ServerController {
 				Integer contingent = (int) Math.ceil( leftDemand * factor.getValue() / factorsSum );
 				contingents.put(factor.getKey(), contingent);
 			}
-			
-			List<Integer> removedKeys = new LinkedList<Integer>();
 			
 			// split demand to players.
 			for (Integer key : supplies.keySet()) {
