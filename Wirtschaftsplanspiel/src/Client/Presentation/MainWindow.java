@@ -77,12 +77,13 @@ public class MainWindow extends JFrame{
 
 
 	public void changeScreen(TypedPanel t) {
-		
+		//Wenn man zweimal auf den selben Button drückt -> Refresh + Nichts tun
 		if (lastUsed == t){
 			t.refreshPanel();
 			return;
 		}
 		
+		//Wenn Spiel zuende und man selbst GameOver, mach nix mehr
 		if (t.type == PanelType.Endbildschirm && gameOver) {
 			return;
 		}
@@ -93,12 +94,18 @@ public class MainWindow extends JFrame{
 			berichtButton.setEnabled(true);
 		}
 		
+		
+		
 		next.setEnabled(true);
 		prev.setEnabled(true);
+		
+		
 		if (t.type == PanelType.Startbildschirm || 
 				t.type == PanelType.ProdAndDistr || 
 				t.type == PanelType.Reporting)
 			prev.setEnabled(false);
+		
+		
 		if (t.type == PanelType.Employee)
 			next.setEnabled(false);
 		
