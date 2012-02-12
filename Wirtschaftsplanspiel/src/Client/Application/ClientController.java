@@ -2,6 +2,7 @@ package Client.Application;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.util.List;
 
 import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
@@ -56,7 +57,8 @@ public abstract class ClientController {
 		//Player.removePlayer(ID);
 		leftPlayer.leaveGame();
 		int activePlayers = 0;
-		for (Player player : Player.getPlayers()) {
+		List<Player> players = Player.getPlayers();
+		for (Player player : players) {
 			if (!player.hasLeftGame()) {
 				activePlayers++;
 				break;
