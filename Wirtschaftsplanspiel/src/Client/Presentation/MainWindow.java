@@ -301,7 +301,7 @@ public class MainWindow extends JFrame{
 		JButton darlehen = new JButton("Darlehen");
 		berichtButton = new JButton("Berichtserstattung");
 		berichtButton.setEnabled(false); // wird erst nach erstem periodenabschluss erlaubt.
-		JButton preiskal = new JButton("Produktionsplanung");
+		JButton preiskal = new JButton("Absatz- und Produktionsplanung");
 		JButton periode = new JButton("Periode abschlieﬂen");
 					
 		// Action Listener
@@ -319,9 +319,10 @@ public class MainWindow extends JFrame{
 		west.add(maschinen);
 		west.add(personal);
 		west.add(darlehen);
-		west.add(berichtButton);
 		west.add(new JSeparator());
 		west.add(periode);
+		west.add(new JSeparator());
+		west.add(berichtButton);
 			
 	}
 		
