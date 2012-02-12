@@ -95,11 +95,17 @@ public class MainWindow extends JFrame{
 		
 		next.setEnabled(true);
 		prev.setEnabled(true);
-		if (t.type == PanelType.Startbildschirm || t.type == PanelType.ProdAndDistr)
+		if (t.type == PanelType.Startbildschirm || 
+				t.type == PanelType.ProdAndDistr || 
+				t.type == PanelType.Reporting)
 			prev.setEnabled(false);
-		if (t.type == PanelType.Reporting)
+		if (t.type == PanelType.Employee)
 			next.setEnabled(false);
 		
+		if (t.type == PanelType.Credit){
+			prev.setEnabled(false);
+			next.setEnabled(false);
+		}
 		
 		t.refreshPanel();
 		mainframe.add(t, BorderLayout.CENTER);
@@ -613,16 +619,14 @@ public class MainWindow extends JFrame{
 				changeScreen(Ppersonal);
 				break;
 			case Employee:
-				changeScreen(Pdarlehen);
 				break;
 			case Credit:
-				changeScreen(Pbericht);
-				next.setEnabled(false);
+				//changeScreen(Pbericht);
 				break;
 			case Reporting:
+				changeScreen(Ppreiskal);
 				break;		
 			case Startbildschirm:
-				changeScreen(Ppreiskal);
 				break;		
 			}
 
@@ -647,10 +651,10 @@ public class MainWindow extends JFrame{
 				changeScreen(Pmaschinen);
 				break;
 			case Credit:
-				changeScreen(Ppersonal);
+				//changeScreen(Ppersonal);
 				break;
 			case Reporting:
-				changeScreen(Pdarlehen);
+				//changeScreen(Pdarlehen);
 				break;				
 			}
 		}
