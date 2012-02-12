@@ -54,7 +54,7 @@ public class InfoScreen extends JFrame{
 					+ "Wahlweise kann man hier Filetiermaschinen oder Verpackungsmaschinen kaufen. Auch hier zeigt das System an wie viele Maschinen vom jeweiligen Typen noch gebraucht werden. Dies hängt auch von der ausgewählten Kapazität der Maschine ab, die auswählen kann."
 					+ "Kauft man eine Maschine dazu, so wird diese als Anlage aufgelistet. Anders herum möchte man eine verkaufen, wählt man eine aus seinem Sortiment aus und drückt den Button verkaufen."
 					+ "Beim nächsten Untermenu handelt es sich um die Personalverwaltung. Diese ist ähnlich aufgebaut wie bei der Maschinenverwaltung. Wiederum hat man die Möglichkeit eine bestimmte Anzahl von Mitarbeitern eines bestimmten Typs einzustellen oder zu entlassen." 
-					+ "Benötigt man einen Kredit so kann man über das Menu „Darlehen“ sich Geld von der Bank leihen. Zu beachten ist, dass immer nur ein Kredit aufgenommen werden kann und dieser nicht höher als 9 Mio. Euro sein kann."
+					+ "Benötigt man einen Kredit so kann man über das Menu „Darlehen“ sich Geld von der Bank leihen. Zu beachten ist, dass immer nur ein Kredit aufgenommen werden kann und dieser nicht höher als 5 Mio. Euro sein kann."
 					+ "Ist man nun soweit mit der Periodenplanung fertig kann man seine Produktions- und Verkaufsdaten über den Button „Periode abschließen“ versenden."
 					+ "Haben alle Spieler dies getan wird der Screen „Berichtserstattung“ frei geschalten (nur in der ersten Periode nicht auswählbar) hat eine Übersicht über die Verkaufsergebnisse."
 					+ "Möchte man weitere Informationen über die Marktlage haben, so kann man hier einen Einblick in die Ergebnisse der anderen Spieler erlangen.");
