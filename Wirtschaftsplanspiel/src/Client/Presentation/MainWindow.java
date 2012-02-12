@@ -24,6 +24,7 @@ import Client.Presentation.TypedPanel.PanelType;
 import java.util.List;
 
 import Client.Application.CannotProduceException;
+import Client.Application.CannotSaleException;
 import Client.Application.PeriodController;
 
 public class MainWindow extends JFrame{
@@ -578,9 +579,9 @@ public class MainWindow extends JFrame{
 				prev.setVisible(false);
 				changeScreen(Pwaiting);
 			} catch (CannotProduceException e1) {
-				//TODO: Anpassen und spezifieren.
-
 				JOptionPane.showMessageDialog(null, "Es konnte nicht produziert werden.", "Zu wenig Produktionsfaktoren", JOptionPane.CANCEL_OPTION);
+			} catch (CannotSaleException e2) {
+				JOptionPane.showMessageDialog(null, "Periode konnte nicht abgeschlossen werden, da mehr Güter verkauft werden als möglich ist.", "Zu wenig Produktionsfaktoren", JOptionPane.CANCEL_OPTION);
 			}
 		}
 		
