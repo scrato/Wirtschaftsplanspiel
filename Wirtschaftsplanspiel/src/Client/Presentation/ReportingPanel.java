@@ -410,7 +410,8 @@ public class ReportingPanel extends TypedPanel {
 			guVPanel.addEntry(new TAccountEntry("Aufwand für Einstellungen", guv.employeeHiringCosts), TAccountSides.left);
 		if (guv.employeeDismissalCosts != 0) 
 			guVPanel.addEntry(new TAccountEntry("Aufwand für Entlassungen", guv.employeeDismissalCosts), TAccountSides.left);
-		
+		if (guv.lossDueDisposalOfAssets != 0)
+			guVPanel.addEntry(new TAccountEntry("Verl. aus Abgang von AV", guv.lossDueDisposalOfAssets), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Abschreibungen", guv.deprecation), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Miete", guv.rental), TAccountSides.left);
 		guVPanel.addEntry(new TAccountEntry("Lageraufwand", guv.warehouseCosts), TAccountSides.left);
@@ -431,24 +432,6 @@ public class ReportingPanel extends TypedPanel {
 		
 		guVPanel.addSum(guv.getTAccountSum());
 
-		
-		
-		//Add panels to bodyPanel
-		
-		/*
-		//c.anchor = GridBagConstraints.LINE_END;
-		
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = 10;
-		c.gridheight = 5;
-		//c.insets = new Insets(400,400,400,400);
-		//resultScrollPane.setPreferredSize(new Dimension(600, 400));
-		bodyPanel.add(resultScrollPane, c);	
-		//bodyPanel.add(resultPanel);
-		//c.insets = new Insets(0,0,0,0);
-		 * 
-		 */
 		
 		//resultScrollPane.set
 		JPanel pufferLeft = new JPanel();
