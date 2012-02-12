@@ -11,6 +11,7 @@ import Client.Entities.Machine;
 import Client.Entities.MachineType;
 import Client.Entities.Period;
 import Client.Entities.PeriodInfo;
+import Client.Entities.ProductionAndDistribution;
 import Client.Entities.Ressource;
 import Client.Application.UserCanNotPayException;
 import Client.Entities.Employee;
@@ -253,7 +254,6 @@ public abstract class CompanyController {
 	   {
 		   Company comp = Company.getInstance();
 		   int units = comp.getProdAndDistr().getUnitsToProduce();
-		   
 			if(!(canProduce())) {
 				// TODO: Spezifizieren, was fehlt, damits im UI angezeigt werden kann.
 				throw new CannotProduceException();
@@ -291,6 +291,21 @@ public abstract class CompanyController {
 	// ------------------------------------------------------------
 		//Begin of Employee-Abschnitt
 	
+	public static boolean canSale() {
+			Company comp = Company.getInstance();
+			ProductionAndDistribution proddis = comp.getProdAndDistr();
+			
+			if(!canProduce())		
+				return false;
+			
+			if(proddis.getUnitsToSell() <= proddis.getUnitsToProduce() + comp.getFinishedProducts())
+				return true;
+			else
+				return false;
+		}
+
+
+
 	public static void employSb(Employee newEmployee) throws UserCanNotPayException {
 		Company comp = Company.getInstance();
 		payItem(Employee.getEmploycost());  	

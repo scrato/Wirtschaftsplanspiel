@@ -49,11 +49,12 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 		}
 
 		@Override
-		public void keyReleased(KeyEvent arg0) {
+		public void keyReleased(KeyEvent arg0) {			
 			//Wenn es eine Zahl ist
 			if ((arg0.getKeyCode() >= KeyEvent.VK_0 && arg0.getKeyCode() <= KeyEvent.VK_9) || 
 					(arg0.getKeyCode() >= KeyEvent.VK_NUMPAD0 && arg0.getKeyCode() <= KeyEvent.VK_NUMPAD9)	||
-					(arg0.getKeyCode() == KeyEvent.VK_SPACE)){
+					(arg0.getKeyCode() == KeyEvent.VK_SPACE) || 
+					(arg0.getKeyChar() == '-')){
 			
 			try
 			{
@@ -529,7 +530,10 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 	
 	private String cutAndValidate(String text) {
 		try {
-			return decformat.format(decformat.parse(text).intValue());
+			int form = decformat.parse(text).intValue();
+			if(form < 0)
+				form = Math.abs(form);
+			return decformat.format(form);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -540,7 +544,10 @@ public class ProductionAndDistributionPanel extends TypedPanel {
 
 	private String cutAndTrim(String text) {
 		try {
-			return curformat.format(curformat.parse(text).doubleValue());
+			double form = curformat.parse(text).doubleValue();
+			if(form < 0)
+				form = Math.abs(form);
+			return curformat.format(form);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
