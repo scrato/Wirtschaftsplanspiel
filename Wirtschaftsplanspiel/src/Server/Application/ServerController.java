@@ -91,7 +91,7 @@ public class ServerController {
 		lockSupplies.acquireUninterruptibly();
 		try {
 			for (ClientHandler client : clients) {
-				if (!supplies.containsKey(client.get_ID())) {
+				if (!client.isInsolvent() && !supplies.containsKey(client.get_ID())) {
 					return;
 				}
 			}
