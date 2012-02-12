@@ -69,8 +69,8 @@ public class MainWindow extends JFrame{
 
 	private JMenuBar menuBar;
 
-	private JButton prev = new JButton("Zurück");
-	private JButton next = new JButton("Weiter");
+	 JButton prev = new JButton("Zurück");
+	 JButton next = new JButton("Weiter");
 
 
 
@@ -321,7 +321,7 @@ public class MainWindow extends JFrame{
 		west.setVisible(true);
 		JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
 
-		 prev.setEnabled(false);
+		prev.setEnabled(false);
 		prev.addActionListener(new PrevActionListener());
 		next.addActionListener(new NextActionListener());
 		JPanel p = new JPanel();

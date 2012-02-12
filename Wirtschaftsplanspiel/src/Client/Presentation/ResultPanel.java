@@ -51,7 +51,11 @@ public class ResultPanel extends TypedPanel {
 		for(Component comp : mw.west.getComponents()){
 			if(comp.getClass() == JButton.class)	
 				comp.setVisible(false);
+			if(comp.getClass() == JLabel.class)
+				comp.setVisible(false);
 		}
+		mw.next.setVisible(false);
+		mw.prev.setVisible(false);
 		mw.berichtButton.setVisible(true);
 		
 		//Results ausrechnen
