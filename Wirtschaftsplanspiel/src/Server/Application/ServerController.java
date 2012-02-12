@@ -116,6 +116,7 @@ public class ServerController {
 			supplies.clear();
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			lockSupplies.release();
 		}
