@@ -14,8 +14,6 @@ import Client.Entities.ProductionAndDistribution;
 import Client.Entities.ProfitAndLoss;
 import Client.Entities.PeriodInfo;
 import Client.Entities.Player;
-import Client.Entities.Ressource;
-import Client.Entities.RessourceType;
 import Client.Network.Client;
 import NetworkCommunication.BroadcastCompanyResultMessage;
 import NetworkCommunication.MessageType;
