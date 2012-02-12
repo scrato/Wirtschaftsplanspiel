@@ -207,7 +207,7 @@ public class MainWindow extends JFrame{
  void serverMenuInit(){
 		JMenu serverMenu = new JMenu("Server");
 		JMenuItem MenuButtonSpielStarten = new JMenuItem("Spiel starten");
-		MenuButtonSpielStarten.addActionListener(new startGame());
+		MenuButtonSpielStarten.addActionListener(new startGame(menuBar, serverMenu));
 	    serverMenu.add(MenuButtonSpielStarten);
 		menuBar.add(serverMenu);
  }
@@ -551,9 +551,19 @@ public class MainWindow extends JFrame{
 
 	private class startGame implements ActionListener{
 
+		JMenuBar menuBar;
+		JMenu serverMenu;
+		public startGame(JMenuBar menuBar, JMenu serverMenu)
+		{
+			this.menuBar = menuBar;
+			this.serverMenu = serverMenu;
+		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			ServerController.StartGame();
+			menuBar.remove(serverMenu);
+			menuBar.revalidate();
+			menuBar.repaint();
 			//JOptionPane.showMessageDialog(new JFrame(),"Das Spiel wurde gestartet. Viel Erfolg!");
 		}
 		
