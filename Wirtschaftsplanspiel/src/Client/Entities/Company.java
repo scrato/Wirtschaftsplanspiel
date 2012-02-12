@@ -41,9 +41,9 @@ public class Company {
 	private double money;
 	
 	private Map<RessourceType, Ressource> ressources;
-	public final double WAREHOUSECOST_PER_STOCKFISCH = 0.1d;
-	public final double WAREHOUSECOST_PER_VERPACKUNG = 0.05d;
-	public final double WAREHOUSECOST_PER_PRODUCT = 0.2d;
+	public final double WAREHOUSECOST_PER_STOCKFISCH = 0.05d;
+	public final double WAREHOUSECOST_PER_VERPACKUNG = 0.4d;
+	public final double WAREHOUSECOST_PER_PRODUCT = 20.0d;
 	//private double warehouseCostPerProduct;
 	
 
