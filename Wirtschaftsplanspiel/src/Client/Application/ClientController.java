@@ -53,9 +53,20 @@ public abstract class ClientController {
 	public static void PlayerLeft(NetMessage message) {
 		int ID = ByteConverter.toInt(message.get_Content());
 		Player leftPlayer = Player.getPlayer(ID);		
-		Player.removePlayer(ID);
-		if (Player.getPlayers().isEmpty()) //TODO sinnvoll? müsste sein: Players.getPlayers().size <= 1. doof zum testen.
+		//Player.removePlayer(ID);
+		leftPlayer.leaveGame();
+		int activePlayers = 0;
+		for (Player player : Player.getPlayers()) {
+			if (!player.hasLeftGame()) {
+				activePlayers++;
+				break;
+			}
+		}
+		if (activePlayers <= 1 ) {
 			MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.OnePlayerLeft));
+		}
+		//if (Player.getPlayers().isEmpty()) //TODO sinnvoll? müsste sein: Players.getPlayers().size <= 1. doof zum testen.
+		//	MainWindow.getInstance().changeScreen(new ResultPanel(ResultPanel.FinishReason.OnePlayerLeft));
 			
 		
 		MainWindow wind = MainWindow.getInstance();

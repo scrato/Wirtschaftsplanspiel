@@ -13,6 +13,7 @@ public class Player implements Comparable<Player> {
 	private String name;
 	private List<CompanyResult> resultList = new LinkedList<CompanyResult>();
 	private boolean insolvent;
+	private boolean leftGame;
 	
 	public Player(int ID, String Name) {
 		id = ID;
@@ -35,6 +36,14 @@ public class Player implements Comparable<Player> {
 	
 	public boolean isInsolvent() {
 		return insolvent;
+	}
+	
+	public void leaveGame() {
+		leftGame = true;
+	}
+	
+	public boolean hasLeftGame() {
+		return leftGame;
 	}
 	
 	

@@ -337,11 +337,19 @@ public class ReportingPanel extends TypedPanel {
 				CompanyResult result = player.getCompanyResult(period);
 				tableValues[i][0] = player.getName();
 				
-				if (result.sales == -1) {
-					tableValues[i][1] = "  Insolvent";
-					tableValues[i][2] = "  Insolvent";
-					tableValues[i][3] = "  Insolvent";
-					i++;
+				if (result == null || result.sales < 0) {
+					if (player.isInsolvent()) {
+						tableValues[i][1] = "  Insolvent";
+						tableValues[i][2] = "  Insolvent";
+						tableValues[i][3] = "  Insolvent";
+						i++;
+					}
+					if (player.hasLeftGame()) {
+						tableValues[i][1] = " Ausgeschieden";
+						tableValues[i][2] = " Ausgeschieden";
+						tableValues[i][3] = " Ausgeschieden";
+						i++;
+					}
 					continue;
 				}
 				

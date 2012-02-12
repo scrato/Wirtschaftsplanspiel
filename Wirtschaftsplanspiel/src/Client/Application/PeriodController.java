@@ -101,9 +101,10 @@ public abstract class PeriodController {
 					Player player = Player.getPlayer(result.clientid);
 					player.addCompanyResult(result);
 					if (result.sales == -1) {
+						player.becameInsolvent();
+						
 						SimpleDateFormat format = new SimpleDateFormat("kk:mm");
 						String time = format.format(new Date());
-						
 						MainWindow.getInstance().addChatMessage(time + "\n" + player.getName() + " ist insolvent.");
 					}
 				} catch (Exception e2) {
