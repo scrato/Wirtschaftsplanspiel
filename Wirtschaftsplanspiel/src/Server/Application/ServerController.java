@@ -130,11 +130,15 @@ public class ServerController {
 		
 		int leftDemand = AppContext.standardDemand;
 		
+		double priceSum = 0;
 		for (Supply sup : supplies.values()) {
-			double perc = sup.price / AppContext.STANDARD_PRICE_PER_UNIT;
-			int diff = (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * ( 1 - ( 1 / perc ) ));
-			leftDemand -= diff;
-			}
+			priceSum += sup.price;
+			//double perc = sup.price / AppContext.STANDARD_PRICE_PER_UNIT;
+			//int diff = (int) (AppContext.STANDARD_DEMAND_PER_PLAYER * ( 1 - ( 1 / perc ) ));
+			//leftDemand -= diff;
+		}
+		double perc = priceSum / AppContext.STANDARD_PRICE_PER_UNIT / supplies.size();
+		leftDemand = (int) ( AppContext.STANDARD_DEMAND_PER_PLAYER * supplies.size() * perc );
 		
 		// initialize assignedDemand
 		Map<Integer, Disposal> disposals  = new TreeMap<Integer, Disposal>();
