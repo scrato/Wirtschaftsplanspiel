@@ -93,6 +93,6 @@ public class Player implements Comparable<Player> {
 		for(Iterator<CompanyResult> resit2 = arg0.resultList.iterator(); resit2.hasNext();){
 			res2 += resit2.next().profit;
 		}
-		return Double.compare(res1, res2);
+		return Double.compare(res2, res1);
 	}
 }
