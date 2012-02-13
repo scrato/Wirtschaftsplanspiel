@@ -1,6 +1,6 @@
 package Client.Application;
 
-public class CannotSaleException extends ApplicationException {
+public class CannotSellException extends ApplicationException {
 
 	/**
 	 * 

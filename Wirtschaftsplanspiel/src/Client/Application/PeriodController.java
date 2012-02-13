@@ -27,9 +27,9 @@ import Client.Presentation.ResultPanel;
 
 public abstract class PeriodController {
 	
-	public static void ClosePeriod() throws CannotProduceException, CannotSaleException {
+	public static void ClosePeriod() throws CannotProduceException, CannotSellException {
 		if (!CompanyController.canSale())
-			throw new CannotSaleException();
+			throw new CannotSellException();
 		CompanyController.produce();
 		SendSupply();
 	}
