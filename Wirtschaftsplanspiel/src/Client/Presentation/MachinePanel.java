@@ -110,7 +110,7 @@ public class MachinePanel extends TypedPanel {
 		c.gridy = 3;
 		c.gridwidth = 3;
 		c.anchor = GridBagConstraints.LINE_START;
-		add(new JLabel("Machinen kaufen"),c);
+		add(new JLabel("Maschinen kaufen"),c);
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.CENTER;
 		
