@@ -169,11 +169,13 @@ public class ServerController {
 			for (Entry<Integer, Supply> sup : supplies.entrySet()) {
 				if (sup.getValue().price == 0) {
 					factors.put(sup.getKey(), Double.MAX_VALUE);
+					factorsSum += Double.MAX_VALUE;
 					continue;
 				}
 				Double factor = Math.pow(averagePrice / sup.getValue().price, 1.5);
 				factors.put(sup.getKey(), factor);
-				factorsSum += factor;
+				if (factorsSum != Double.MAX_VALUE)
+					factorsSum += factor;
 			}
 			
 			// calculate contingents by factors.
